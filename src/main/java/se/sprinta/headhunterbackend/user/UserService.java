@@ -23,10 +23,4 @@ public class UserService {
     public User save(User newUser) {
         return this.userRepository.save(newUser);
     }
-
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return null;
-//        // TODO: 04/01/2024 fix later
-//    }
 }

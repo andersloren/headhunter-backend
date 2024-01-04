@@ -1,9 +1,11 @@
 package se.sprinta.headhunterbackend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -77,4 +80,30 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data[1].username").value("Anders"))
                 .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
+
+    @Test
+    void testAddUserSuccess() throws Exception {
+        // Setup
+        User newUser = new User();
+//        newUser.setId("a");
+        newUser.setUsername("Mehrdad Javan");
+        newUser.setPassword("2468");
+        newUser.setRoles("admin");
+
+        String json = this.objectMapper.writeValueAsString(newUser);
+
+        // Given
+        given(this.userService.save(Mockito.any(User.class))).willReturn(newUser);
+
+        // When and then
+        this.mockMvc.perform(post(this.baseUrl + "/users").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+
+    }
+
+
 }

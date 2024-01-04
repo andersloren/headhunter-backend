@@ -29,6 +29,6 @@ public class DBDataInitializer implements CommandLineRunner {
         u2.setRoles("user");
 
         this.userService.save(u1);
-        this.userService.save(u1);
+        this.userService.save(u2);
     }
 }

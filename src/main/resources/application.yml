@@ -1,3 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:headhunter
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
 api:
   endpoint:
     base-url: /api/v1

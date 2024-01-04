@@ -1,9 +1,7 @@
 package se.sprinta.headhunterbackend.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.user.converter.UserToUserDtoConverter;
@@ -30,6 +28,13 @@ public class UserController {
                 .map(this.userToUserDtoConverter::convert)
                 .toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundUserDtos);
+    }
+
+    @PostMapping
+    public Result addUser(@Valid @RequestBody User user) {
+        User addedUser = this.userService.save(user);
+        UserDto addedUserDto = this.userToUserDtoConverter.convert(addedUser);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
     }
 
 }
