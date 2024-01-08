@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "_user")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
