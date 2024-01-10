@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -39,6 +40,11 @@ public class SecurityConfig {
 
     @Value("${api.endpoint.base-url}")
     private String baseUrl;
+    private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
+    private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
+    private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
+
+
 
     /*
      * RSA is an algorithm.
@@ -48,7 +54,14 @@ public class SecurityConfig {
      * This means that every time this program is restarted, we have two new keys.
      * */
 
-    public SecurityConfig() throws NoSuchAlgorithmException {
+    public SecurityConfig(
+            AuthenticationEntryPoint customBasicAuthenticationEntryPoint,
+            CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint,
+            CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler
+    ) throws NoSuchAlgorithmException {
+        this.customBasicAuthenticationEntryPoint = customBasicAuthenticationEntryPoint;
+        this.customBearerTokenAuthenticationEntryPoint = customBearerTokenAuthenticationEntryPoint;
+        this.customBearerTokenAccessDeniedHandler = customBearerTokenAccessDeniedHandler;
 
         // Generate a public/private key pair.
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -65,14 +78,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/users").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.POST, this.baseUrl + "/users").permitAll()
+                        .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/{usersId}").hasAuthority("ROLE_admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         // Disallow everything else
                         .anyRequest().authenticated() // Always a good idea to put this as last
                 )
                 .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // This is for H2 browser console access
                 .csrf(csrf -> csrf.disable()) // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.
-                .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()))
+                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(this.customBasicAuthenticationEntryPoint))
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                        .jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(this.customBearerTokenAuthenticationEntryPoint)
+                        .accessDeniedHandler(this.customBearerTokenAccessDeniedHandler))
                 .sessionManagement(sessionsManagement -> sessionsManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
@@ -98,7 +116,16 @@ public class SecurityConfig {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
+        /*
+        Let’s say that that your authorization server communicates authorities in a custom claim called "authorities".
+        In that case, you can configure the claim that JwtAuthenticationConverter should inspect, like so:
+         */
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+
+        /*
+        You can also configure the authority prefix to be different as well. The default one is "SCOPE_".
+        In this project, you need to change it to empty, that is, no prefix!
+         */
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix(""); // If the prefix is not changed, it would add "SCOPE_" before "ROLE_" and mess everything upp
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

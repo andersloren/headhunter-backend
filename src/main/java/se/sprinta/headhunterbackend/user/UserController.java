@@ -37,4 +37,9 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
     }
 
+    @PutMapping("/{userId}")
+    public Result updateUser(@PathVariable String userId, @Valid @RequestBody UserDto userDto) {
+        return null;
+    }
+
 }

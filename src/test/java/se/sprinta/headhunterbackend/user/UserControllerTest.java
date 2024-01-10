@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring security
 class UserControllerTest {
 
     @Autowired
@@ -85,7 +84,6 @@ class UserControllerTest {
     void testAddUserSuccess() throws Exception {
         // Setup
         User newUser = new User();
-//        newUser.setId("a");
         newUser.setUsername("Mehrdad Javan");
         newUser.setPassword("2468");
         newUser.setRoles("admin");
@@ -102,8 +100,5 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
-
     }
-
-
 }
