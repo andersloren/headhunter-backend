@@ -11,7 +11,7 @@ public class UserToUserDtoConverter implements Converter<User, UserDto> {
     @Override
     public UserDto convert(User source) {
         return new UserDto(
-                source.getId(),
+                source.getEmail(),
                 source.getUsername()
         );
     }

@@ -77,10 +77,10 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/users").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/{usersId}").hasAuthority("ROLE_user") // Only user here!
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_user") // Only user here!
                         .requestMatchers(HttpMethod.POST, this.baseUrl + "/users").permitAll()
-                        .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/{usersId}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         // Disallow everything else
                         .anyRequest().authenticated() // Always a good idea to put this as last
@@ -98,7 +98,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12); // TODO: 04/01/2024 testa 31? :)
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

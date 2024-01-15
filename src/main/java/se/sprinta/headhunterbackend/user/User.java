@@ -23,9 +23,8 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private String id;
+    @NotEmpty(message = "email is required.")
+    private String email;
 
     @NotEmpty(message = "username is required.")
     private String username;

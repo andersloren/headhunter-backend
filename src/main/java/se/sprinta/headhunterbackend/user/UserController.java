@@ -49,4 +49,9 @@ public class UserController {
         return null;
     }
 
+    @DeleteMapping("/{userId}")
+    public Result deleteUser(@PathVariable String userId) {
+        this.userService.delete(userId);
+        return new Result(true, StatusCode.SUCCESS, "Delete Success");
+    }
 }

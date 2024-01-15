@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -44,13 +45,13 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
-        u2.setId("d66a3164-0a9d-4efb-943b-de64057aab15");
+        u2.setEmail("a@l.se");
         u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");
@@ -76,20 +77,22 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"));
+                .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
+                .andExpect(jsonPath("$.data[1].username").value("Anders"))
+                .andExpect(jsonPath("$.data[1].email").value("a@l.se"));
     }
 
     @Test
     void testFindUserByIdSuccess() throws Exception {
         // Given
-        given(this.userService.findByUserId("d66a3164-0a9d-4efb-943b-de64057aab15")).willReturn(this.users.get(1));
+        given(this.userService.findByUserId("a@l.se")).willReturn(this.users.get(1));
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrl + "/users/d66a3164-0a9d-4efb-943b-de64057aab15").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrl + "/users/a@l.se").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value("d66a3164-0a9d-4efb-943b-de64057aab15"))
+                .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"));
     }
 
@@ -110,6 +113,7 @@ class UserControllerTest {
     void testAddUserSuccess() throws Exception {
         // Setup
         User newUser = new User();
+        newUser.setEmail("m@j.se");
         newUser.setUsername("Mehrdad Javan");
         newUser.setPassword("2468");
         newUser.setRoles("admin");
@@ -125,5 +129,31 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"));
+    }
+
+    @Test
+    void testDeleteUserByIdSuccess() throws Exception {
+        // Given
+        doNothing().when(this.userService).delete("a@l.se");
+
+        // When and then
+        this.mockMvc.perform(delete(this.baseUrl + "/users/a@l.se").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Delete Success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testDeleteUserByIdWithNonExistingId() throws Exception {
+        // Given
+        doThrow(new ObjectNotFoundException("user", "abc")).when(this.userService).delete("abc");
+
+        // When and then
+        this.mockMvc.perform(delete(this.baseUrl + "/users/abc").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 }

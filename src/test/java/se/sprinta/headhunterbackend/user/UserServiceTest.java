@@ -37,13 +37,13 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
-        u2.setId("d66a3164-0a9d-4efb-943b-de64057aab15");
+        u2.setEmail("a@l.se");
         u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");
@@ -58,7 +58,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testFindAllUsersSuccess() {
+    void testFindAllUsersByIdSuccess() {
         // Given
         given(this.userRepository.findAll()).willReturn(this.users);
 
@@ -76,18 +76,18 @@ class UserServiceTest {
     void testFindUserByIdSuccess() {
         // Given
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab14")).willReturn(Optional.of(u1));
+        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(u1));
 
         // When
-        User returnedUser = this.userService.findByUserId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        User returnedUser = this.userService.findByUserId("m@e.se");
 
         // Then
-        assertThat(returnedUser.getId()).isEqualTo(u1.getId());
+        assertThat(returnedUser.getEmail()).isEqualTo(u1.getEmail());
         assertThat(returnedUser.getUsername()).isEqualTo(u1.getUsername());
         assertThat(returnedUser.getRoles()).isEqualTo(u1.getRoles());
     }
@@ -95,24 +95,24 @@ class UserServiceTest {
     @Test
     void testFindUserByIdWithNonExistentId() {
         // Given
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab19")).willThrow(new ObjectNotFoundException("user", "d66a3164-0a9d-4efb-943b-de64057aab19"));
+        given(this.userRepository.findByEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            User user = this.userService.findByUserId("d66a3164-0a9d-4efb-943b-de64057aab19");
+            User user = this.userService.findByUserId("abc");
         });
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find user with Id d66a3164-0a9d-4efb-943b-de64057aab19");
+                .hasMessage("Could not find user with Id abc");
     }
 
     @Test
     void testSaveUsersSuccess() {
         // Setup
         User newUser = new User();
-        newUser.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        newUser.setEmail("m@e.se");
         newUser.setUsername("Mikael");
         newUser.setPassword("123456");
         newUser.setRoles("admin user");
@@ -136,93 +136,93 @@ class UserServiceTest {
     @Test
     void testUpdateUserSuccess() {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User update = new User();
-        update.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        update.setEmail("m@e.se");
         update.setUsername("Mikael - updated");
         update.setPassword("123456789");
         update.setUsername("user");
 
         // Given
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab14")).willReturn(Optional.of(u1));
+        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(u1));
         given(this.userRepository.save(u1)).willReturn(u1);
 
         // When
-        User updatedUser = this.userService.update("d66a3164-0a9d-4efb-943b-de64057aab14", update);
+        User updatedUser = this.userService.update("m@e.se", update);
 
         // Then
-        assertThat(updatedUser.getId()).isEqualTo(update.getId());
+        assertThat(updatedUser.getEmail()).isEqualTo(update.getEmail());
         assertThat(updatedUser.getUsername()).isEqualTo(update.getUsername());
         assertThat(updatedUser.getRoles()).isEqualTo(update.getRoles());
 
         // Verify
-        verify(this.userRepository, times(1)).findById("d66a3164-0a9d-4efb-943b-de64057aab14");
+        verify(this.userRepository, times(1)).findByEmail("m@e.se");
         verify(this.userRepository, times(1)).save(u1);
     }
 
     @Test
     void testUpdateUserWithNonExistentId() {
         User update = new User();
-        update.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        update.setEmail("m@e.se");
         update.setUsername("Mikael - updated");
         update.setPassword("123456789");
         update.setUsername("user");
 
         // Given
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab19")).willReturn(Optional.empty());
+        given(this.userRepository.findByEmail("abc")).willReturn(Optional.empty());
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            User updatedUser = this.userService.update("d66a3164-0a9d-4efb-943b-de64057aab19", update);
+            User updatedUser = this.userService.update("abc", update);
         });
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find user with Id d66a3164-0a9d-4efb-943b-de64057aab19");
-        verify(this.userRepository, times(1)).findById("d66a3164-0a9d-4efb-943b-de64057aab19");
+                .hasMessage("Could not find user with Id abc");
+        verify(this.userRepository, times(1)).findByEmail("abc");
     }
 
     @Test
     void testDeleteUserSuccess() {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         // Given
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab14")).willReturn(Optional.of(u1));
+        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(u1));
         doNothing().when(this.userRepository).delete(u1);
 
         // When
-        this.userService.delete("d66a3164-0a9d-4efb-943b-de64057aab14");
+        this.userService.delete("m@e.se");
 
         // Then
-        verify(this.userRepository, times(1)).findById("d66a3164-0a9d-4efb-943b-de64057aab14");
+        verify(this.userRepository, times(1)).findByEmail("m@e.se");
     }
 
     @Test
     void testDeleteUserWithNonExistentId() {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab19");
+        u1.setEmail("m@e.se");
 
         // Given
-        given(this.userRepository.findById("d66a3164-0a9d-4efb-943b-de64057aab19")).willReturn(Optional.empty());
+        given(this.userRepository.findByEmail("abc")).willReturn(Optional.empty());
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.userService.delete("d66a3164-0a9d-4efb-943b-de64057aab19");
+            this.userService.delete("abc");
         });
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find user with Id d66a3164-0a9d-4efb-943b-de64057aab19");
+                .hasMessage("Could not find user with Id abc");
     }
 
 }

@@ -17,13 +17,13 @@ public class DBDataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         User u1 = new User();
-        u1.setId("d66a3164-0a9d-4efb-943b-de64057aab14");
+        u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
-        u2.setId("d66a3164-0a9d-4efb-943b-de64057aab15");
+        u2.setEmail("a@l.se");
         u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");

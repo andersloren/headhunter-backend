@@ -1,6 +1,7 @@
 package se.sprinta.headhunterbackend.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Integration tests for User API endpoints")
 @Tag("integration")
 @ActiveProfiles(value = "dev")
+@Transactional
 public class UserControllerIntegrationTest {
 
     @Autowired
@@ -44,9 +46,15 @@ public class UserControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("Mikael", "123456"))); // httpBasic() is from spring-security-test.
+        ResultActions resultActions = this.mockMvc.perform(
+                post(this.baseUrl + "/users/login")
+                        .with(httpBasic("m@e.se",
+                                "123456"))); // httpBasic() is from spring-security-test.
+        System.out.println("resultActions: " + resultActions.toString());
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
+        System.out.println("mvcResult: " + mvcResult);
         String contentAsString = mvcResult.getResponse().getContentAsString();
+        System.out.println("contentAsString: " + contentAsString);
         JSONObject json = new JSONObject(contentAsString);
         this.token = "Bearer " + json.getJSONObject("data").getString("token");
     }
@@ -61,35 +69,38 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
+                .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
                 .andExpect(jsonPath("$.data[1].username").value("Anders"));
     }
 
     @Test
     @DisplayName("Check findUserById (GET)")
-    void testFindUserById() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("Anders", "654321"))); // httpBasic() is from spring-security-test.
+    void testFindUserByEmail() throws Exception {
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
         String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
-        String andersId = json.getJSONObject("data").getJSONObject("userInfo").getString("id");
-        String andersIdUri = "/" + andersId;
+        String andersEmail = json.getJSONObject("data").getJSONObject("userInfo").getString("email");
+        String andersEmailUri = "/" + andersEmail;
 
-        this.mockMvc.perform(get(this.baseUrl + "/users" + andersIdUri)
+        this.mockMvc.perform(get(this.baseUrl + "/users" + andersEmailUri)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, andersToken))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value(andersId))
+                .andExpect(jsonPath("$.data.email").value(andersEmail))
+                .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"));
     }
 
     @Test
     @DisplayName("Check deleteUser with insufficient permission (DELETE)")
     void testFindAllUsersNoAccessAsRoleUser() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("Anders", "654321"))); // httpBasic() is from spring-security-test.
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
@@ -108,6 +119,7 @@ public class UserControllerIntegrationTest {
     @DisplayName("Check addUser with valid input (POST)")
     void testAddUserSuccess() throws Exception {
         User user = new User();
+        user.setEmail("m@j.se");
         user.setUsername("Mehrdad");
         user.setPassword("02468");
         user.setRoles("admin");
@@ -122,7 +134,8 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad"));
+                .andExpect(jsonPath("$.data.username").value("Mehrdad"))
+                .andExpect(jsonPath("$.data.email").value("m@j.se"));
     }
 
     @Test
@@ -156,15 +169,15 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("Check deleteUser with insufficient permission (DELETE)")
     void testDeleteUserNoAccessAsRoleUser() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("Anders", "654321"))); // httpBasic() is from spring-security-test.
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
         String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
-        String andersId = json.getJSONObject("data").getJSONObject("userInfo").getString("id");
-        String andersIdUri = "/" + andersId;
+        String andersEmail = json.getJSONObject("data").getJSONObject("userInfo").getString("email");
+        String andersEmailUri = "/" + andersEmail;
 
-        this.mockMvc.perform(delete(this.baseUrl + "/users" + andersIdUri)
+        this.mockMvc.perform(delete(this.baseUrl + "/users" + andersEmailUri)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, andersToken))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -178,7 +191,33 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
+                .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
                 .andExpect(jsonPath("$.data[1].username").value("Anders"));
+    }
+
+    @Test
+    @DisplayName("Check deleteUser with valid input(DELETE)")
+    void testDeleteUserSuccess() throws Exception {
+        this.mockMvc.perform(delete(this.baseUrl + "/users/a@l.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Delete Success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("Check deleteUser with invalid input (DELETE)")
+    void testDeleteUserWithNonExistentId() throws Exception {
+        this.mockMvc.perform(delete(this.baseUrl + "/users/abc")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 }

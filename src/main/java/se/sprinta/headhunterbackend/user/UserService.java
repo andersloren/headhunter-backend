@@ -26,9 +26,9 @@ public class UserService implements UserDetailsService {
         return this.userRepository.findAll();
     }
 
-    public User findByUserId(String userId) {
-        return this.userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+    public User findByUserId(String email) {
+        return this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("user", email));
     }
 
     public User save(User newUser) {
@@ -36,24 +36,25 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(newUser);
     }
 
-    public User update(String userId, User update) {
-        User foundUser = this.userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+    public User update(String email, User update) {
+        User foundUser = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("user", email));
         foundUser.setUsername(update.getUsername());
         foundUser.setRoles(update.getRoles());
         return this.userRepository.save(foundUser);
     }
 
-    public void delete(String userId) {
-        User user = this.userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+    public void delete(String email) {
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("user", email));
         this.userRepository.delete(user);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.userRepository.findByUsername(username) // First, we need to find this user from database.
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserDetails userDetails = this.userRepository.findByEmail(email) // First, we need to find this user from database.
                 .map(user -> new MyUserPrincipal(user)) // If found, wrap the returned user instance in a MyUserPrincipal instance.
-                .orElseThrow(() -> new UsernameNotFoundException("username" + username + " is not found")); // Otherwise, throw an exception.
+                .orElseThrow(() -> new UsernameNotFoundException("email " + email + " is not found")); // Otherwise, throw an exception.
+        return userDetails;
     }
 }
