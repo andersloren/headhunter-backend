@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
@@ -66,6 +65,28 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data[0].roles").value("admin user"))
                 .andExpect(jsonPath("$.data[1].username").value("Anders"))
                 .andExpect(jsonPath("$.data[1].roles").value("user"));
+    }
+
+    @Test
+    @DisplayName("Check findUserById (GET)")
+    void testFindUserById() throws Exception {
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("Anders", "654321"))); // httpBasic() is from spring-security-test.
+        MvcResult mvcResult = resultActions.andDo(print()).andReturn();
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        JSONObject json = new JSONObject(contentAsString);
+        String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
+        String andersId = json.getJSONObject("data").getJSONObject("userInfo").getString("id");
+        String andersIdUri = "/" + andersId;
+
+        this.mockMvc.perform(get(this.baseUrl + "/users" + andersIdUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, andersToken))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find One Success"))
+                .andExpect(jsonPath("$.data.id").value(andersId))
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
     @Test
@@ -145,8 +166,10 @@ public class UserControllerIntegrationTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
         String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
+        String andersId = json.getJSONObject("data").getJSONObject("userInfo").getString("id");
+        String andersIdUri = "/" + andersId;
 
-        this.mockMvc.perform(delete(this.baseUrl + "/users/e98deaa9-418e-47ae-bbba-0e64bda81723")
+        this.mockMvc.perform(delete(this.baseUrl + "/users" + andersIdUri)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, andersToken))
                 .andExpect(jsonPath("$.flag").value(false))

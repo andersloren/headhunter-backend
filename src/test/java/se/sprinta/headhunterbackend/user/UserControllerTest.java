@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,34 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].roles").value("admin user"))
                 .andExpect(jsonPath("$.data[1].username").value("Anders"))
                 .andExpect(jsonPath("$.data[1].roles").value("user"));
+    }
+
+    @Test
+    void testFindUserByIdSuccess() throws Exception {
+        // Given
+        given(this.userService.findByUserId("d66a3164-0a9d-4efb-943b-de64057aab15")).willReturn(this.users.get(1));
+
+        // When and then
+        this.mockMvc.perform(get(this.baseUrl + "/users/d66a3164-0a9d-4efb-943b-de64057aab15").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find One Success"))
+                .andExpect(jsonPath("$.data.id").value("d66a3164-0a9d-4efb-943b-de64057aab15"))
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("user"));
+    }
+
+    @Test
+    void testFindUserByIdWithNonExistentId() throws Exception {
+        // Given
+        given(this.userService.findByUserId("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
+
+        // When and then
+        this.mockMvc.perform(get(this.baseUrl + "/users/abc").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test

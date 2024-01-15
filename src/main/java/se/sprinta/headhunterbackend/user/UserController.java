@@ -30,6 +30,13 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundUserDtos);
     }
 
+    @GetMapping("/{userId}")
+    public Result findUserById(@PathVariable String userId) {
+        User foundUser = this.userService.findByUserId(userId);
+        UserDto foundUserDto = this.userToUserDtoConverter.convert(foundUser);
+        return new Result(true, StatusCode.SUCCESS, "Find One Success", foundUserDto);
+    }
+
     @PostMapping
     public Result addUser(@Valid @RequestBody User user) {
         User addedUser = this.userService.save(user);

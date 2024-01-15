@@ -77,6 +77,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/users").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/{usersId}").hasAuthority("ROLE_user") // Only user here!
                         .requestMatchers(HttpMethod.POST, this.baseUrl + "/users").permitAll()
                         .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/{usersId}").hasAuthority("ROLE_admin")
