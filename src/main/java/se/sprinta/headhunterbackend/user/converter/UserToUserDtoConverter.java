@@ -12,8 +12,7 @@ public class UserToUserDtoConverter implements Converter<User, UserDto> {
     public UserDto convert(User source) {
         return new UserDto(
                 source.getId(),
-                source.getUsername(),
-                source.getRoles()
+                source.getUsername()
         );
     }
 }

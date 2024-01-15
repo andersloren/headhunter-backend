@@ -33,6 +33,5 @@ public class User implements Serializable {
     @NotEmpty(message = "password is required.")
     private String password;
 
-    @NotEmpty(message = "roles is required.")
-    private String roles;
+    private String roles = "user";
 }

@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 public record UserDto(String id,
 
                       @NotEmpty(message = "username is required.")
-                      String username,
-
-                      @NotEmpty(message = "role is required.")
-                      String roles
+                      String username
 ) {
 }

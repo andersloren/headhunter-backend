@@ -62,9 +62,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
-                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"))
-                .andExpect(jsonPath("$.data[1].roles").value("user"));
+                .andExpect(jsonPath("$.data[1].username").value("Anders"));
     }
 
     @Test
@@ -85,8 +83,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.id").value(andersId))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
-                .andExpect(jsonPath("$.data.roles").value("user"));
+                .andExpect(jsonPath("$.data.username").value("Anders"));
     }
 
     @Test
@@ -125,8 +122,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad"))
-                .andExpect(jsonPath("$.data.roles").value("admin"));
+                .andExpect(jsonPath("$.data.username").value("Mehrdad"));
     }
 
     @Test
@@ -148,8 +144,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
                 .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details."))
                 .andExpect(jsonPath("$.data.username").value("username is required."))
-                .andExpect(jsonPath("$.data.password").value("password is required."))
-                .andExpect(jsonPath("$.data.roles").value("roles is required."));
+                .andExpect(jsonPath("$.data.password").value("password is required."));
     }
 
     //update success (String userId, User update)
@@ -184,8 +179,6 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
-                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"))
-                .andExpect(jsonPath("$.data[1].roles").value("user"));
+                .andExpect(jsonPath("$.data[1].username").value("Anders"));
     }
 }

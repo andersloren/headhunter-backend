@@ -8,9 +8,10 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
 
+
 public class MyUserPrincipal implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public MyUserPrincipal(User user) {
         this.user = user;

@@ -76,9 +76,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
-                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"))
-                .andExpect(jsonPath("$.data[1].roles").value("user"));
+                .andExpect(jsonPath("$.data[1].username").value("Anders"));
     }
 
     @Test
@@ -92,8 +90,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.id").value("d66a3164-0a9d-4efb-943b-de64057aab15"))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
-                .andExpect(jsonPath("$.data.roles").value("user"));
+                .andExpect(jsonPath("$.data.username").value("Anders"));
     }
 
     @Test
@@ -127,7 +124,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
-                .andExpect(jsonPath("$.data.roles").value("admin"));
+                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"));
     }
 }
