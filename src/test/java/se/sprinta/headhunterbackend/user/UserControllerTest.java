@@ -1,6 +1,8 @@
 package se.sprinta.headhunterbackend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -39,8 +43,8 @@ class UserControllerTest {
 
     List<User> users;
 
-    @Value("${api.endpoint.base-url}")
-    String baseUrl;
+    @Value("${api.endpoint.base-url-users}")
+    String baseUrlUsers;
 
     @BeforeEach
     void setUp() {
@@ -72,40 +76,45 @@ class UserControllerTest {
         given(this.userService.findAll()).willReturn(this.users);
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrl + "/users").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findAll").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
+                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
                 .andExpect(jsonPath("$.data[1].username").value("Anders"))
-                .andExpect(jsonPath("$.data[1].email").value("a@l.se"));
+                .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
+                .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
 
     @Test
     void testFindUserByIdSuccess() throws Exception {
         // Given
-        given(this.userService.findByUserId("a@l.se")).willReturn(this.users.get(1));
+        given(this.userService.findByUserEmail("a@l.se")).willReturn(this.users.get(1));
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrl + "/users/a@l.se").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + "a@l.se").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"));
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
     @Test
     void testFindUserByIdWithNonExistentId() throws Exception {
+        String nonExistingEmail = "abc";
+
         // Given
-        given(this.userService.findByUserId("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
+        given(this.userService.findByUserEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrl + "/users/abc").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + nonExistingEmail).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.message").value("Could not find user with Email abc"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -124,20 +133,76 @@ class UserControllerTest {
         given(this.userService.save(Mockito.any(User.class))).willReturn(newUser);
 
         // When and then
-        this.mockMvc.perform(post(this.baseUrl + "/users").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post(this.baseUrlUsers + "/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"));
+                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    void testUpdateUserSuccess() throws Exception {
+
+        UserDto userDto = new UserDto("m@e.se", "Mikael", "admin user");
+
+        User updatedUser = new User();
+        updatedUser.setEmail("m@e.se");
+        updatedUser.setUsername("Mikael");
+        updatedUser.setPassword("123456");
+        updatedUser.setRoles("admin");
+
+        String email = "m@e.se";
+        String roles = "admin";
+
+        String json = this.objectMapper.writeValueAsString(userDto);
+
+        // Given
+        given(this.userService.update(eq(email), Mockito.any(String.class))).willReturn(updatedUser);
+
+        // When and then
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.email").value("m@e.se"))
+                .andExpect(jsonPath("$.data.username").value("Mikael"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    void testUpdateUserWithNonExistentEmail() throws Exception {
+        String email = "abc";
+        String roles = "admin";
+
+        // Given
+        given(this.userService.update(email, roles)).willThrow(new ObjectNotFoundException("user", email));
+
+        // When and then
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+                        .content(String.valueOf(MediaType.APPLICATION_JSON))
+                        .content(roles)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find user with Email abc"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test
     void testDeleteUserByIdSuccess() throws Exception {
+        String existingEmail = "a@l.se";
+
         // Given
         doNothing().when(this.userService).delete("a@l.se");
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrl + "/users/a@l.se").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + existingEmail).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Delete Success"))
@@ -146,14 +211,16 @@ class UserControllerTest {
 
     @Test
     void testDeleteUserByIdWithNonExistingId() throws Exception {
+        String nonExistingEmail = "abc";
         // Given
-        doThrow(new ObjectNotFoundException("user", "abc")).when(this.userService).delete("abc");
+        doThrow(new ObjectNotFoundException("user", nonExistingEmail)).when(this.userService).delete(nonExistingEmail);
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrl + "/users/abc").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + nonExistingEmail)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.message").value("Could not find user with Email abc"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }

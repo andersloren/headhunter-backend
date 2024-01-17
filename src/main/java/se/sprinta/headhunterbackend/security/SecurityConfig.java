@@ -38,8 +38,8 @@ public class SecurityConfig {
 
     private final RSAPrivateKey privateKey;
 
-    @Value("${api.endpoint.base-url}")
-    private String baseUrl;
+    @Value("${api.endpoint.base-url-users}")
+    private String baseUrlUsers;
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
@@ -76,11 +76,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/users").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_user") // Only user here!
-                        .requestMatchers(HttpMethod.POST, this.baseUrl + "/users").permitAll()
-                        .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/{userId}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin") // Find all
+                        .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").hasAuthority("ROLE_admin") //
+                        .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         // Disallow everything else
                         .anyRequest().authenticated() // Always a good idea to put this as last

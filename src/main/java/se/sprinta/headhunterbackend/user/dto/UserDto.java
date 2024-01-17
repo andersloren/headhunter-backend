@@ -6,6 +6,8 @@ public record UserDto(@NotEmpty(message = "email is required.")
                       String email,
 
                       @NotEmpty(message = "username is required.")
-                      String username
+                      String username,
+
+                      String roles
 ) {
 }

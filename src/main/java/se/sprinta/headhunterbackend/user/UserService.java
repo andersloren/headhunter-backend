@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
         return this.userRepository.findAll();
     }
 
-    public User findByUserId(String email) {
+    public User findByUserEmail(String email) {
         return this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
     }
@@ -36,18 +36,17 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(newUser);
     }
 
-    public User update(String email, User update) {
+    public User update(String email, String roles) {
         User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
-        foundUser.setUsername(update.getUsername());
-        foundUser.setRoles(update.getRoles());
+        foundUser.setRoles(roles);
         return this.userRepository.save(foundUser);
     }
 
     public void delete(String email) {
-        User user = this.userRepository.findByEmail(email)
+        User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
-        this.userRepository.delete(user);
+        this.userRepository.delete(foundUser);
     }
 
     @Override

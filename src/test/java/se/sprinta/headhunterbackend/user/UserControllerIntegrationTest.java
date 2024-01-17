@@ -41,20 +41,17 @@ public class UserControllerIntegrationTest {
 
     String token;
 
-    @Value("${api.endpoint.base-url}")
-    String baseUrl;
+    @Value("${api.endpoint.base-url-users}")
+    String baseUrlUsers;
 
     @BeforeEach
     void setUp() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(
-                post(this.baseUrl + "/users/login")
+                post(this.baseUrlUsers + "/login")
                         .with(httpBasic("m@e.se",
                                 "123456"))); // httpBasic() is from spring-security-test.
-        System.out.println("resultActions: " + resultActions.toString());
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
-        System.out.println("mvcResult: " + mvcResult);
         String contentAsString = mvcResult.getResponse().getContentAsString();
-        System.out.println("contentAsString: " + contentAsString);
         JSONObject json = new JSONObject(contentAsString);
         this.token = "Bearer " + json.getJSONObject("data").getString("token");
     }
@@ -62,7 +59,7 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("Check findAllUsers (GET)")
     void testFindAllUsers() throws Exception {
-        this.mockMvc.perform(get(this.baseUrl + "/users")
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -71,44 +68,39 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
+                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
                 .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"));
+                .andExpect(jsonPath("$.data[1].username").value("Anders"))
+                .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
 
     @Test
-    @DisplayName("Check findUserById (GET)")
+    @DisplayName("Check findUserByEmail (GET)")
     void testFindUserByEmail() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
-        MvcResult mvcResult = resultActions.andDo(print()).andReturn();
-        String contentAsString = mvcResult.getResponse().getContentAsString();
-        JSONObject json = new JSONObject(contentAsString);
-        String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
-        String andersEmail = json.getJSONObject("data").getJSONObject("userInfo").getString("email");
-        String andersEmailUri = "/" + andersEmail;
-
-        this.mockMvc.perform(get(this.baseUrl + "/users" + andersEmailUri)
+        String existingEmail = "a@l.se";
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + existingEmail)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, andersToken))
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.email").value(andersEmail))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"));
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
     @Test
     @DisplayName("Check deleteUser with insufficient permission (DELETE)")
     void testFindAllUsersNoAccessAsRoleUser() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrlUsers + "/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
-        String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
+        String userRoleToken = "Bearer " + json.getJSONObject("data").getString("token");
 
-        this.mockMvc.perform(get(this.baseUrl + "/users")
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, andersToken))
+                        .header(HttpHeaders.AUTHORIZATION, userRoleToken))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
                 .andExpect(jsonPath("$.message").value("No permission"))
@@ -126,7 +118,7 @@ public class UserControllerIntegrationTest {
 
         String json = this.objectMapper.writeValueAsString(user);
 
-        this.mockMvc.perform(post(this.baseUrl + "/users")
+        this.mockMvc.perform(post(this.baseUrlUsers + "/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON)
@@ -135,7 +127,8 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.username").value("Mehrdad"))
-                .andExpect(jsonPath("$.data.email").value("m@j.se"));
+                .andExpect(jsonPath("$.data.email").value("m@j.se"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
     }
 
     @Test
@@ -148,7 +141,7 @@ public class UserControllerIntegrationTest {
 
         String json = this.objectMapper.writeValueAsString(user);
 
-        this.mockMvc.perform(post(this.baseUrl + "/users")
+        this.mockMvc.perform(post(this.baseUrlUsers + "/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON)
@@ -162,6 +155,64 @@ public class UserControllerIntegrationTest {
 
     //update success (String userId, User update)
 
+    @Test
+    @DisplayName("Check updateUser with valid input (PUT)")
+    void testUpdateUserWithValidInput() throws Exception {
+        String email = "m@e.se";
+        String roles = "admin";
+
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(roles)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.email").value("m@e.se"))
+                .andExpect(jsonPath("$.data.username").value("Mikael"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    @DisplayName("Check updateUser with invalid input (PUT)")
+    void testUpdateWithInvalidInput() {
+        // Fix this later.
+    }
+
+    @Test
+    @DisplayName("Check updateUser with insufficient permission (PUT)")
+    void testUpdateUserNoAccessAsRoleUser() throws Exception {
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrlUsers + "/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
+        MvcResult mvcResult = resultActions.andDo(print()).andReturn();
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        JSONObject json = new JSONObject(contentAsString);
+        String userRoleToken = "Bearer " + json.getJSONObject("data").getString("token");
+
+        String email = "a@l.se";
+        String roles = "admin";
+
+        String jsonRole = this.objectMapper.writeValueAsString(roles);
+
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRole)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, userRoleToken))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.data").value("Access Denied"));
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + email)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find One Success"))
+                .andExpect(jsonPath("$.data.email").value("a@l.se"))
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("user"));
+    }
 
     //delete success
     //delete invalid input
@@ -169,22 +220,21 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("Check deleteUser with insufficient permission (DELETE)")
     void testDeleteUserNoAccessAsRoleUser() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrl + "/users/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
+        ResultActions resultActions = this.mockMvc.perform(post(this.baseUrlUsers + "/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
         JSONObject json = new JSONObject(contentAsString);
-        String andersToken = "Bearer " + json.getJSONObject("data").getString("token");
-        String andersEmail = json.getJSONObject("data").getJSONObject("userInfo").getString("email");
-        String andersEmailUri = "/" + andersEmail;
+        String userRoleToken = "Bearer " + json.getJSONObject("data").getString("token");
+        String userEmail = json.getJSONObject("data").getJSONObject("userInfo").getString("email");
 
-        this.mockMvc.perform(delete(this.baseUrl + "/users" + andersEmailUri)
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + userEmail)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, andersToken))
+                        .header(HttpHeaders.AUTHORIZATION, userRoleToken))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
                 .andExpect(jsonPath("$.message").value("No permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
-        this.mockMvc.perform(get(this.baseUrl + "/users")
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -193,14 +243,18 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
+                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
                 .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"));
+                .andExpect(jsonPath("$.data[1].username").value("Anders"))
+                .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
 
     @Test
     @DisplayName("Check deleteUser with valid input(DELETE)")
     void testDeleteUserSuccess() throws Exception {
-        this.mockMvc.perform(delete(this.baseUrl + "/users/a@l.se")
+        String existingEmail = "a@l.se";
+
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + existingEmail)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -212,12 +266,14 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("Check deleteUser with invalid input (DELETE)")
     void testDeleteUserWithNonExistentId() throws Exception {
-        this.mockMvc.perform(delete(this.baseUrl + "/users/abc")
+        String nonExistentEmail = "abc";
+
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + nonExistentEmail)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find user with Id abc"))
+                .andExpect(jsonPath("$.message").value("Could not find user with Email abc"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }
