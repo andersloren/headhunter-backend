@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.user;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -134,31 +135,31 @@ class UserServiceTest {
     }
 
     @Test
-    void testUpdateUserSuccess() {
-        User newUser = new User();
-        newUser.setEmail("m@e.se");
-        newUser.setUsername("Mikael");
-        newUser.setPassword("123456");
-        newUser.setRoles("admin user");
+    void testUpdateOwnUserSuccess() {
+        User ownUser = new User();
+        ownUser.setEmail("m@e.se");
+        ownUser.setUsername("Mikael");
+        ownUser.setPassword("123456");
+        ownUser.setRoles("admin user");
 
         String email = "m@e.se";
         String roles = "admin";
 
         // Given
-        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(newUser));
-        given(this.userRepository.save(newUser)).willReturn(newUser);
+        given(this.userRepository.findByEmail(email)).willReturn(Optional.of(ownUser));
+        given(this.userRepository.save(ownUser)).willReturn(ownUser);
 
         // When
-        User updatedUser = this.userService.update("m@e.se", roles);
+        User updatedUser = this.userService.update(email, roles);
 
         // Then
-        assertThat(updatedUser.getEmail()).isEqualTo(newUser.getEmail());
-        assertThat(updatedUser.getUsername()).isEqualTo(newUser.getUsername());
+        assertThat(updatedUser.getEmail()).isEqualTo(ownUser.getEmail());
+        assertThat(updatedUser.getUsername()).isEqualTo(ownUser.getUsername());
         assertThat(updatedUser.getRoles()).isEqualTo(roles);
 
         // Verify
-        verify(this.userRepository, times(1)).findByEmail("m@e.se");
-        verify(this.userRepository, times(1)).save(newUser);
+        verify(this.userRepository, times(1)).findByEmail(email);
+        verify(this.userRepository, times(1)).save(ownUser);
     }
 
     @Test

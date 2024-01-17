@@ -156,31 +156,6 @@ public class UserControllerIntegrationTest {
     //update success (String userId, User update)
 
     @Test
-    @DisplayName("Check updateUser with valid input (PUT)")
-    void testUpdateUserWithValidInput() throws Exception {
-        String email = "m@e.se";
-        String roles = "admin";
-
-        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(roles)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, this.token))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Update Success"))
-                .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael"))
-                .andExpect(jsonPath("$.data.roles").value("admin"));
-    }
-
-    @Test
-    @DisplayName("Check updateUser with invalid input (PUT)")
-    void testUpdateWithInvalidInput() {
-        // Fix this later.
-    }
-
-    @Test
     @DisplayName("Check updateUser with insufficient permission (PUT)")
     void testUpdateUserNoAccessAsRoleUser() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(post(this.baseUrlUsers + "/login").with(httpBasic("a@l.se", "654321"))); // httpBasic() is from spring-security-test.
@@ -213,6 +188,53 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
+
+
+    @Test
+    @DisplayName("Check updateUser when updating own user with valid input (PUT)")
+    void testUpdateOwnUserWithValidInput() throws Exception {
+        String email = "m@e.se";
+        String roles = "admin";
+
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(roles)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.email").value("m@e.se"))
+                .andExpect(jsonPath("$.data.username").value("Mikael"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    @DisplayName("Check updateUser when updating other user with valid input (PUT)")
+    void testUpdateOtherUserWithValidInput() throws Exception {
+        String otherEmail = "a@l.se";
+        String updatedRoles = "admin";
+
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + otherEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedRoles)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, this.token))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.email").value("a@l.se"))
+                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    @DisplayName("Check updateUser with invalid input (PUT)")
+    void testUpdateWithInvalidInput() {
+        // Fix this later.
+        // Add test for updatingOther user?
+    }
+
 
     //delete success
     //delete invalid input
