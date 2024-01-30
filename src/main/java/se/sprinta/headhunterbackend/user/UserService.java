@@ -39,7 +39,8 @@ public class UserService implements UserDetailsService {
     public User update(String email, String roles) {
         User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
-        foundUser.setRoles(roles);
+        String rolesFixed = roles.replace("\"", "");
+        foundUser.setRoles(rolesFixed);
         return this.userRepository.save(foundUser);
     }
 
