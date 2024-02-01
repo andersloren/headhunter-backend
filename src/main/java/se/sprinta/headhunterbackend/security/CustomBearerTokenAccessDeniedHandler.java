@@ -26,7 +26,7 @@ public class CustomBearerTokenAccessDeniedHandler implements AccessDeniedHandler
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
         this.resolver.resolveException(request, response, null, accessDeniedException);
     }
 

@@ -39,13 +39,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    public Result registerUser(@Valid @RequestBody User user) {
+        User addedUser = this.userService.save(user);
+        UserDto addedUserDto = this.userToUserDtoConverter.convert(addedUser);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
+    }
+
+    @PostMapping("/addUser")
     public Result addUser(@Valid @RequestBody User user) {
         User addedUser = this.userService.save(user);
         UserDto addedUserDto = this.userToUserDtoConverter.convert(addedUser);
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
     }
 
-    @PutMapping("/update/{email}")
+    @PutMapping("/update/{email}") // TODO: 31/01/2024 add username
     public Result updateUser(@PathVariable String email, @RequestBody String roles) {
         User user = this.userService.update(email, roles);
         UserDto updatedUserDto = this.userToUserDtoConverter.convert(user);

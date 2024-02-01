@@ -79,6 +79,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin") // Find all
                         .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").hasAuthority("ROLE_admin") //
                         .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
@@ -121,7 +122,7 @@ public class SecurityConfig {
         Let’s say that that your authorization server communicates authorities in a custom claim called "authorities".
         In that case, you can configure the claim that JwtAuthenticationConverter should inspect, like so:
          */
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
 
         /*
         You can also configure the authority prefix to be different as well. The default one is "SCOPE_".

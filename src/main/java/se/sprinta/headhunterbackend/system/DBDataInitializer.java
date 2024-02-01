@@ -15,17 +15,17 @@ public class DBDataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         User u1 = new User();
         u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
-        u1.setPassword("123456");
+        u1.setPassword("a");
         u1.setRoles("admin user");
 
         User u2 = new User();
         u2.setEmail("a@l.se");
         u2.setUsername("Anders");
-        u2.setPassword("654321");
+        u2.setPassword("a");
         u2.setRoles("user");
 
         this.userService.save(u1);

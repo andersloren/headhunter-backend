@@ -119,7 +119,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testAddUserSuccess() throws Exception {
+    void testRegisterUserSuccess() throws Exception {
         // Setup
         User newUser = new User();
         newUser.setEmail("m@j.se");
@@ -142,6 +142,9 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
+
+    // TODO: 31/01/2024 testAddUserSuccess
+    // TODO: 31/01/2024 testAddUserInvalidInput
 
     @Test
     void testUpdateUserSuccess() throws Exception {
