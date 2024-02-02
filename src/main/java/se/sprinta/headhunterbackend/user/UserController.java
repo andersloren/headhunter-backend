@@ -40,6 +40,7 @@ public class UserController {
 
     @PostMapping("/register")
     public Result registerUser(@Valid @RequestBody User user) {
+        user.setRoles("user");
         User addedUser = this.userService.save(user);
         UserDto addedUserDto = this.userToUserDtoConverter.convert(addedUser);
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
