@@ -1,7 +1,6 @@
 package se.sprinta.headhunterbackend.job;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -24,19 +23,23 @@ public class JobService {
     }
 
     public Job findById(Long id) {
-        return this.jobRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Job Advertisement", id));
+        return this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
     }
 
-    public Job update(Long id, Job jobDetails) {
-        Job job = findById(id);
-//        jobAdvertisement.setTitle(jobAdvertisementDetails.getTitle());
-        job.setDescription(jobDetails.getDescription());
-//        jobAdvertisement.setStatus(jobAdvertisementDetails.getStatus());
-//        jobAdvertisement.setExpirationDate(jobAdvertisementDetails.getExpirationDate());
+    public Job update(Long id, Job update) {
+        Job job = this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
+//        job.setTitle(update.getTitle());
+        job.setDescription(update.getDescription());
+//        job.setStatus(update.getStatus());
+//        job.setExpirationDate(update.getExpirationDate());
         return this.jobRepository.save(job);
     }
 
     public void delete(Long id) {
-        this.jobRepository.deleteById(id);
+        Job foundJob = this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
+        this.jobRepository.delete(foundJob);
     }
 }

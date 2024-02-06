@@ -12,7 +12,7 @@ api:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/headhunter_db?useSSL=false
+    url: jdbc:mysql://localhost:3306/headhunter-db?useSSL=false
     username: [username]
     password: [password]
   jpa:

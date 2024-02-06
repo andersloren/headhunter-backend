@@ -1,5 +1,7 @@
 package se.sprinta.headhunterbackend.job;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "jobs")
@@ -12,7 +14,8 @@ public class Job {
 //    @Column(nullable = false)
 //    private String title;
 
-    @Column(nullable = false, length = 1024)
+    @Column(length = 1024) // TODO: 06/02/2024 Should this be increased, or should we keep it?
+    @NotEmpty(message = "description is required.")
     private String description;
 
 //    @Column(nullable = false)
@@ -40,11 +43,12 @@ public class Job {
 //    private Date expirationDate;
 
     // Constructors
-    public Job() {}
+    public Job() {
+    }
 
     public Job(Long id, String description
 //                            String title, User user, Date createdAt, String status, Date expirationDate
-                            ) {
+    ) {
         this.id = id;
 //        this.title = title;
         this.description = description;
@@ -55,11 +59,15 @@ public class Job {
     }
 
     // Getters
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
 //    public String getTitle() { return title; }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
 //    public User getUser() { return user; }
 //
@@ -70,11 +78,15 @@ public class Job {
 //    public Date getExpirationDate() { return expirationDate; }
 
     // Setters
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 //    public void setTitle(String title) { this.title = title; }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 //    public void setUser(User user) { this.user = user; }
 //
