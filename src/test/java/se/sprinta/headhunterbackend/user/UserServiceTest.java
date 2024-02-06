@@ -54,9 +54,6 @@ class UserServiceTest {
         this.users.add(u2);
     }
 
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void testFindAllUsersSuccess() {
