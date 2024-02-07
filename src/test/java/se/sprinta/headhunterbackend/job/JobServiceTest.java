@@ -1,20 +1,19 @@
 package se.sprinta.headhunterbackend.job;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
-import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
-import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
-import se.sprinta.headhunterbackend.client.chat.dto.Choice;
-import se.sprinta.headhunterbackend.client.chat.dto.Message;
-import se.sprinta.headhunterbackend.job.dto.JobDto;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.user.UserRepository;
+import se.sprinta.headhunterbackend.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,8 @@ class JobServiceTest {
     @Mock
     JobRepository jobRepository;
     @Mock
+    UserRepository userRepository;
+    @Mock
     ChatClient chatClient;
 
     @InjectMocks
@@ -41,7 +42,6 @@ class JobServiceTest {
 
     @BeforeEach
     void setUp() {
-
         Job j1 = new Job();
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         Job j2 = new Job();
@@ -104,6 +104,7 @@ class JobServiceTest {
         Job newJob = new Job();
         newJob.setId(1L);
         newJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+        newJob.setUser(null);
 
         // Given
         given(this.jobRepository.save(newJob)).willReturn(newJob);

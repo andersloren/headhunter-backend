@@ -147,7 +147,10 @@ class UserControllerTest {
     @Test
     void testUpdateUserSuccess() throws Exception {
 
-        UserDto userDto = new UserDto("m@e.se", "Mikael", "admin user");
+        UserDto userDto = new UserDto(
+                "m@e.se",
+                "Mikael",
+                "admin user");
 
         User updatedUser = new User();
         updatedUser.setEmail("m@e.se");

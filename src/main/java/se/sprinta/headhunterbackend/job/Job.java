@@ -2,7 +2,6 @@ package se.sprinta.headhunterbackend.job;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,15 +21,17 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 1024) // TODO: 06/02/2024 Should this be increased, or should we keep it?
+//    @Column(length = 1024) // TODO: 06/02/2024 Should this be increased, or should we keep it?
     @NotEmpty(message = "description is required.")
     private String description;
 
-
+    //     @ManyToOne(fetch = FetchType.LAZY)
+//
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     /*
-     * @ManyToOne(fetch = FetchType.LAZY)
-     * @JoinColumn(name = "user_id", nullable = false)
-     * private User user;
+
      * @Column(nullable = false)
      * private String title;
      * @Column(nullable = false)
@@ -49,4 +50,7 @@ public class Job {
      * private Date expirationDate;
      **/
 
+    public Job(String description) {
+        this.description = description;
+    }
 }

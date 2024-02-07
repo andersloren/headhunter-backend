@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:headhunter-db
-    username: sa
-    password:
+    url: jdbc:mysql://localhost:3306/headhunter-db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: [username]
+    password: [password]
   jpa:
     show-sql: true
 ai:

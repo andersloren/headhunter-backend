@@ -1,15 +1,16 @@
 package se.sprinta.headhunterbackend.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import se.sprinta.headhunterbackend.job.Job;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +32,17 @@ public class User implements Serializable {
     private String password;
 
     private String roles;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "user")
+    private List<Job> jobs = new ArrayList<>();
+
+    public void addJob(Job job) {
+        job.setUser(this);
+        this.jobs.add(job);
+    }
+
+    public void removeJob(Job job) {
+        job.setUser(null);
+        this.jobs.remove(job);
+    }
 }

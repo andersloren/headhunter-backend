@@ -15,7 +15,7 @@ spring:
   profiles:
     active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/headhunter-db?useSSL=false
+    url: jdbc:mysql://localhost:3306/headhunter-db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
     username: [username]
     password: [password]
   jpa:
