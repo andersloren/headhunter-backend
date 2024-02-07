@@ -1,8 +1,6 @@
 package se.sprinta.headhunterbackend.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false) // Turn off Spring security
+@AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
 class UserControllerTest {
 
     @Autowired
@@ -155,10 +153,9 @@ class UserControllerTest {
         updatedUser.setEmail("m@e.se");
         updatedUser.setUsername("Mikael");
         updatedUser.setPassword("123456");
-        updatedUser.setRoles("admin");
+        updatedUser.setRoles("admin"); // Role changes from 'admin user' to 'admin'
 
         String email = "m@e.se";
-        String roles = "admin";
 
         String json = this.objectMapper.writeValueAsString(userDto);
 

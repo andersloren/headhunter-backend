@@ -21,6 +21,11 @@ public class DBDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
+        /*
+         * Users
+         */
+
         User u1 = new User();
         u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
@@ -36,11 +41,17 @@ public class DBDataInitializer implements CommandLineRunner {
         this.userService.save(u1);
         this.userService.save(u2);
 
+        /*
+         * Jobs
+         */
+
         Job j1 = new Job();
         j1.setDescription("Testare till Tesla");
-        this.jobService.save(j1);
+
         Job j2 = new Job();
         j2.setDescription("Pilot till GPT");
+
+        this.jobService.save(j1);
         this.jobService.save(j2);
 
     }

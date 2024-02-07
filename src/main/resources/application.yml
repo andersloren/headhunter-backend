@@ -9,8 +9,11 @@
 api:
   endpoint:
     base-url-users: /api/v1/users
+    base-url-jobs: /api/v1/jobs
 
 spring:
+  profiles:
+    active: dev
   datasource:
     url: jdbc:mysql://localhost:3306/headhunter-db?useSSL=false
     username: [username]

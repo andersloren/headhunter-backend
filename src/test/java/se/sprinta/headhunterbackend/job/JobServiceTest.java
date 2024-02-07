@@ -1,12 +1,19 @@
 package se.sprinta.headhunterbackend.job;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sprinta.headhunterbackend.client.chat.ChatClient;
+import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
+import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
+import se.sprinta.headhunterbackend.client.chat.dto.Choice;
+import se.sprinta.headhunterbackend.client.chat.dto.Message;
+import se.sprinta.headhunterbackend.job.dto.JobDto;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
@@ -23,11 +30,14 @@ class JobServiceTest {
 
     @Mock
     JobRepository jobRepository;
+    @Mock
+    ChatClient chatClient;
 
     @InjectMocks
     JobService jobService;
 
     List<Job> jobs;
+
 
     @BeforeEach
     void setUp() {
@@ -45,7 +55,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testFindAllSuccess() {
+    void testFindAllJobsSuccess() {
         // Given
         given(this.jobRepository.findAll()).willReturn(this.jobs);
         // When
@@ -57,7 +67,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testFindByIdSuccess() {
+    void testFindJobByIdSuccess() {
         Job j1 = new Job();
         j1.setId(1L);
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
@@ -74,7 +84,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testFindByIWithNonExistentId() {
+    void testFindJobByIWithNonExistentId() {
         // Given
         given(this.jobRepository.findById(10L)).willThrow(new ObjectNotFoundException("job", 10L));
 
@@ -90,7 +100,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testSaveSuccess() {
+    void testSaveJobSuccess() {
         Job newJob = new Job();
         newJob.setId(1L);
         newJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
@@ -110,7 +120,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testUpdateSuccess() {
+    void testUpdateJobSuccess() {
         Job j1 = new Job();
         j1.setId(1L);
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
@@ -134,7 +144,7 @@ class JobServiceTest {
     }
 
     @Test
-    void testUpdateWithNonExistentId() {
+    void testUpdateJobWithNonExistentId() {
         Job nonExistentJob = new Job();
         nonExistentJob.setDescription("Job that is not in db.");
 
@@ -153,10 +163,12 @@ class JobServiceTest {
     }
 
     @Test
-    void testDeleteSuccess() {
+    void testDeleteJobSuccess() {
         Job j1 = new Job();
         j1.setId(1L);
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+
+        int size = this.jobs.size();
 
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
@@ -166,11 +178,12 @@ class JobServiceTest {
         this.jobService.delete(1L);
 
         // Then
+        assertThat(this.jobRepository.findAll().size()).isEqualTo(0);
         verify(this.jobRepository, times(1)).findById(1L);
     }
 
     @Test
-    void testDeleteNonExistentId() {
+    void testDeleteJobWithNonExistentId() {
         // Given
         given(this.jobRepository.findById(10L)).willThrow(new ObjectNotFoundException("job", 10L));
 
@@ -185,6 +198,60 @@ class JobServiceTest {
                 .hasMessage("Could not find job with Id 10");
 
     }
+
+//    @Test
+//    void testSummarizeSuccess() throws JsonProcessingException {
+//        // Given
+//        JobDto jobDto = new JobDto(1L,
+//                "Programledare\n" +
+//                        "IT Program-/Projektledare\n" +
+//                        "\n" +
+//                        " \n" +
+//                        "\n" +
+//                        "Vi söker en programledare för att leda och styra projektresurser vars focus är att bidra till den totala leveransen inom ett mer omfattande IT-program.\n" +
+//                        "\n" +
+//                        "Som programledare förväntas du hantera och facilitera externa intressenter som har beroenden till programmet.\n" +
+//                        "\n" +
+//                        " \n" +
+//                        "\n" +
+//                        "Rollen kräver en kombination av teknisk expertis, dokumenterad projektledningsförmåga av större dignitet och ett tydligt affärsmannaskap.\n" +
+//                        "\n" +
+//                        "Du kommer övervaka planering, genomförande och leverans för att med intressenter, teammedlemmar och ledare säkerställa att programmet når sina mål.\n" +
+//                        "\n" +
+//                        " \n" +
+//                        "\n" +
+//                        "Programmet syftar till att ta in en ny kund till Soltak och att få alla delarna i den totala IT-leveransen på plats.\n" +
+//                        "\n" +
+//                        "Flertalet projekt är redan uppstartade och det finns även delar som ännu inte är uppstartade.\n" +
+//                        "\n" +
+//                        " \n" +
+//                        "\n" +
+//                        "Rollen behöver tillsättas omgående och initialt upptar programledarrollen 50% av en FTE.\n" +
+//                        "\n" +
+//                        "Möjlighet till utökande av projektledning av ett eller flera andra projekt."
+//        );
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String jsonArray = objectMapper.writeValueAsString(jobDto);
+//
+//        List<Message> messages = List.of(
+//                new Message("system", "Your task is to generate a short summary of a given JSON array in at most 100 words. The summary must include the number if artifacts, each artifact's description, and the ownership information."),
+//                new Message("user", jsonArray));
+//
+//
+//        ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
+//        ChatResponse chatResponse = new ChatResponse(List.of(new Choice(0, new Message("assistent", "A summary of two artifacts owned by Albus Dumbledore."))));
+//
+//        given(this.chatClient.generate(chatRequest)).willReturn(chatResponse);
+//
+//        // When
+//
+//        String summary = this.jobService.generate(jobDto);
+//
+//        // Then
+//
+//        assertThat(summary).isEqualTo("A summary of two artifacts owned by Albus Dumbledore.");
+//        verify(this.chatClient, times(1)).generate(chatRequest);
+//    }
 }
 
 

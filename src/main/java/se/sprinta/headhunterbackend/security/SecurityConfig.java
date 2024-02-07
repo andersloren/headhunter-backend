@@ -83,6 +83,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/jobs/**")).permitAll()
+
                         // Disallow everything else
                         .anyRequest().authenticated() // Always a good idea to put this as last
                 )

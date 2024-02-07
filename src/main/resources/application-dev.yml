@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:headhunter-db
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+ai:
+  openai:
+    endpoint: ${AI_OPENAI_ENDPOINT:[OpenAI Endpoint]} # environment variable with a default value
+    # Remember to save API Key in Azure Key Vault when the app goes into production
+    api-key: ${AI_OPENAI_API_KEY:[OpenAI key]} # environment variable with a default value
