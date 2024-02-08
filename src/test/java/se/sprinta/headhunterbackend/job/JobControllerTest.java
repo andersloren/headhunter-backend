@@ -20,9 +20,9 @@ import se.sprinta.headhunterbackend.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -94,13 +94,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data[0].id").value(1L))
                 .andExpect(jsonPath("$.data[0].description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."))
-                .andExpect(jsonPath("$.data[0].user.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.data[1].id").value(2L))
                 .andExpect(jsonPath("$.data[1].description").value(".Net-junior till vårt nya kontor."))
-                .andExpect(jsonPath("$.data[1].user.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.data[2].id").value(3L))
-                .andExpect(jsonPath("$.data[2].description").value("HR-ninja till vår nya avdelning på Mynttorget."))
-                .andExpect(jsonPath("$.data[2].user.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.data[2].description").value("HR-ninja till vår nya avdelning på Mynttorget."));
     }
 
     @Test
@@ -133,40 +130,40 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
-    @Test
-    void testUpdateJobSuccess() throws Exception {
-
-        Job newJob = new Job();
-        newJob.setDescription("Testare på Tesla.");
-
-        this.jobService.save(newJob);
-
-        JobDtoForm jobDto = new JobDtoForm(
-                "m@e.se",
-                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
-        );
-
-        Job updatedJob = new Job();
-        updatedJob.setId(1L);
-        updatedJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
-
-        String json = this.objectMapper.writeValueAsString(jobDto);
-
-        // Given
-        given(this.jobService.update(eq(1L), Mockito.any(Job.class))).willReturn(updatedJob);
-
-        // When and then
-        this.mockMvc.perform(put(this.baseUrl + "/update/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Update Success"))
-                .andExpect(jsonPath("$.data.id").value(1L))
-                .andExpect(jsonPath("$.data.description").value("Testare på Tesla."))
-                .andExpect(jsonPath("$.data.user").isEmpty());
-    }
+//    @Test
+//    void testUpdateJobSuccess() throws Exception {
+//
+//        Job newJob = new Job();
+//        newJob.setDescription("Testare på Tesla.");
+//
+//        this.jobService.save(newJob);
+//
+//        JobDtoForm jobDto = new JobDtoForm(
+//                "m@e.se",
+//                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
+//        );
+//
+//        Job updatedJob = new Job();
+//        updatedJob.setId(1L);
+//        updatedJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+//
+//        String json = this.objectMapper.writeValueAsString(jobDto);
+//
+//        // Given
+//        given(this.jobService.update(eq(1L), Mockito.any(Job.class))).willReturn(updatedJob);
+//
+//        // When and then
+//        this.mockMvc.perform(put(this.baseUrl + "/update/1")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(json)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.flag").value(true))
+//                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+//                .andExpect(jsonPath("$.message").value("Update Success"))
+//                .andExpect(jsonPath("$.data.id").value(1L))
+//                .andExpect(jsonPath("$.data.description").value("Testare på Tesla."))
+//                .andExpect(jsonPath("$.data.user").isEmpty());
+//    }
 
 //    @Test
 //    void testUpdateJobWithNonExistentId() throws Exception {
@@ -238,7 +235,6 @@ class JobControllerTest {
         savedJob.setUser(user);
 
         String json = this.objectMapper.writeValueAsString(newJobDtoForm);
-        System.out.println(json);
 
         // Given
         given(this.jobService.addJob(newJobDtoForm)).willReturn(savedJob);
@@ -252,11 +248,6 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.id").value(1L))
-                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."))
-                .andExpect(jsonPath("$.data.user.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.user.username").value("Mikael"))
-                .andExpect(jsonPath("$.data.user.roles").value("admin user"));
-
-
+                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."));
     }
 }

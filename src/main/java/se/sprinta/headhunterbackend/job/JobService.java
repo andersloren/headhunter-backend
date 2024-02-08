@@ -55,18 +55,16 @@ public class JobService {
     }
 
     public Job addJob(JobDtoForm jobDtoForm) {
-        System.out.println("addJobb init");
-        Job newJob = new Job();
-        newJob.setDescription(jobDtoForm.description());
-        System.out.println("newJob :" + newJob);
-
-        Job savedJob = this.jobRepository.save(newJob);
-        System.out.println("newJob :" + savedJob);
-
         User foundUser = this.userRepository.findByEmail(jobDtoForm.email())
                 .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoForm.email()));
+
+        Job newJob = new Job();
+        newJob.setDescription(jobDtoForm.description());
+        newJob.setUser(foundUser);
+
         foundUser.addJob(newJob);
-        System.out.println("foundUser :" + foundUser);
+
+        Job savedJob = this.jobRepository.save(newJob);
 
         return savedJob;
     }

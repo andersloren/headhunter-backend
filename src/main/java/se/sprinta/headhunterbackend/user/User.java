@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "_user")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobs"})
 public class User implements Serializable {
 
     @Id

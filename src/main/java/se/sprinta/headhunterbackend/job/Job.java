@@ -21,7 +21,7 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(length = 1024) // TODO: 06/02/2024 Should this be increased, or should we keep it?
+    @Column(length = 10_000) // TODO: 08/02/2024 What should this number be (looking into the future)?  
     @NotEmpty(message = "description is required.")
     private String description;
 
