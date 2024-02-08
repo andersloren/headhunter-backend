@@ -94,10 +94,13 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data[0].id").value(1L))
                 .andExpect(jsonPath("$.data[0].description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."))
+                .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[1].id").value(2L))
                 .andExpect(jsonPath("$.data[1].description").value(".Net-junior till vårt nya kontor."))
+                .andExpect(jsonPath("$.data[1].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[2].id").value(3L))
-                .andExpect(jsonPath("$.data[2].description").value("HR-ninja till vår nya avdelning på Mynttorget."));
+                .andExpect(jsonPath("$.data[2].description").value("HR-ninja till vår nya avdelning på Mynttorget."))
+                .andExpect(jsonPath("$.data[2].email").value("m@e.se"));
     }
 
     @Test
@@ -111,7 +114,8 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.id").value(1L))
-                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."));
+                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."))
+                .andExpect(jsonPath("$.data.email").value("m@e.se"));
     }
 
     @Test
@@ -248,6 +252,7 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.id").value(1L))
-                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."));
+                .andExpect(jsonPath("$.data.description").value("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."))
+                .andExpect(jsonPath("$.data.email").value("m@e.se"));
     }
 }

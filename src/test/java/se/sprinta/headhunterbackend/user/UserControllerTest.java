@@ -150,7 +150,8 @@ class UserControllerTest {
         UserDto userDto = new UserDto(
                 "m@e.se",
                 "Mikael",
-                "admin user");
+                "admin user",
+                0);
 
         User updatedUser = new User();
         updatedUser.setEmail("m@e.se");
@@ -175,7 +176,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("Update Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
                 .andExpect(jsonPath("$.data.username").value("Mikael"))
-                .andExpect(jsonPath("$.data.roles").value("admin"));
+                .andExpect(jsonPath("$.data.roles").value("admin"))
+                .andExpect(jsonPath("$.data.numberOfJobs").value(0));
     }
 
     @Test

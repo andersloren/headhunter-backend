@@ -13,7 +13,8 @@ public class UserToUserDtoConverter implements Converter<User, UserDto> {
         return new UserDto(
                 source.getEmail(),
                 source.getUsername(),
-                source.getRoles()
+                source.getRoles(),
+                source.getNumberOfJobs()
         );
     }
 }

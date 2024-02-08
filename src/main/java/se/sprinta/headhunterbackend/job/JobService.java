@@ -63,10 +63,13 @@ public class JobService {
         newJob.setUser(foundUser);
 
         foundUser.addJob(newJob);
+        foundUser.setNumberOfJobs();
 
-        Job savedJob = this.jobRepository.save(newJob);
+        System.out.println("addJobb method, foundUser: " + foundUser.getJobs());
 
-        return savedJob;
+        this.userRepository.save(foundUser);
+
+        return this.jobRepository.save(newJob);
     }
 
     public String generate(Long id) throws JsonProcessingException {

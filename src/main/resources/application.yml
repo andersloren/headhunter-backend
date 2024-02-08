@@ -1,28 +1,28 @@
+#spring:
+#  datasource:
+#    url: jdbc:h2:mem:headhunter
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    show-sql: true
+
+
 spring:
   datasource:
-    url: jdbc:h2:mem:headhunter
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/headhunter-db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: [username]
+    password: [password]
   jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
     show-sql: true
+
 api:
   endpoint:
     base-url-users: /api/v1/users
     base-url-jobs: /api/v1/jobs
-
-#spring:
-#  profiles:
-#    active: dev
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/headhunter-db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-#    username: [username]
-#    password: [password]
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    generate-ddl: true
-#    show-sql: true
 
 hibernate:
   dialect: org.hibernate.dialect.MySQL8Dialect

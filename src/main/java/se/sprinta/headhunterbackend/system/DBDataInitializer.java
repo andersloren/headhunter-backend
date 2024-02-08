@@ -1,9 +1,11 @@
 package se.sprinta.headhunterbackend.system;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobService;
+import se.sprinta.headhunterbackend.job.dto.JobDtoForm;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
@@ -13,14 +15,18 @@ public class DBDataInitializer implements CommandLineRunner {
     private final UserService userService;
     private final JobService jobService;
 
-    public DBDataInitializer(UserService userService, JobService jobService) {
+    private final JdbcTemplate jdbcTemplate;
+
+    public DBDataInitializer(UserService userService, JobService jobService, JdbcTemplate jdbcTemplate) {
         this.userService = userService;
         this.jobService = jobService;
+        this.jdbcTemplate = jdbcTemplate;
     }
-
 
     @Override
     public void run(String... args) {
+
+        jdbcTemplate.execute("TRUNCATE TABLE jobs"); // Adjust the table name as per your schema
 
         /*
          * Users
@@ -45,14 +51,11 @@ public class DBDataInitializer implements CommandLineRunner {
          * Jobs
          */
 
-        Job j1 = new Job();
-        j1.setDescription("Testare till Tesla");
+        JobDtoForm userMikael = new JobDtoForm("m@e.se", "Testare till Tesla");
+        JobDtoForm userAnders = new JobDtoForm("a@l.se", "Pilot till GPT");
 
-        Job j2 = new Job();
-        j2.setDescription("Pilot till GPT");
-
-        this.jobService.save(j1);
-        this.jobService.save(j2);
+        this.jobService.addJob(userMikael);
+        this.jobService.addJob(userAnders);
 
     }
 }
