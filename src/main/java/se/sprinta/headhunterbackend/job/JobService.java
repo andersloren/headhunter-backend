@@ -6,7 +6,8 @@ import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
-import se.sprinta.headhunterbackend.job.dto.JobDtoForm;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
@@ -48,18 +49,25 @@ public class JobService {
         return this.jobRepository.save(job);
     }
 
-    public void delete(Long id) {
-        Job foundJob = this.jobRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("job", id));
+    public void delete(JobDtoFormRemove jobDtoFormRemove) {
+
+        Job foundJob = this.jobRepository.findById(jobDtoFormRemove.id())
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobDtoFormRemove.id()));
+
+        User foundUser = this.userRepository.findByEmail(jobDtoFormRemove.email()).orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormRemove.email()));
+
+        foundUser.removeJob(foundJob);
+
+        System.out.println(foundJob.getId()); //TODO remove after debug
         this.jobRepository.delete(foundJob);
     }
 
-    public Job addJob(JobDtoForm jobDtoForm) {
-        User foundUser = this.userRepository.findByEmail(jobDtoForm.email())
-                .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoForm.email()));
+    public Job addJob(JobDtoFormAdd jobDtoFormAdd) {
+        User foundUser = this.userRepository.findByEmail(jobDtoFormAdd.email())
+                .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormAdd.email()));
 
         Job newJob = new Job();
-        newJob.setDescription(jobDtoForm.description());
+        newJob.setDescription(jobDtoFormAdd.description());
         newJob.setUser(foundUser);
 
         foundUser.addJob(newJob);

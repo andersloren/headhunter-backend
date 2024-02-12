@@ -3,9 +3,8 @@ package se.sprinta.headhunterbackend.system;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobService;
-import se.sprinta.headhunterbackend.job.dto.JobDtoForm;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
@@ -51,8 +50,8 @@ public class DBDataInitializer implements CommandLineRunner {
          * Jobs
          */
 
-        JobDtoForm userMikael = new JobDtoForm("m@e.se", "Testare till Tesla");
-        JobDtoForm userAnders = new JobDtoForm("a@l.se", "Pilot till GPT");
+        JobDtoFormAdd userMikael = new JobDtoFormAdd("m@e.se", "Testare till Tesla");
+        JobDtoFormAdd userAnders = new JobDtoFormAdd("a@l.se", "Pilot till GPT");
 
         this.jobService.addJob(userMikael);
         this.jobService.addJob(userAnders);

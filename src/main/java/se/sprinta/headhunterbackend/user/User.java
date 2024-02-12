@@ -31,7 +31,7 @@ public class User implements Serializable {
 
     private int numberOfJobs;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Job> jobs = new ArrayList<>();
 
     public User(String email, String username, String roles, List<Job> jobs) {
@@ -44,6 +44,10 @@ public class User implements Serializable {
 
     public void addJob(Job newJob) {
         this.jobs.add(newJob);
+        setNumberOfJobs();
+    }
+    public void removeJob(Job newJob) {
+        this.jobs.remove(newJob);
         setNumberOfJobs();
     }
 

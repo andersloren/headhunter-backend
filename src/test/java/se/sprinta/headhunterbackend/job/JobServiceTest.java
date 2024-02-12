@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
@@ -102,6 +104,7 @@ class JobServiceTest {
     @Test
     void testSaveJobSuccess() {
         Job newJob = new Job();
+        User newUser = new User();
         newJob.setId(1L);
         newJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         newJob.setUser(null);
@@ -170,13 +173,13 @@ class JobServiceTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
 
         int size = this.jobs.size();
-
+        JobDtoFormRemove jobDtoFormRemove = new JobDtoFormRemove("m@e.se", 1L);
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
         doNothing().when(this.jobRepository).delete(j1);
 
         // When
-        this.jobService.delete(1L);
+        this.jobService.delete(new JobDtoFormRemove("m@e.se", 1L));
 
         // Then
         assertThat(this.jobRepository.findAll().size()).isEqualTo(0);
@@ -190,7 +193,7 @@ class JobServiceTest {
 
         // When
         Throwable thrown = catchThrowable(() -> {
-            this.jobService.delete(10L);
+            this.jobService.delete(new JobDtoFormRemove("m@e.se", 1L));
         });
 
         // Then

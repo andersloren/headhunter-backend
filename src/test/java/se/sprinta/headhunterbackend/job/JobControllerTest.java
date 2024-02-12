@@ -12,7 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
-import se.sprinta.headhunterbackend.job.dto.JobDtoForm;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
@@ -142,7 +143,7 @@ class JobControllerTest {
 //
 //        this.jobService.save(newJob);
 //
-//        JobDtoForm jobDto = new JobDtoForm(
+//        JobDtoFormAdd jobDto = new JobDtoFormAdd(
 //                "m@e.se",
 //                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
 //        );
@@ -174,7 +175,7 @@ class JobControllerTest {
 //        Long id = Mockito.any(Long.class);
 //
 //        // Given
-//        JobDtoForm jobDto = new JobDtoForm(
+//        JobDtoFormAdd jobDto = new JobDtoFormAdd(
 //                "m@e.se",
 //                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
 //        );
@@ -198,10 +199,10 @@ class JobControllerTest {
     @Test
     void testDeleteSuccess() throws Exception {
         // Given
-        doNothing().when(this.jobService).delete(1L);
+        doNothing().when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 1L));
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrl + "/delete/1")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -212,9 +213,9 @@ class JobControllerTest {
     @Test
     void testDeleteNonExistentId() throws Exception {
         // Given
-        doThrow(new ObjectNotFoundException("job", 0L)).when(this.jobService).delete(0L);
+        doThrow(new ObjectNotFoundException("job", 0L)).when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 0L));
 
-        this.mockMvc.perform(delete(this.baseUrl + "/delete/0")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
@@ -229,7 +230,7 @@ class JobControllerTest {
         user.setRoles("admin user");
         user.setEmail("m@e.se");
 
-        JobDtoForm newJobDtoForm = new JobDtoForm(
+        JobDtoFormAdd newJobDtoFormAdd = new JobDtoFormAdd(
                 "m@e.se",
                 "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
 
@@ -238,10 +239,10 @@ class JobControllerTest {
         savedJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         savedJob.setUser(user);
 
-        String json = this.objectMapper.writeValueAsString(newJobDtoForm);
+        String json = this.objectMapper.writeValueAsString(newJobDtoFormAdd);
 
         // Given
-        given(this.jobService.addJob(newJobDtoForm)).willReturn(savedJob);
+        given(this.jobService.addJob(newJobDtoFormAdd)).willReturn(savedJob);
 
         // When and then
         this.mockMvc.perform(post(this.baseUrl + "/addJob")
