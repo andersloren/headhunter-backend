@@ -15,8 +15,10 @@ import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,9 @@ class JobControllerTest {
 
     @MockBean
     JobService jobService;
+
+    @MockBean
+    UserService userService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -66,18 +71,15 @@ class JobControllerTest {
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user);
 
+        user.addJob(j1);
+        user.addJob(j2);
+        user.addJob(j3);
+
         this.jobs = new ArrayList<>();
 
         this.jobs.add(j1);
         this.jobs.add(j2);
         this.jobs.add(j3);
-
-        System.out.println(jobs.get(0).getId());
-        System.out.println(jobs.get(0).getDescription());
-        System.out.println(jobs.get(1).getId());
-        System.out.println(jobs.get(1).getDescription());
-        System.out.println(jobs.get(2).getId());
-        System.out.println(jobs.get(2).getDescription());
     }
 
     @Test
@@ -198,11 +200,17 @@ class JobControllerTest {
 
     @Test
     void testDeleteSuccess() throws Exception {
+        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@e.se", 1L);
+
+        String json = this.objectMapper.writeValueAsString(removeJob);
+
         // Given
         doNothing().when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 1L));
 
         // When and then
         this.mockMvc.perform(delete(this.baseUrl + "/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -212,14 +220,65 @@ class JobControllerTest {
 
     @Test
     void testDeleteNonExistentId() throws Exception {
+        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@e.se", 0L);
+
+        String json = this.objectMapper.writeValueAsString(removeJob);
+
         // Given
         doThrow(new ObjectNotFoundException("job", 0L)).when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 0L));
 
         this.mockMvc.perform(delete(this.baseUrl + "/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find job with Id 0"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testDeleteNonExistentEmail() throws Exception {
+        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@j.se", 1L);
+
+        String json = this.objectMapper.writeValueAsString(removeJob);
+
+        // Given
+        doThrow(new ObjectNotFoundException("user", "m@j.se")).when(this.jobService).delete(new JobDtoFormRemove("m@j.se", 1L));
+
+        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find user with Email m@j.se"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testDeleteWithWrongEmail() throws Exception {
+        // Setup
+        User user = new User();
+        user.setEmail("m@e.se");
+        this.userService.save(user);
+
+        JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a description.");
+        this.jobService.addJob(newJob);
+
+        JobDtoFormRemove removeJob = new JobDtoFormRemove("a@l.se", 1L);
+        String json = this.objectMapper.writeValueAsString(removeJob);
+
+        // Given
+        doThrow(new DoesNotExistException()).when(this.jobService).delete(new JobDtoFormRemove("a@l.se", 1L));
+
+        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Does not exist"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 

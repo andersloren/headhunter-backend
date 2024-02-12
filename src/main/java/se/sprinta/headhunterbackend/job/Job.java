@@ -53,4 +53,9 @@ public class Job {
     public Job(String description) {
         this.description = description;
     }
+
+    public Job(String description, User user) {
+        this.description = description;
+        this.user = user;
+    }
 }

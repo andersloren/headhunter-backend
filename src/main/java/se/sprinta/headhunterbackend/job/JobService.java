@@ -8,6 +8,7 @@ import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
+import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
@@ -15,6 +16,7 @@ import se.sprinta.headhunterbackend.user.UserRepository;
 import java.util.List;
 
 @Service
+//@Transactional
 public class JobService {
     private final JobRepository jobRepository;
 
@@ -41,27 +43,6 @@ public class JobService {
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
     }
 
-    public Job update(Long id, Job update) {
-        Job job = this.jobRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("job", id));
-        job.setDescription(update.getDescription());
-        // // TODO: 06/02/2024 add more statements here if Job gets additional fields
-        return this.jobRepository.save(job);
-    }
-
-    public void delete(JobDtoFormRemove jobDtoFormRemove) {
-        System.out.println("Id in jobservice " + jobDtoFormRemove.id());
-        Job foundJob = this.jobRepository.findById(jobDtoFormRemove.id())
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobDtoFormRemove.id()));
-
-        User foundUser = this.userRepository.findByEmail(jobDtoFormRemove.email()).orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormRemove.email()));
-
-        foundUser.removeJob(foundJob);
-
-        System.out.println(foundJob.getId()); //TODO remove after debug
-        this.jobRepository.delete(foundJob);
-    }
-
     public Job addJob(JobDtoFormAdd jobDtoFormAdd) {
         User foundUser = this.userRepository.findByEmail(jobDtoFormAdd.email())
                 .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormAdd.email()));
@@ -73,11 +54,35 @@ public class JobService {
         foundUser.addJob(newJob);
         foundUser.setNumberOfJobs();
 
-        System.out.println("addJobb method, foundUser: " + foundUser.getJobs());
-
         this.userRepository.save(foundUser);
 
         return this.jobRepository.save(newJob);
+    }
+
+    public Job update(Long id, Job update) {
+        Job job = this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
+        job.setDescription(update.getDescription());
+        // // TODO: 06/02/2024 add more statements here if Job gets additional fields
+        return this.jobRepository.save(job);
+    }
+
+    public void delete(JobDtoFormRemove jobDtoFormRemove) {
+
+        Job foundJob = this.jobRepository.findById(jobDtoFormRemove.id())
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobDtoFormRemove.id()));
+
+        User foundUser = this.userRepository.findByEmail(jobDtoFormRemove.email())
+                .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormRemove.email()));
+
+
+        if (!foundJob.getUser().getEmail().equalsIgnoreCase(foundUser.getEmail())) {
+            throw new DoesNotExistException();
+        }
+
+        foundUser.removeJob(foundJob);
+
+        this.jobRepository.delete(foundJob);
     }
 
     public String generate(Long id) throws JsonProcessingException {
