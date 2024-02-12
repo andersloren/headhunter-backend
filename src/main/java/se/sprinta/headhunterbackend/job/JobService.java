@@ -50,7 +50,7 @@ public class JobService {
     }
 
     public void delete(JobDtoFormRemove jobDtoFormRemove) {
-
+        System.out.println("Id in jobservice " + jobDtoFormRemove.id());
         Job foundJob = this.jobRepository.findById(jobDtoFormRemove.id())
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobDtoFormRemove.id()));
 
