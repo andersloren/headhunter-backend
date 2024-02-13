@@ -35,7 +35,7 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundJobsDtoView);
     }
 
-    @GetMapping("/findAllByUserEmail/{email}")
+    @GetMapping("/findAllJobsByUserEmail/{email}")
     public Result findAllJobsByUserEmail(@PathVariable String email) {
         List<Job> userJobs = this.jobService.findAllJobsByEmail(email);
         List<JobDtoView> foundUserJobsDtoView = userJobs.stream()
