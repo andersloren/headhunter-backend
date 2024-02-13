@@ -78,18 +78,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                        .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin") // Find all
-                        .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").hasAuthority("ROLE_admin") //
-                        .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/jobs/**")).permitAll()
+                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin") // Find all
+                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").hasAuthority("ROLE_admin") //
+                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
+//                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/jobs/**")).permitAll()
 
-                        // Disallow everything else
-                        .anyRequest().authenticated() // Always a good idea to put this as last
+                                // Disallow everything else
+                                .anyRequest().authenticated() // Always a good idea to put this as last
                 )
                 .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // This is for H2 browser console access
                 .csrf(csrf -> csrf.disable()) // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.

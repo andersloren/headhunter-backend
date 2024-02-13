@@ -15,7 +15,8 @@ public class JobToJobDtoViewConverter
         return new JobDtoView(
                 source.getId(),
                 source.getDescription(),
-                source.getUser().getEmail()
+                source.getUser().getEmail(),
+                source.getHtmlCode()
         );
     }
 }

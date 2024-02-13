@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "_user")
+@Table(name = "_users")
 public class User implements Serializable {
 
     @Id

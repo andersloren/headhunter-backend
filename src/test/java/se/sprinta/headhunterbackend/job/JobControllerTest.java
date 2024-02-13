@@ -263,7 +263,7 @@ class JobControllerTest {
         user.setEmail("m@e.se");
         this.userService.save(user);
 
-        JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a description.");
+        JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a description.", "instruction");
         this.jobService.addJob(newJob);
 
         JobDtoFormRemove removeJob = new JobDtoFormRemove("a@l.se", 1L);
@@ -291,7 +291,7 @@ class JobControllerTest {
 
         JobDtoFormAdd newJobDtoFormAdd = new JobDtoFormAdd(
                 "m@e.se",
-                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.", "instruction");
 
         Job savedJob = new Job();
         savedJob.setId(1L);

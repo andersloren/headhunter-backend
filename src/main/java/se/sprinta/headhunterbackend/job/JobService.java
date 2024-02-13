@@ -14,6 +14,7 @@ import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 //@Transactional
@@ -38,6 +39,11 @@ public class JobService {
         return this.jobRepository.findAll();
     }
 
+    public List<Job> findAllJobsByEmail(String email) {
+        List<Job> allJobs = this.jobRepository.findAll();
+        return allJobs.stream().filter(job -> job.getUser().getEmail().equalsIgnoreCase(email)).collect(Collectors.toList());
+    }
+
     public Job findById(Long id) {
         return this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
@@ -49,6 +55,7 @@ public class JobService {
 
         Job newJob = new Job();
         newJob.setDescription(jobDtoFormAdd.description());
+        newJob.setInstruction(jobDtoFormAdd.instruction());
         newJob.setUser(foundUser);
 
         foundUser.addJob(newJob);
@@ -85,18 +92,23 @@ public class JobService {
         this.jobRepository.delete(foundJob);
     }
 
-    public String generate(Long id) throws JsonProcessingException {
+    public String generate(Long id) {
 
         Job foundJob = this.jobRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
+        String instruction1 = foundJob.getInstruction();
 
         // Prepare the message for summarizing
         List<Message> messages = List.of(
-                new Message("system", "Kan du göra en professionell jobbannons i HTML av detta utkast."),
+                new Message("system", instruction1),
                 new Message("user", foundJob.getDescription()));
 
         ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
 
         ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on the given chatRequest
+
+        foundJob.setHtmlCode(chatResponse.choices().get(0).message().content()); // TODO: 13/02/2024 test this?
+        this.jobRepository.save(foundJob);
         return chatResponse.choices().get(0).message().content();
+
     }
 }

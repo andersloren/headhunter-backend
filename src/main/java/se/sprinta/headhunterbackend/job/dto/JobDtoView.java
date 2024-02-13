@@ -6,7 +6,8 @@ import se.sprinta.headhunterbackend.user.User;
 public record JobDtoView(
         Long id,
         String description,
-        String email
+        String email,
+        String htmlCode
 ) {
 }
 

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 public record JobDtoFormAdd(
         String email,
         @NotEmpty(message = "Description is required.")
-        String description
+        String description,
+        String instruction
 ) {
 }

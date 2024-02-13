@@ -29,10 +29,19 @@ public class JobController {
     @GetMapping("/findAll")
     public Result findAllJobs() {
         List<Job> foundJobs = this.jobService.findAll();
-        List<JobDtoView> foundJobsDtoViews = foundJobs.stream()
+        List<JobDtoView> foundJobsDtoView = foundJobs.stream()
                 .map(job -> this.jobToJobDtoViewConverter.convert(job))
                 .toList();
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundJobsDtoViews);
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundJobsDtoView);
+    }
+
+    @GetMapping("/findAllByUserEmail/{email}")
+    public Result findAllJobsByUserEmail(@PathVariable String email) {
+        List<Job> userJobs = this.jobService.findAllJobsByEmail(email);
+        List<JobDtoView> foundUserJobsDtoView = userJobs.stream()
+                .map(this.jobToJobDtoViewConverter::convert)
+                .toList();
+        return new Result(true, StatusCode.SUCCESS, "Find All User Jobs Success", foundUserJobsDtoView);
     }
 
     @GetMapping("/findJob/{id}")
@@ -54,7 +63,6 @@ public class JobController {
     public Result deleteJob(@RequestBody JobDtoFormRemove jobDtoFormRemove) {
         this.jobService.delete(jobDtoFormRemove);
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
-
     }
 
     @PostMapping("/addJob")
@@ -65,9 +73,8 @@ public class JobController {
     }
 
     @GetMapping("/generate/{id}")
-    public Result generateJobAd(@PathVariable Long id) throws JsonProcessingException {
+    public Result generateJobAd(@PathVariable Long id) {
         String generatedJobAd = this.jobService.generate(id);
         return new Result(true, StatusCode.SUCCESS, "Summarize Success", generatedJobAd);
     }
-
 }
