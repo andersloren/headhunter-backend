@@ -29,8 +29,9 @@ public class Job {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(length = 5_000)
     private String instruction;
 
-    @Column(length = 10_000) // TODO: 08/02/2024 What should this number be (looking into the future)?
+    @Column(length = 5_000) // TODO: 08/02/2024 What should this number be (looking into the future)?
     private String htmlCode;
 }

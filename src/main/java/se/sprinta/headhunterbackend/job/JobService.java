@@ -106,9 +106,9 @@ public class JobService {
 
         ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on the given chatRequest
 
+        if (foundJob == null) throw new ObjectNotFoundException("job", id);
         foundJob.setHtmlCode(chatResponse.choices().get(0).message().content()); // TODO: 13/02/2024 test this?
         this.jobRepository.save(foundJob);
         return chatResponse.choices().get(0).message().content();
-
     }
 }

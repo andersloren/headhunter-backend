@@ -7,7 +7,8 @@ public record JobDtoView(
         Long id,
         String description,
         String email,
-        String htmlCode
+        String htmlCode,
+        String instruction
 ) {
 }
 
