@@ -1,11 +1,11 @@
 package se.sprinta.headhunterbackend.job;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
@@ -51,13 +51,13 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Find One Success", JobDtoView);
     }
 
-//    @PutMapping("/update/{id}")
-//    public Result updateJob(@PathVariable Long id, @Valid @RequestBody JobDtoFormAdd update) {
-//        Job updateJob = this.jobDtoToJobConverter.convert(update);
-//        Job updatedJob = this.jobService.update(id, updateJob); // TODO: 06/02/2024 fix this at some point
-//        JobDto updatedJobDto = this.jobToJobDtoConverter.convert(updatedJob);
-//        return new Result(true, StatusCode.SUCCESS, "Update Success", updatedJobDto);
-//    }
+    @PutMapping("/update/{id}")
+    public Result updateJob(@PathVariable Long id, @Valid @RequestBody JobDtoFormUpdate update) {
+        System.out.println("GOT TO CONTROLLER!!!!!!!!!!!!!!!!!");
+        Job updatedJob = this.jobService.update(id, update); // TODO: 06/02/2024 fix this at some point
+        JobDtoView updatedJobDto = this.jobToJobDtoViewConverter.convert(updatedJob);
+        return new Result(true, StatusCode.SUCCESS, "Update Success", updatedJobDto);
+    }
 
     @DeleteMapping("/delete")
     public Result deleteJob(@RequestBody JobDtoFormRemove jobDtoFormRemove) {

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -23,6 +24,7 @@ import se.sprinta.headhunterbackend.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -62,14 +64,22 @@ class JobControllerTest {
         j1.setId(1L);
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user);
+        j1.setInstruction("This is an instruction");
+        j1.setHtmlCode("This is HTML code");
+
         Job j2 = new Job();
         j2.setId(2L);
         j2.setDescription(".Net-junior till vårt nya kontor.");
         j2.setUser(user);
+        j2.setInstruction("This is an instruction");
+        j2.setHtmlCode("This is HTML code");
+
         Job j3 = new Job();
         j3.setId(3L);
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user);
+        j3.setInstruction("This is an instruction");
+        j3.setHtmlCode("This is HTML code");
 
         user.addJob(j1);
         user.addJob(j2);
@@ -137,66 +147,81 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
-//    @Test
-//    void testUpdateJobSuccess() throws Exception {
-//
-//        Job newJob = new Job();
-//        newJob.setDescription("Testare på Tesla.");
-//
-//        this.jobService.save(newJob);
-//
-//        JobDtoFormAdd jobDto = new JobDtoFormAdd(
-//                "m@e.se",
-//                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
-//        );
-//
-//        Job updatedJob = new Job();
-//        updatedJob.setId(1L);
-//        updatedJob.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
-//
-//        String json = this.objectMapper.writeValueAsString(jobDto);
-//
-//        // Given
-//        given(this.jobService.update(eq(1L), Mockito.any(Job.class))).willReturn(updatedJob);
-//
-//        // When and then
-//        this.mockMvc.perform(put(this.baseUrl + "/update/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(json)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.flag").value(true))
-//                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-//                .andExpect(jsonPath("$.message").value("Update Success"))
-//                .andExpect(jsonPath("$.data.id").value(1L))
-//                .andExpect(jsonPath("$.data.description").value("Testare på Tesla."))
-//                .andExpect(jsonPath("$.data.user").isEmpty());
-//    }
+    @Test
+    void testUpdateJobSuccess() throws Exception {
 
-//    @Test
-//    void testUpdateJobWithNonExistentId() throws Exception {
-//        Long id = Mockito.any(Long.class);
-//
-//        // Given
-//        JobDtoFormAdd jobDto = new JobDtoFormAdd(
-//                "m@e.se",
-//                "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten."
-//        );
-//
-//        String json = this.objectMapper.writeValueAsString(jobDto);
-//
-//
-//        given(this.jobService.update(id, Mockito.any(Job.class))).willThrow(new ObjectNotFoundException("job", id));
-//
-//        // When and then
-//        this.mockMvc.perform(put(this.baseUrl + "/update/" + id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(json)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.flag").value(false))
-//                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-//                .andExpect(jsonPath("$.message").value("Could not find job with Id " + id))
-//                .andExpect(jsonPath("$.data").isEmpty());
-//    }
+        Job job = new Job();
+        job.setId(1L);
+        job.setDescription("Old Description");
+        job.setInstruction("Old Instruction");
+        job.setHtmlCode("Old HTML Code");
+
+        User user = new User();
+        user.setEmail("m@e.se");
+        user.setUsername("Mikael");
+        user.setRoles("admin user");
+        user.addJob(job);
+
+        JobDtoFormUpdate jobDtoFormUpdate = new JobDtoFormUpdate(
+                "m@e.se",
+                "New Description",
+                "New Instruction",
+                "New HTML Code"
+        );
+
+        String json = this.objectMapper.writeValueAsString(jobDtoFormUpdate);
+
+        Job update = new Job();
+        update.setId(1L);
+        update.setUser(user);
+        update.setDescription("New Description");
+        update.setInstruction("New Instruction");
+        update.setHtmlCode("New HTML Code");
+
+        // Given
+        given(this.jobService.update(1L, jobDtoFormUpdate)).willReturn(update);
+
+        // When and then
+        this.mockMvc.perform(put(this.baseUrl + "/update/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.id").value(1L))
+                .andExpect(jsonPath("$.data.description").value("New Description"))
+                .andExpect(jsonPath("$.data.instruction").value("New Instruction"))
+                .andExpect(jsonPath("$.data.htmlCode").value("New HTML Code"));
+
+    }
+
+    @Test
+    void testUpdateJobWithNonExistentId() throws Exception {
+        Long id = Mockito.any(Long.class);
+
+        // Given
+        JobDtoFormUpdate jobDto = new JobDtoFormUpdate(
+                "m@e.se",
+                "New Description",
+                "New Instruction",
+                "New HTML Code"
+        );
+
+        String json = this.objectMapper.writeValueAsString(jobDto);
+
+        given(this.jobService.update(id, eq(jobDto))).willThrow(new ObjectNotFoundException("job", id));
+
+        // When and then
+        this.mockMvc.perform(put(this.baseUrl + "/update/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find job with Id " + id))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
 
     @Test
     void testDeleteSuccess() throws Exception {

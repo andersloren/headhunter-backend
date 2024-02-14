@@ -1,15 +1,18 @@
 package se.sprinta.headhunterbackend.job;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.system.exception.ResponseSubstringNotPureHtmlException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
 
@@ -66,10 +69,26 @@ public class JobService {
         return this.jobRepository.save(newJob);
     }
 
-    public Job update(Long id, Job update) {
+    public Job update(Long id, JobDtoFormUpdate update) {
+        System.out.println("HTML CODE !!!!! " + update.htmlCode());
+        System.out.println("UPDATE 1");
         Job job = this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
-        job.setDescription(update.getDescription());
+        System.out.println("UPDATE 2");
+        if (update.description() != null) {
+            System.out.println("UPDATE 3");
+            job.setDescription(update.description());
+        }
+        if (update.instruction() != null) {
+            System.out.println("UPDATE 4");
+            job.setInstruction(update.instruction());
+        }
+        if (update.htmlCode() != null) {
+            System.out.println("UPDATE 5");
+            job.setHtmlCode(update.htmlCode());
+        }
+        System.out.println("UPDATE 6");
+
         // // TODO: 06/02/2024 add more statements here if Job gets additional fields
         return this.jobRepository.save(job);
     }
@@ -106,9 +125,28 @@ public class JobService {
 
         ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on the given chatRequest
 
-        if (foundJob == null) throw new ObjectNotFoundException("job", id);
-        foundJob.setHtmlCode(chatResponse.choices().get(0).message().content()); // TODO: 13/02/2024 test this?
+        String response = chatResponse.choices().get(0).message().content();
+
+        // To trim the response, response is being passed to makeResponseSubstring and a trimmed string is returned
+        String substringResponse = makeResponseSubstring(response);
+
+        foundJob.setHtmlCode(substringResponse);
         this.jobRepository.save(foundJob);
-        return chatResponse.choices().get(0).message().content();
+        return substringResponse;
+    }
+
+    public String makeResponseSubstring(String response) {
+        if (response == null) throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        int cutBeginning = response.indexOf("<!D");
+        // Adjusting cutEnd to include the entire "</html>" tag
+        int cutEnd = response.lastIndexOf("</html>") + "</html>".length();
+
+        // Extracting the substring
+        if (cutBeginning == -1 || cutEnd == -1 || cutEnd <= cutBeginning)
+            throw new ResponseSubstringNotPureHtmlException("HTML");
+
+        return response.substring(cutBeginning, cutEnd);
     }
 }
+
