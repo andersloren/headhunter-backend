@@ -70,24 +70,18 @@ public class JobService {
     }
 
     public Job update(Long id, JobDtoFormUpdate update) {
-        System.out.println("HTML CODE !!!!! " + update.htmlCode());
-        System.out.println("UPDATE 1");
         Job job = this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
-        System.out.println("UPDATE 2");
+
         if (update.description() != null) {
-            System.out.println("UPDATE 3");
             job.setDescription(update.description());
         }
         if (update.instruction() != null) {
-            System.out.println("UPDATE 4");
             job.setInstruction(update.instruction());
         }
         if (update.htmlCode() != null) {
-            System.out.println("UPDATE 5");
             job.setHtmlCode(update.htmlCode());
         }
-        System.out.println("UPDATE 6");
 
         // // TODO: 06/02/2024 add more statements here if Job gets additional fields
         return this.jobRepository.save(job);
@@ -142,10 +136,6 @@ public class JobService {
         int cutBeginning = response.indexOf("<!D");
         // Adjusting cutEnd to include the entire "</html>" tag
         int cutEnd = response.lastIndexOf("</html>") + "</html>".length();
-
-        System.out.println("Response: " + response);
-        System.out.println("cutBeginning: " + cutBeginning);
-        System.out.println("citEnd: " + cutEnd);
 
         // Extracting the substring
         if (cutBeginning == -1 || cutEnd == -1 || cutEnd <= cutBeginning)
