@@ -5,12 +5,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
-import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
 @Component
 public class DBDataInitializer implements CommandLineRunner {
+//public class DBDataInitializer {
 
     private final UserService userService;
     private final JdbcTemplate jdbcTemplate;
@@ -24,8 +24,9 @@ public class DBDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+//    public void run() {
 
-//        jdbcTemplate.execute("TRUNCATE TABLE jobs");
+        jdbcTemplate.execute("TRUNCATE TABLE jobs");
 
         /*
          * Users

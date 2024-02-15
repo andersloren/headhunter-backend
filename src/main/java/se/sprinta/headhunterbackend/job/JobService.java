@@ -138,9 +138,14 @@ public class JobService {
     public String makeResponseSubstring(String response) {
         if (response == null) throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
 
+
         int cutBeginning = response.indexOf("<!D");
         // Adjusting cutEnd to include the entire "</html>" tag
         int cutEnd = response.lastIndexOf("</html>") + "</html>".length();
+
+        System.out.println("Response: " + response);
+        System.out.println("cutBeginning: " + cutBeginning);
+        System.out.println("citEnd: " + cutEnd);
 
         // Extracting the substring
         if (cutBeginning == -1 || cutEnd == -1 || cutEnd <= cutBeginning)
