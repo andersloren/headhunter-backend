@@ -163,6 +163,7 @@ class JobServiceTest {
 
         Job j1 = new Job();
         j1.setId(1L);
+        j1.setTitle("Java-utvecklare");
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user1);
         j1.setInstruction("This is an instruction");
@@ -177,6 +178,7 @@ class JobServiceTest {
 
         // Then
         assertThat(savedJob.getId()).isEqualTo(j1.getId());
+        assertThat(savedJob.getTitle()).isEqualTo(j1.getTitle());
         assertThat(savedJob.getDescription()).isEqualTo(j1.getDescription());
         assertThat(savedJob.getUser()).isEqualTo(j1.getUser());
         assertThat(savedJob.getInstruction()).isEqualTo(j1.getInstruction());
@@ -196,12 +198,14 @@ class JobServiceTest {
 
         Job j1 = new Job();
         j1.setId(1L);
+        j1.setTitle("Java-utvecklare");
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setInstruction("This is an instruction");
         j1.setHtmlCode("This is HTML code");
 
         JobDtoFormUpdate update = new JobDtoFormUpdate(
                 "m@e.se",
+                "Updated title",
                 "Updated description.",
 
                 "Updated instruction",
@@ -209,6 +213,7 @@ class JobServiceTest {
         );
 
         Job updatedJob = new Job();
+        updatedJob.setTitle("Updated title");
         updatedJob.setDescription("Updated description.");
         updatedJob.setUser(user1);
         updatedJob.setInstruction("Updated instruction");
@@ -222,6 +227,7 @@ class JobServiceTest {
         Job returnedUpdatedJob = this.jobService.update(1L, update);
 
         // Then
+        assertThat(returnedUpdatedJob.getTitle()).isEqualTo(updatedJob.getTitle());
         assertThat(returnedUpdatedJob.getDescription()).isEqualTo(updatedJob.getDescription());
         assertThat(returnedUpdatedJob.getInstruction()).isEqualTo(updatedJob.getInstruction());
         assertThat(returnedUpdatedJob.getHtmlCode()).isEqualTo(updatedJob.getHtmlCode());
@@ -235,6 +241,7 @@ class JobServiceTest {
     void testUpdateJobWithNonExistentId() {
         JobDtoFormUpdate nonExistentJob = new JobDtoFormUpdate(
                 "m@e.se",
+                "Title",
                 "Description",
                 "Instruction",
                 "HTML code"
@@ -281,6 +288,7 @@ class JobServiceTest {
     void testDeleteJobWithIncorrectEmail() {
         Job j1 = new Job();
         j1.setId(1L);
+        j1.setTitle("Java-utvecklare");
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setInstruction("This is an instruction");
         j1.setHtmlCode("This is HTML code");

@@ -57,6 +57,7 @@ public class JobService {
                 .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormAdd.email()));
 
         Job newJob = new Job();
+        newJob.setTitle(jobDtoFormAdd.title());
         newJob.setDescription(jobDtoFormAdd.description());
         newJob.setInstruction(jobDtoFormAdd.instruction());
         newJob.setUser(foundUser);
@@ -73,6 +74,9 @@ public class JobService {
         Job job = this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
 
+        if (update.title() != null) {
+            job.setTitle(update.title());
+        }
         if (update.description() != null) {
             job.setDescription(update.description());
         }

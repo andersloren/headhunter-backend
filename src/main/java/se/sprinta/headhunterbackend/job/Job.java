@@ -21,7 +21,11 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 5_000) // TODO: 08/02/2024 What should this number be (looking into the future)?
+    @NotEmpty(message = "title is required")
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
+    // TODO: 08/02/2024 What should this number be (looking into the future)?
     @NotEmpty(message = "description is required.")
     private String description;
 
@@ -29,9 +33,10 @@ public class Job {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 5_000)
+    @Column(columnDefinition = "TEXT")
     private String instruction;
 
-    @Column(length = 5_000) // TODO: 08/02/2024 What should this number be (looking into the future)?
+    @Column(columnDefinition = "TEXT")
+    // TODO: 08/02/2024 What should this number be (looking into the future)?
     private String htmlCode;
 }

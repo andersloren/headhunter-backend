@@ -152,6 +152,7 @@ class JobControllerTest {
 
         Job job = new Job();
         job.setId(1L);
+        job.setTitle("Old Title");
         job.setDescription("Old Description");
         job.setInstruction("Old Instruction");
         job.setHtmlCode("Old HTML Code");
@@ -164,6 +165,7 @@ class JobControllerTest {
 
         JobDtoFormUpdate jobDtoFormUpdate = new JobDtoFormUpdate(
                 "m@e.se",
+                "New Title",
                 "New Description",
                 "New Instruction",
                 "New HTML Code"
@@ -203,6 +205,7 @@ class JobControllerTest {
         // Given
         JobDtoFormUpdate jobDto = new JobDtoFormUpdate(
                 "m@e.se",
+                "New Title",
                 "New Description",
                 "New Instruction",
                 "New HTML Code"
@@ -288,7 +291,7 @@ class JobControllerTest {
         user.setEmail("m@e.se");
         this.userService.save(user);
 
-        JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a description.", "instruction");
+        JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a title", "This is a description.", "instruction");
         this.jobService.addJob(newJob);
 
         JobDtoFormRemove removeJob = new JobDtoFormRemove("a@l.se", 1L);
@@ -316,6 +319,7 @@ class JobControllerTest {
 
         JobDtoFormAdd newJobDtoFormAdd = new JobDtoFormAdd(
                 "m@e.se",
+                "Java-utvecklare",
                 "Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.", "instruction");
 
         Job savedJob = new Job();

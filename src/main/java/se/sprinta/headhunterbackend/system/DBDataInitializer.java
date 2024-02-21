@@ -55,7 +55,8 @@ public class DBDataInitializer implements CommandLineRunner {
 
         Job job1 = new Job(
                 null,
-                "Testare till Tesla. En massa nya funktioner behöver testas. Den anställde behöver vara uthållig och driven.",
+                "Testare till Tesla"
+                , "En massa nya funktioner behöver testas. Den anställde behöver vara uthållig och driven.",
                 u1,
                 instruction,
                 "<!DOCTYPE html>\n" +
@@ -126,7 +127,8 @@ public class DBDataInitializer implements CommandLineRunner {
                         "</html>\n");
         Job job2 = new Job(
                 null,
-                "AI-utvecklare till GPTPilot. Hög analytisk förmåga. Doktorand i matematisk statistik. Mångårig erfarenhet av AI-system.",
+                "AI-utvecklare till GPTPilot."
+                , "Hög analytisk förmåga. Doktorand i matematisk statistik. Mångårig erfarenhet av AI-system.",
                 u1,
                 instruction,
                 "<!DOCTYPE html>\n" +
@@ -211,8 +213,8 @@ public class DBDataInitializer implements CommandLineRunner {
                         "</body>\n" +
                         "</html>");
         Job job3 = new Job(
-                null,
-                "Programledare IT Program-/Projektledare nVi söker en programledare för att leda och styra projektresurser vars focus är att bidra till den totala leveransen inom ett mer omfattande IT-program.\\Som programledare förväntas du hantera och facilitera externa intressenter som har beroenden till programmet.Rollen kräver en kombination av teknisk expertis, dokumenterad projektledningsförmåga av större dignitet och ett tydligt affärsmannaskap.Du kommer övervaka planering, genomförande och leverans för att med intressenter, teammedlemmar och ledare säkerställa att programmet når sina mål.Programmet syftar till att ta in en ny kund till Soltak och att få alla delarna i den totala IT-leveransen på plats.\\Flertalet projekt är redan uppstartade och det finns även delar som ännu inte är uppstartade.Rollen behöver tillsättas omgående och initialt upptar programledarrollen 50% av en FTE.Möjlighet till utökande av projektledning av ett eller flera andra projekt.",
+                null, "Programledare IT Program-/Projektledare",
+                " Vi söker en programledare för att leda och styra projektresurser vars focus är att bidra till den totala leveransen inom ett mer omfattande IT-program.\\Som programledare förväntas du hantera och facilitera externa intressenter som har beroenden till programmet.Rollen kräver en kombination av teknisk expertis, dokumenterad projektledningsförmåga av större dignitet och ett tydligt affärsmannaskap.Du kommer övervaka planering, genomförande och leverans för att med intressenter, teammedlemmar och ledare säkerställa att programmet når sina mål.Programmet syftar till att ta in en ny kund till Soltak och att få alla delarna i den totala IT-leveransen på plats.\\Flertalet projekt är redan uppstartade och det finns även delar som ännu inte är uppstartade.Rollen behöver tillsättas omgående och initialt upptar programledarrollen 50% av en FTE.Möjlighet till utökande av projektledning av ett eller flera andra projekt.",
                 u1,
                 instruction,
                 "<!DOCTYPE html>\n" +
@@ -285,8 +287,8 @@ public class DBDataInitializer implements CommandLineRunner {
                         "</html>"
         );
         Job job4 = new Job(
-                null,
-                "Applikationsspecialist. SwCG söker en Applikationsspecialist till kund i Jönköping. Applikationsspecialist i förvaltningsgrupp eHälsa är en mångfacetterad roll med olika beröringspunkter inom systemförvaltning och verksamhetsutveckling. Du får möjlighet att förkovra dig inom sjukvårdens olika verksamhetsområden och dess systemstöd, leda uppdrag och stötta våra kunder med felsökning och problemlösning. Applikationsspecialisten stöttar även verksamheten kring systemförvaltning och är en länk mellan slutanvändare, systemförvaltare och oss på IT-drift. I större projekt kan du komma att delta och ha ett mer kravorienterat fokus och vara med kring anpassning av lösningen, samt bidra att projektet levererar nödvändiga leverabler som till exempel systemdokumentation till förvaltningsorganisationen. Vi jobbar agilt och målfokuserat tillsammans och du samarbetar tätt med teamets övriga kompetenser och andra förvaltningsgrupper inom IT-centrum, för att leverera väl fungerande tjänster och god service till våra kunder på sjukhusen och andra vårdgivare i länet. Uppdraget ska genomföras av en konsult och uppdragets omfattning är 60-100 % av en heltidstjänst. Offererad konsult ska uppfylla följande obligatoriska krav: Relevant IT-utbildning, Dokumenterad erfarenhet av att beskriva och dokumentera lösningar, Dokumenterad erfarenhet av test av applikationer, Dokumenterad erfarenhet av arbete med vårdrelaterade IT-system. Har arbetat och verkat hos en Region. Då uppdraget kommer att innebära mycket kontakt med medarbetare inom Region Jönköpings län kommer stor vikt att läggas vid personlig lämplighet. Offererad konsult ska uppfylla följande krav: Är drivande och har förmåga att hålla ihop mindre uppdrag, Är strukturerad med god analytisk- och problemlösningsförmåga, God kommunikativ förmåga, Social och har lätt för att arbeta i team, Förmåga att omsätta krav i realiserbart IT-stöd, God förståelse för hela systemutvecklingskedjan, Meriterande kompetens: Dokumenterad erfarenhet av arbete inom förvaltningsområdet eHälsa hos Region Jönköpings län och då några av följande system; Blå appen, Carelink, Checkware, Journalia, Medidoc, Obstetrix, Picsara.",
+                null, "Applikationsspecialist",
+                "SwCG söker en Applikationsspecialist till kund i Jönköping. Applikationsspecialist i förvaltningsgrupp eHälsa är en mångfacetterad roll med olika beröringspunkter inom systemförvaltning och verksamhetsutveckling. Du får möjlighet att förkovra dig inom sjukvårdens olika verksamhetsområden och dess systemstöd, leda uppdrag och stötta våra kunder med felsökning och problemlösning. Applikationsspecialisten stöttar även verksamheten kring systemförvaltning och är en länk mellan slutanvändare, systemförvaltare och oss på IT-drift. I större projekt kan du komma att delta och ha ett mer kravorienterat fokus och vara med kring anpassning av lösningen, samt bidra att projektet levererar nödvändiga leverabler som till exempel systemdokumentation till förvaltningsorganisationen. Vi jobbar agilt och målfokuserat tillsammans och du samarbetar tätt med teamets övriga kompetenser och andra förvaltningsgrupper inom IT-centrum, för att leverera väl fungerande tjänster och god service till våra kunder på sjukhusen och andra vårdgivare i länet. Uppdraget ska genomföras av en konsult och uppdragets omfattning är 60-100 % av en heltidstjänst. Offererad konsult ska uppfylla följande obligatoriska krav: Relevant IT-utbildning, Dokumenterad erfarenhet av att beskriva och dokumentera lösningar, Dokumenterad erfarenhet av test av applikationer, Dokumenterad erfarenhet av arbete med vårdrelaterade IT-system. Har arbetat och verkat hos en Region. Då uppdraget kommer att innebära mycket kontakt med medarbetare inom Region Jönköpings län kommer stor vikt att läggas vid personlig lämplighet. Offererad konsult ska uppfylla följande krav: Är drivande och har förmåga att hålla ihop mindre uppdrag, Är strukturerad med god analytisk- och problemlösningsförmåga, God kommunikativ förmåga, Social och har lätt för att arbeta i team, Förmåga att omsätta krav i realiserbart IT-stöd, God förståelse för hela systemutvecklingskedjan, Meriterande kompetens: Dokumenterad erfarenhet av arbete inom förvaltningsområdet eHälsa hos Region Jönköpings län och då några av följande system; Blå appen, Carelink, Checkware, Journalia, Medidoc, Obstetrix, Picsara.",
                 u1,
                 instruction,
                 "<!DOCTYPE html>\n" +
@@ -342,6 +344,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
         Job job5 = new Job(
                 null,
+                "Utvecklare AI-app",
                 "En applikation för AI-genererade jobbannonser. Frontend är skriven i React, och tillhörande libraries är React Router, DOMPurify, CSS och Styled Components. Backend är skriven i Java och Spring Boot, Spring Security samt kommunikation med ett AI API används. Databasen sköts av MySQL. Applikationen styrs genom molntjänsten Azure. GIT och GitHub används som versionshanterare. Alla inblandade behöver kontinuerligt vara beredda på att sätta sig in i nya libraries och frameworks. Målet är att applikationen ska sjösättas inom 1 år. Applikationen växer snabbt och de nuvarande två utvecklarna får allt svårare att hinna med allt som behöver göras. Ytterligare en utvecklare behövs nu.",
                 u1,
                 instruction,
@@ -459,6 +462,6 @@ public class DBDataInitializer implements CommandLineRunner {
         this.jobRepository.save(job2);
         this.jobRepository.save(job3);
         this.jobRepository.save(job4);
-        this.jobRepository.save(job5);
+//        this.jobRepository.save(job5);
     }
 }

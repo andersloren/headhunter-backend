@@ -10,6 +10,7 @@ import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 /**
  * The OpenAiChatClient class is an implementation of the ChatClient interface.
  */
+
 @Component
 public class OpenAiChatClient implements ChatClient {
 
@@ -34,5 +35,4 @@ public class OpenAiChatClient implements ChatClient {
                 .retrieve()
                 .body(ChatResponse.class);
     }
-
 }
