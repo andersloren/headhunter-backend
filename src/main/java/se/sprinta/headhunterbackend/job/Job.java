@@ -21,11 +21,11 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "title is required")
+//    @NotEmpty(message = "title is required")
     private String title;
 
     @Column(columnDefinition = "TEXT")
-    @NotEmpty(message = "description is required.")
+//    @NotEmpty(message = "description is required.")
     private String description;
 
     @ManyToOne()
