@@ -59,9 +59,13 @@ class JobControllerTest {
     void setUp() {
         User user = new User();
         user.setEmail("m@e.se");
+        user.setUsername("Mikael");
+        user.setPassword("a");
+        user.setRoles("admin user");
 
         Job j1 = new Job();
         j1.setId(1L);
+        j1.setTitle("Java-utvecklare");
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user);
         j1.setInstruction("This is an instruction");
@@ -69,6 +73,7 @@ class JobControllerTest {
 
         Job j2 = new Job();
         j2.setId(2L);
+        j1.setTitle(".Net-junior");
         j2.setDescription(".Net-junior till vårt nya kontor.");
         j2.setUser(user);
         j2.setInstruction("This is an instruction");
@@ -76,6 +81,7 @@ class JobControllerTest {
 
         Job j3 = new Job();
         j3.setId(3L);
+        j1.setTitle("HR-ninja");
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user);
         j3.setInstruction("This is an instruction");

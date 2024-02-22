@@ -25,7 +25,6 @@ public class Job {
     private String title;
 
     @Column(columnDefinition = "TEXT")
-    // TODO: 08/02/2024 What should this number be (looking into the future)?
     @NotEmpty(message = "description is required.")
     private String description;
 
@@ -37,6 +36,5 @@ public class Job {
     private String instruction;
 
     @Column(columnDefinition = "TEXT")
-    // TODO: 08/02/2024 What should this number be (looking into the future)?
     private String htmlCode;
 }

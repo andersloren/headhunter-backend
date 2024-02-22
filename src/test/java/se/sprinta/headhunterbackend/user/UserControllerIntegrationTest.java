@@ -69,11 +69,11 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data[0].email").value("a@l.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Anders"))
                 .andExpect(jsonPath("$.data[0].roles").value("user"))
-                .andExpect(jsonPath("$.data[0].numberOfJobs").value(1))
+                .andExpect(jsonPath("$.data[0].numberOfJobs").value(2))
                 .andExpect(jsonPath("$.data[1].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[1].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[1].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data[1].numberOfJobs").value(3));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data.numberOfJobs").value(2));
     }
 
     // TODO: 31/01/2024 testFindUserWithNonExistentEmail
@@ -179,7 +179,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
                 .andExpect(jsonPath("$.data.username").value("Mikael"))
                 .andExpect(jsonPath("$.data.roles").value("admin"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data.numberOfJobs").value(3));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("admin"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data.numberOfJobs").value(2));
     }
 
     // TODO: 31/01/2024 testUpdateWithNonExistentEmail
@@ -236,7 +236,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data.numberOfJobs").value(2));
     }
 
     @Test
@@ -301,11 +301,11 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.data[0].email").value("a@l.se"))
                 .andExpect(jsonPath("$.data[0].username").value("Anders"))
                 .andExpect(jsonPath("$.data[0].roles").value("user"))
-                .andExpect(jsonPath("$.data[0].numberOfJobs").value(1))
+                .andExpect(jsonPath("$.data[0].numberOfJobs").value(2))
                 .andExpect(jsonPath("$.data[1].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[1].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[1].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].numberOfJobs").value(1));
+                .andExpect(jsonPath("$.data[1].numberOfJobs").value(3));
 
     }
 }
