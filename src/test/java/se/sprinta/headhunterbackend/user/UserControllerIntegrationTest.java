@@ -121,7 +121,6 @@ public class UserControllerIntegrationTest {
         user.setEmail("m@j.se");
         user.setUsername("Mehrdad");
         user.setPassword("02468");
-        // TODO: 06/02/2024 Mehrdad should have a role, and it should be checked in the assrtion 
 
         String json = this.objectMapper.writeValueAsString(user);
 
