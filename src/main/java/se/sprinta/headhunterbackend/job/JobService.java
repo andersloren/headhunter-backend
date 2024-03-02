@@ -1,8 +1,10 @@
 package se.sprinta.headhunterbackend.job;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
@@ -20,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-//@Transactional
 public class JobService {
     private final JobRepository jobRepository;
 
@@ -127,8 +128,12 @@ public class JobService {
 
         // To trim the response, response is being passed to makeResponseSubstring and a trimmed string is returned
         String substringResponse = makeResponseSubstring(response);
+        foundJob.setHtmlCode(substringResponse); // TODO: 02/03/2024  remove this once the ad setup is all finished 
 
-        foundJob.setHtmlCode(substringResponse);
+        Ad newAd = new Ad(substringResponse);
+        foundJob.addAd(newAd);
+        newAd.setJob(foundJob);
+
         this.jobRepository.save(foundJob);
         return substringResponse;
     }

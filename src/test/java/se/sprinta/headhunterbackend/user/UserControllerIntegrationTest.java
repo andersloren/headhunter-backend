@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Integration tests for User API endpoints")
 @Tag("integration")
-@ActiveProfiles(value = "dev")
+@ActiveProfiles("job-test")
 @Transactional
 public class UserControllerIntegrationTest {
 
@@ -46,6 +47,7 @@ public class UserControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
+
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlUsers + "/login")
                         .with(httpBasic("m@e.se",

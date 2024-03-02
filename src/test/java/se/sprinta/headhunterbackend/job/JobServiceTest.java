@@ -50,6 +50,10 @@ class JobServiceTest {
 
     @BeforeEach
     void setUp() {
+    }
+
+    @Test
+    void testFindAllJobsSuccess() {
         User user1 = new User(
                 "m@e.se",
                 "Mikael",
@@ -101,10 +105,6 @@ class JobServiceTest {
 
         user1.setJobs(user1Jobs);
         user2.setJobs(user2Jobs);
-    }
-
-    @Test
-    void testFindAllJobsSuccess() {
         // Given
         given(this.jobRepository.findAll()).willReturn(this.jobs);
         // When
@@ -190,18 +190,17 @@ class JobServiceTest {
 
     @Test
     void testUpdateJobSuccess() {
-        User user1 = new User(
-                "m@e.se",
-                "Mikael",
-                "admin user",
-                null);
+        User user1 = new User();
+        user1.setEmail("m@e.se");
+        user1.setUsername("Mikael");
+        user1.setRoles("admin user");
 
-        Job j1 = new Job();
-        j1.setId(1L);
-        j1.setTitle("Java-utvecklare");
-        j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
-        j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
+        Job job1 = new Job();
+        job1.setId(1L);
+        job1.setTitle("Java-utvecklare");
+        job1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+        job1.setInstruction("This is an instruction");
+        job1.setHtmlCode("This is an HTML code");
 
         JobDtoFormUpdate update = new JobDtoFormUpdate(
                 "m@e.se",
@@ -220,8 +219,8 @@ class JobServiceTest {
         updatedJob.setHtmlCode("Updated HTML code");
 
         // Given)
-        given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
-        given(this.jobRepository.save(j1)).willReturn(j1);
+        given(this.jobRepository.findById(1L)).willReturn(Optional.of(job1));
+        given(this.jobRepository.save(job1)).willReturn(job1);
 
         // When
         Job returnedUpdatedJob = this.jobService.update(1L, update);
@@ -234,7 +233,7 @@ class JobServiceTest {
 
         // Verify
         verify(this.jobRepository, times(1)).findById(1L);
-        verify(this.jobRepository, times(1)).save(j1);
+        verify(this.jobRepository, times(1)).save(job1);
     }
 
     @Test

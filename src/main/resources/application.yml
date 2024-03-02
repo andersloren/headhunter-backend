@@ -19,13 +19,13 @@ spring:
     generate-ddl: true
     show-sql: true
 
+hibernate:
+  dialect: org.hibernate.dialect.MySQL8Dialect
+
 api:
   endpoint:
     base-url-users: /api/v1/users
     base-url-jobs: /api/v1/jobs
-
-hibernate:
-  dialect: org.hibernate.dialect.MySQL8Dialect
 
 ai:
   openai:

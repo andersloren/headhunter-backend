@@ -46,6 +46,10 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
+    }
+
+    @Test
+    void testFindAllUsersSuccess() throws Exception {
         User u1 = new User();
         u1.setEmail("m@e.se");
         u1.setUsername("Mikael");
@@ -61,16 +65,8 @@ class UserControllerTest {
         this.users = new ArrayList<>();
         this.users.add(u1);
         this.users.add(u2);
-    }
 
-    @AfterEach
-    void tearDown() {
-    }
-
-    @Test
-    void testFindAllUsersSuccess() throws Exception {
         // Given
-
         given(this.userService.findAll()).willReturn(this.users);
 
         // When and then
@@ -88,6 +84,22 @@ class UserControllerTest {
 
     @Test
     void testFindUserByIdSuccess() throws Exception {
+        User u1 = new User();
+        u1.setEmail("m@e.se");
+        u1.setUsername("Mikael");
+        u1.setPassword("123456");
+        u1.setRoles("admin user");
+
+        User u2 = new User();
+        u2.setEmail("a@l.se");
+        u2.setUsername("Anders");
+        u2.setPassword("654321");
+        u2.setRoles("user");
+
+        this.users = new ArrayList<>();
+        this.users.add(u1);
+        this.users.add(u2);
+
         // Given
         given(this.userService.findByUserEmail("a@l.se")).willReturn(this.users.get(1));
 

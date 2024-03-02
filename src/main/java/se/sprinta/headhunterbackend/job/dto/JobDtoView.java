@@ -1,7 +1,8 @@
 package se.sprinta.headhunterbackend.job.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.ad.Ad;
+
+import java.util.List;
 
 public record JobDtoView(
         Long id,
