@@ -4,8 +4,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.user.MyUserPrincipal;
 import se.sprinta.headhunterbackend.user.User;
-import se.sprinta.headhunterbackend.user.converter.UserToUserDtoConverter;
-import se.sprinta.headhunterbackend.user.dto.UserDto;
+import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
+import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
 public class AuthService {
 
     private final JwtProvider jwtProvider;
-    private final UserToUserDtoConverter userToUserDtoConverter;
+    private final UserToUserDtoViewConverter userToUserDtoViewConverter;
 
-    public AuthService(JwtProvider jwtProvider, UserToUserDtoConverter userToUserDtoConverter) {
+    public AuthService(JwtProvider jwtProvider, UserToUserDtoViewConverter userToUserDtoViewConverter) {
         this.jwtProvider = jwtProvider;
-        this.userToUserDtoConverter = userToUserDtoConverter;
+        this.userToUserDtoViewConverter = userToUserDtoViewConverter;
     }
 
     /*
@@ -32,7 +32,7 @@ public class AuthService {
         // Create user info.
         MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
         User user = principal.getUser();
-        UserDto userDto = this.userToUserDtoConverter.convert(user);
+        UserDtoView userDto = this.userToUserDtoViewConverter.convert(user);
 
         // Create a JWT.
         String token = this.jwtProvider.createToken(authentication);

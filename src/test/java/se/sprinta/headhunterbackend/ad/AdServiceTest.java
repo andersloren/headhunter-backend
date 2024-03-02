@@ -4,11 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import se.sprinta.headhunterbackend.job.Job;
-import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
 
@@ -17,12 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AdServiceTest {
@@ -94,8 +90,14 @@ class AdServiceTest {
         User user = new User("m@e.se", "Mikael", "admin user", null);
         Job job = new Job(1L, "Title", "Description", user, "Instruction", "htmlCode", null, 0);
 
-        Ad ad1 = new Ad("htmlCode 1");
-        Ad ad2 = new Ad("htmlCode 2");
+        Ad ad1 = new Ad();
+        ad1.setHtmlCode("htmlCode");
+        ad1.setJob(job);
+
+        Ad ad2 = new Ad();
+        ad2.setHtmlCode("htmlCode");
+
+        ad2.setJob(job);
 
         this.ads.add(ad1);
         this.ads.add(ad2);
@@ -108,14 +110,42 @@ class AdServiceTest {
         given(this.adRepository.findByJob_Id(1L)).willReturn(ads);
 
         // When
-        List<Ad> foundAds = this.adService.findAllAds();
+        List<Ad> foundAds = this.adService.findAdsByJobId(1L);
 
         // Then
         assertThat(foundAds).hasSameElementsAs(ads);
 
         // Verify
-        then(this.adService).should().findAdsByJobId(1L);
+        then(this.adRepository).should().findByJob_Id(1L);
 
+    }
+
+    @Test
+    void testFindUserByAdIdSuccess() {
+        User user = new User("m@e.se", "Mikael", "admin user", null);
+        Job job = new Job(1L, "Title", "Description", user, "Instruction", "htmlCode", null, 0);
+
+        List<Job> jobs = new ArrayList<>();
+        jobs.add(job);
+
+        user.setJobs(jobs);
+        Ad ad = new Ad("abc", "htmlCode 1", job);
+
+        List<Ad> ads = new ArrayList<>();
+        ads.add(ad);
+        job.setAds(ads);
+
+        // Given
+        given(this.adRepository.findById("abc")).willReturn(Optional.of(ad));
+
+        // When
+        User foundUser = this.adService.findUserByAdId("abc");
+
+        // Then
+        assertThat(foundUser).isEqualTo(user);
+
+        // Verify
+        then(this.adRepository).should().findById("abc");
     }
 }
 

@@ -45,12 +45,12 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(foundUser);
     }
 
+
     public void delete(String email) {
         User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
         this.userRepository.delete(foundUser);
     }
-
 
 
     @Override

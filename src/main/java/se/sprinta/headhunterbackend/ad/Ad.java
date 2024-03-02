@@ -34,5 +34,8 @@ public class Ad implements Serializable {
         this.htmlCode = htmlCode;
     }
 
-
+    public Ad(String htmlCode, Job job) {
+        this.htmlCode = htmlCode;
+        this.job = job;
+    }
 }

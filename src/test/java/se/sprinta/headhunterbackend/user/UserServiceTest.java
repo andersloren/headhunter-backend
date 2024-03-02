@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -115,9 +116,9 @@ class UserServiceTest {
 
         // Given
         given(this.userRepository.save(newUser)).willReturn(newUser);
+        given(this.passwordEncoder.encode(newUser.getPassword())).willReturn("Encoded Password");
 
         // When
-        given(this.passwordEncoder.encode(newUser.getPassword())).willReturn("Encoded Password");
         User returnedUser = this.userService.save(newUser);
 
         // Then
@@ -126,7 +127,7 @@ class UserServiceTest {
         assertThat(returnedUser.getRoles()).isEqualTo(newUser.getRoles());
 
         // Verify
-        verify(this.userRepository, times(1)).save(newUser);
+        then(this.userRepository).should().save(newUser);
     }
 
     @Test

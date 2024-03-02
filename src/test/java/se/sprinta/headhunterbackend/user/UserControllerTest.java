@@ -1,7 +1,6 @@
 package se.sprinta.headhunterbackend.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.user.dto.UserDto;
+import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +158,7 @@ class UserControllerTest {
     @Test
     void testUpdateUserSuccess() throws Exception {
 
-        UserDto userDto = new UserDto(
+        UserDtoView userDto = new UserDtoView(
                 "m@e.se",
                 "Mikael",
                 "admin user",

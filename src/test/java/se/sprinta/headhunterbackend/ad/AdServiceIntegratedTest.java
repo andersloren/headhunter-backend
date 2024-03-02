@@ -11,6 +11,7 @@ import se.sprinta.headhunterbackend.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -50,5 +51,6 @@ public class AdServiceIntegratedTest {
         then(jobService).should().save(job);
         then(adRepository).should().save(ad);
     }
-}
 
+
+}

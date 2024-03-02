@@ -17,7 +17,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @DataJpaTest
-//@Profile("ad-test")
 public class AdRepositoryTest {
 
     @Autowired
@@ -61,7 +60,7 @@ public class AdRepositoryTest {
     }
 
     @Test
-    void testFindAdByJobId() {
+    void testFindAdsByJobId() {
         Job job1 = new Job();
         job1.setTitle("Test");
         job1.setDescription("Description");
@@ -71,7 +70,12 @@ public class AdRepositoryTest {
         ad1.setHtmlCode("htmlCode");
         ad1.setJob(job1);
 
+        Ad ad2 = new Ad();
+        ad2.setHtmlCode("htmlCode");
+        ad2.setJob(job1);
+
         this.ads.add(ad1);
+        this.ads.add(ad2);
 
         // Given
         given(this.adRepository.findByJob_Id(1L)).willReturn(ads);

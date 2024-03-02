@@ -3,14 +3,14 @@ package se.sprinta.headhunterbackend.user.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.user.User;
-import se.sprinta.headhunterbackend.user.dto.UserDto;
+import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 @Component
-public class UserToUserDtoConverter implements Converter<User, UserDto> {
+public class UserToUserDtoViewConverter implements Converter<User, UserDtoView> {
 
     @Override
-    public UserDto convert(User source) {
-        return new UserDto(
+    public UserDtoView convert(User source) {
+        return new UserDtoView(
                 source.getEmail(),
                 source.getUsername(),
                 source.getRoles(),

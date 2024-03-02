@@ -42,6 +42,8 @@ public class SecurityConfig {
     private String baseUrlUsers;
     @Value("${api.endpoint.base-url-jobs}")
     private String baseUrlJobs;
+    @Value("${api.endpoint.base-url-ads}")
+    private String baseUrlAds;
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
@@ -86,7 +88,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
 //                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/jobs/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAds + "/**")).permitAll()
 
                                 // Disallow everything else
                                 .anyRequest().authenticated() // Always a good idea to put this as last

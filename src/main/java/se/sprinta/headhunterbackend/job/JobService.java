@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.job;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class JobService {
     private final JobRepository jobRepository;
 
@@ -52,6 +54,7 @@ public class JobService {
         return this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
     }
+
 
     public Job addJob(JobDtoFormAdd jobDtoFormAdd) {
         User foundUser = this.userRepository.findByEmail(jobDtoFormAdd.email())
