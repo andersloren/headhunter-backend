@@ -67,6 +67,7 @@ public class JobController {
 
     @PostMapping("/addJob")
     public Result addJob(@Valid @RequestBody JobDtoFormAdd jobDtoFormAdd) {
+//        Job newJob = this.jobDtoForm
         Job addedJob = this.jobService.addJob(jobDtoFormAdd);
         JobDtoView addedJobDtoView = this.jobToJobDtoViewConverter.convert(addedJob);
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedJobDtoView);

@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.ad;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.user.User;
@@ -18,6 +21,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -67,7 +71,6 @@ public class AdControllerTest {
         job1.addAd(ad3);
         job1.addAd(ad4);
         job1.addAd(ad5);
-
     }
 
     @Test
@@ -102,5 +105,27 @@ public class AdControllerTest {
                 .andExpect(jsonPath("$.data.username").value("Mikael"))
                 .andExpect(jsonPath("$.data.roles").value("admin user"))
                 .andExpect(jsonPath("$.data.numberOfJobs").value(1));
+    }
+
+    @Test
+    void testSaveAdSuccess() throws Exception {
+        AdDtoForm adDtoForm = new AdDtoForm("htmlCode");
+
+        Ad ad = new Ad("htmlCode");
+
+        String json = this.objectMapper.writeValueAsString(adDtoForm);
+
+        // Given
+        given(this.adService.addAd(ad, 1L));
+
+        // When and then
+        this.mockMvc.perform(post(this.baseUrlAds + "/saveAd")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Save Ad Success"))
+                .andExpect(jsonPath("$.data.htmlCode").value("htmlCode"));
     }
 }

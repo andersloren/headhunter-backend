@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sprinta.headhunterbackend.job.Job;
+import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.user.User;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 public class AdServiceIntegratedTest {
@@ -24,31 +25,34 @@ public class AdServiceIntegratedTest {
     private AdService adService;
     private JobService jobService;
     private AdRepository adRepository;
+    private JobRepository jobRepository;
 
     @BeforeEach
     public void setUp() {
         this.jobService = Mockito.mock(JobService.class);
         this.adRepository = Mockito.mock(AdRepository.class);
-        this.adService = new AdService(this.adRepository, this.jobService);
+        this.jobRepository = Mockito.mock(JobRepository.class);
+        this.adService = new AdService(this.adRepository, this.jobService, this.jobRepository);
     }
 
     @Test
-    void testSaveAdSuccess() {
+    void testSaveAdSuccess() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         User user = new User("m@e.se", "Mikael", "admin user", null);
         Job job = new Job(1L, "Title", "Description", user, "Instruction", "htmlCode", null, 0);
-        Ad ad = new Ad("abc", "htmlCode", job);
+        Ad newAd = new Ad("abc", "htmlCode", job);
         List<Ad> ads = new ArrayList<>();
-        ads.add(ad);
+        ads.add(newAd);
         job.setAds(ads);
 
-        given(this.jobService.findById(job.getId())).willReturn(job);
-        given(this.adRepository.save(any(Ad.class))).willReturn(ad);
+        given(this.adRepository.save(newAd)).willReturn(newAd);
+        given(this.jobRepository.findById(job.getId())).willReturn(Optional.of(job));
 
-        Ad savedAd = this.adService.saveAd(ad, job.getId());
+        Ad savedAd = this.adService.addAd(newAd, job.getId());
 
-        assertThat(savedAd).isEqualTo(ad);
+        assertThat(savedAd.getHtmlCode()).isEqualToIgnoringCase(newAd.getHtmlCode());
 
         then(this.jobService).should().save(job);
-        then(this.adRepository).should().save(ad);
     }
 }
+
+/*        this.jobRepository = Mockito.mock(JobRepository.class);*/

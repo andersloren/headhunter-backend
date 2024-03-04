@@ -18,6 +18,7 @@ import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.system.exception.ResponseSubstringNotPureHtmlException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
+import se.sprinta.headhunterbackend.user.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,14 +29,18 @@ public class JobService {
     private final JobRepository jobRepository;
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     private final ChatClient chatClient;
 
-    public JobService(JobRepository jobRepository, UserRepository userRepository, ChatClient chatClient) {
+    public JobService(JobRepository jobRepository, UserRepository userRepository, UserService userService, ChatClient chatClient) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
         this.chatClient = chatClient;
     }
+
+    /* save is needed for when job gets associated with a new ad, in addAd()*/
 
     public Job save(Job job) {
         return this.jobRepository.save(job);
@@ -57,8 +62,7 @@ public class JobService {
 
 
     public Job addJob(JobDtoFormAdd jobDtoFormAdd) {
-        User foundUser = this.userRepository.findByEmail(jobDtoFormAdd.email())
-                .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormAdd.email()));
+        User foundUser = this.userService.findByUserEmail(jobDtoFormAdd.email());
 
         Job newJob = new Job();
         newJob.setTitle(jobDtoFormAdd.title());
