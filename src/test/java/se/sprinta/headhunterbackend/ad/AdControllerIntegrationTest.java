@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Integration tests for Ad API endpoints")
 @Tag("integration")
-@ActiveProfiles("ad-test")
+@ActiveProfiles("dev")
 @Transactional
 public class AdControllerIntegrationTest {
 
@@ -62,16 +62,16 @@ public class AdControllerIntegrationTest {
     @Test
     @DisplayName("Check findUserByAdId (GET)")
     void testFindUserByAdId() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAds + "/findUserByAdId/abc")
+        this.mockMvc.perform(get(this.baseUrlAds + "/findUserByAdId/48cf64a6-f32a-4311-9714-2c0f3567ebde")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find User Success"))
+                .andExpect(jsonPath("$.message").value("Find User By Ad Id Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
                 .andExpect(jsonPath("$.data.username").value("Mikael"))
                 .andExpect(jsonPath("$.data.roles").value("admin user"))
-                .andExpect(jsonPath("$.data.numberOfJobs").isEmpty());
+                .andExpect(jsonPath("$.data.numberOfJobs").value(3));
     }
 
 }

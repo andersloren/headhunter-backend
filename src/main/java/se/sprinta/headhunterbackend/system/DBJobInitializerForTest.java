@@ -1,3 +1,4 @@
+/*
 package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
@@ -11,7 +12,7 @@ import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
 @Component
-@Profile("job-test")
+@Profile("dev")
 @Transactional
 public class DBJobInitializerForTest implements CommandLineRunner {
 
@@ -37,19 +38,20 @@ public class DBJobInitializerForTest implements CommandLineRunner {
         user2.setPassword("a");
         user2.setRoles("user");
 
+        this.userService.save(user1);
+        this.userService.save(user2);
+
         Job job1 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job1 Title", "job1 Description", "job1 Instruction"));
         Job job2 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job2 Title", "job2 Description", "job2 Instruction"));
         Job job3 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job3 Title", "job3 Description", "job3 Instruction"));
         Job job4 = this.jobService.addJob(new JobDtoFormAdd("a@l.se", "job4 Title", "job4 Description", "job4 Instruction"));
-        Job job5 = this.jobService.addJob(new JobDtoFormAdd("a@l.se", "job5 Title", "job5 Title", "job5 Instruction"));
+        Job job5 = this.jobService.addJob(new JobDtoFormAdd("a@l.se", "job5 Title", "job5 Description", "job5 Instruction"));
 
         user1.addJob(job1);
         user1.addJob(job2);
         user1.addJob(job3);
         user2.addJob(job4);
         user2.addJob(job5);
-
-        this.userService.save(user1);
-        this.userService.save(user2);
     }
 }
+*/

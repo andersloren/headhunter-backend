@@ -1,3 +1,4 @@
+/*
 package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("ad-test")
+//@Profile("ad-test")
 @Transactional
 public class DBAdInitializerForTest implements CommandLineRunner {
 
@@ -94,3 +95,4 @@ public class DBAdInitializerForTest implements CommandLineRunner {
 
     }
 }
+*/

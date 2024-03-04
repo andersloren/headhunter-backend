@@ -27,9 +27,9 @@ public class AdServiceIntegratedTest {
 
     @BeforeEach
     public void setUp() {
-        jobService = Mockito.mock(JobService.class);
-        adRepository = Mockito.mock(AdRepository.class);
-        adService = new AdService(adRepository, jobService);
+        this.jobService = Mockito.mock(JobService.class);
+        this.adRepository = Mockito.mock(AdRepository.class);
+        this.adService = new AdService(this.adRepository, this.jobService);
     }
 
     @Test
@@ -41,16 +41,14 @@ public class AdServiceIntegratedTest {
         ads.add(ad);
         job.setAds(ads);
 
-        given(jobService.findById(job.getId())).willReturn(job);
-        given(adRepository.save(any(Ad.class))).willReturn(ad);
+        given(this.jobService.findById(job.getId())).willReturn(job);
+        given(this.adRepository.save(any(Ad.class))).willReturn(ad);
 
-        Ad savedAd = adService.saveAd(ad, job.getId());
+        Ad savedAd = this.adService.saveAd(ad, job.getId());
 
         assertThat(savedAd).isEqualTo(ad);
 
-        then(jobService).should().save(job);
-        then(adRepository).should().save(ad);
+        then(this.jobService).should().save(job);
+        then(this.adRepository).should().save(ad);
     }
-
-
 }

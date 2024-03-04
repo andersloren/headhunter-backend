@@ -1,7 +1,9 @@
+/*
 package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
@@ -34,3 +36,4 @@ public class DBUserInitializer implements CommandLineRunner {
         this.userService.save(user2);
     }
 }
+*/

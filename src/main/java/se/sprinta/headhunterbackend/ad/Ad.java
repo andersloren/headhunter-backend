@@ -12,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 @Entity
+@Table(name = "ads")
 public class Ad implements Serializable {
 
     @Id
