@@ -44,13 +44,16 @@ public class AdServiceIntegratedTest {
         ads.add(newAd);
         job.setAds(ads);
 
+        // Given
         given(this.adRepository.save(newAd)).willReturn(newAd);
         given(this.jobRepository.findById(job.getId())).willReturn(Optional.of(job));
 
-        Ad savedAd = this.adService.addAd(newAd, job.getId());
+        // When
+        Ad savedAd = this.adService.addAd(job.getId(), newAd);
 
         assertThat(savedAd.getHtmlCode()).isEqualToIgnoringCase(newAd.getHtmlCode());
 
+        // This doesn't make any sense...
         then(this.jobService).should().save(job);
     }
 }

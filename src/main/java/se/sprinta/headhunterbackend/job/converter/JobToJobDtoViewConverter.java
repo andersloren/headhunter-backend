@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 
-
 @Component
 public class JobToJobDtoViewConverter
         implements Converter<Job, JobDtoView> {

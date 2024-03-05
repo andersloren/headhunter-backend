@@ -46,16 +46,17 @@ public class AdService {
 
     /* no save ad as long as Ad doesn't have any children */
 
-    public Ad addAd(Ad ad, Long jobId) {
+    public Ad addAd(Long jobId, Ad ad) {
         Job foundJob = this.jobRepository.findById(jobId)
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+
+//        Job foundJob = this.jobService.findById(jobId);
 
         foundJob.addAd(ad);
         foundJob.setNumberOfAds();
 
         this.jobService.save(foundJob);
 
-        Ad savedAd = this.adRepository.save(ad);
-        return savedAd;
+        return this.adRepository.save(ad);
     }
 }

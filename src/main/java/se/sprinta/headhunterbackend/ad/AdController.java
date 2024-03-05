@@ -35,10 +35,10 @@ public class AdController {
         return new Result(true, StatusCode.SUCCESS, "Find User By Ad Id Success", foundUserDtoView);
     }
 
-    @PostMapping("/saveAd")
-    public Result saveAd(@RequestBody AdDtoForm adDtoForm, @RequestBody Long jobId) {
+    @PostMapping("/saveAd/{jobId}")
+    public Result saveAd(@PathVariable Long jobId, @RequestBody AdDtoForm adDtoForm) {
         Ad ad = this.adDtoFormToAdConverter.convert(adDtoForm);
-        Ad savedAd = this.adService.addAd(ad, jobId);
+        Ad savedAd = this.adService.addAd(jobId, ad);
         AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
         return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
     }

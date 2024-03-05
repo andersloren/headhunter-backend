@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.ad.AdService;
-import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.job.Job;
-import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.user.User;
@@ -99,15 +97,15 @@ public class DBDataInitializerTest implements CommandLineRunner {
         user2.addJob(job4);
         user2.addJob(job5);
 
-        Ad ad1 = this.adService.addAd(new Ad("htmlCode 1"), 1L);
-        Ad ad2 = this.adService.addAd(new Ad("htmlCode 2"), 1L);
-        Ad ad3 = this.adService.addAd(new Ad("htmlCode 3"), 1L);
-        Ad ad4 = this.adService.addAd(new Ad("htmlCode 4"), 2L);
-        Ad ad5 = this.adService.addAd(new Ad("htmlCode 5"), 2L);
-        Ad ad6 = this.adService.addAd(new Ad("htmlCode 6"), 3L);
-        Ad ad7 = this.adService.addAd(new Ad("htmlCode 7"), 4L);
-        Ad ad8 = this.adService.addAd(new Ad("htmlCode 8"), 4L);
-        Ad ad9 = this.adService.addAd(new Ad("htmlCode 9"), 5L);
+        Ad ad1 = this.adService.addAd(1L, new Ad("htmlCode 1"));
+        Ad ad2 = this.adService.addAd(1L, new Ad("htmlCode 2"));
+        Ad ad3 = this.adService.addAd(1L, new Ad("htmlCode 3"));
+        Ad ad4 = this.adService.addAd(2L, new Ad("htmlCode 4"));
+        Ad ad5 = this.adService.addAd(2L, new Ad("htmlCode 5"));
+        Ad ad6 = this.adService.addAd(3L, new Ad("htmlCode 6"));
+        Ad ad7 = this.adService.addAd(4L, new Ad("htmlCode 7"));
+        Ad ad8 = this.adService.addAd(4L, new Ad("htmlCode 8"));
+        Ad ad9 = this.adService.addAd(5L, new Ad("htmlCode 9"));
 
         ad1.setJob(job1);
         ad2.setJob(job1);
