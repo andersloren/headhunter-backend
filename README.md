@@ -3,7 +3,7 @@
 ## MySQL Scripts
 
 #### Entity Tables
-```SELECT * FROM jobs; SELECT * FROM _users; SELECT * FROM ads;```
+`SELECT * FROM jobs; SELECT * FROM _users; SELECT * FROM ads;`
 
 #### User - Job Relationship table
 `-- Relationship Table between USERS and JOBS SELECT u.email AS user_email, u.username AS user_username, j.id AS job_id, j.title AS job_title FROM _users u JOIN jobs j ON u.email = j.user_id ORDER BY u.email, j.id;`
