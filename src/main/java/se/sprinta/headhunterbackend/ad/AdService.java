@@ -50,12 +50,12 @@ public class AdService {
         Job foundJob = this.jobRepository.findById(jobId)
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-//        Job foundJob = this.jobService.findById(jobId);
 
         foundJob.addAd(ad);
         foundJob.setNumberOfAds();
-
         this.jobService.save(foundJob);
+
+        ad.setJob(foundJob);
 
         return this.adRepository.save(ad);
     }

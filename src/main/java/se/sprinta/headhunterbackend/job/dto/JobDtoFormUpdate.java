@@ -4,7 +4,6 @@ public record JobDtoFormUpdate(
         String email,
         String title,
         String description,
-        String instruction,
-        String htmlCode
+        String instruction
 ) {
 }

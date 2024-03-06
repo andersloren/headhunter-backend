@@ -9,8 +9,8 @@ public record JobDtoView(
         String title,
         String description,
         String email,
-        String htmlCode,
-        String instruction
+        String instruction,
+        int numberOfAds
 ) {
 }
 

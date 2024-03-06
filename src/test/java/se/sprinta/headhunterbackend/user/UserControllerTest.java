@@ -73,7 +73,7 @@ class UserControllerTest {
         this.mockMvc.perform(get(this.baseUrlUsers + "/findAll").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.message").value("Find All User Success"))
                 .andExpect(jsonPath("$.data[0].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].roles").value("admin user"))
@@ -107,7 +107,7 @@ class UserControllerTest {
         this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + "a@l.se").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find One Success"))
+                .andExpect(jsonPath("$.message").value("Find One User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
                 .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
@@ -148,7 +148,7 @@ class UserControllerTest {
                         .content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.message").value("Add User Success"))
                 .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
@@ -185,7 +185,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
                 .andExpect(jsonPath("$.data.username").value("Mikael"))
                 .andExpect(jsonPath("$.data.roles").value("admin"))
@@ -222,7 +222,7 @@ class UserControllerTest {
         this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + existingEmail).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Delete Success"))
+                .andExpect(jsonPath("$.message").value("Delete User Success"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 

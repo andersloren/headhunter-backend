@@ -173,8 +173,7 @@ class JobControllerTest {
                 "m@e.se",
                 "New Title",
                 "New Description",
-                "New Instruction",
-                "New HTML Code"
+                "New Instruction"
         );
 
         String json = this.objectMapper.writeValueAsString(jobDtoFormUpdate);
@@ -199,8 +198,7 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.message").value("Update Success"))
                 .andExpect(jsonPath("$.data.id").value(1L))
                 .andExpect(jsonPath("$.data.description").value("New Description"))
-                .andExpect(jsonPath("$.data.instruction").value("New Instruction"))
-                .andExpect(jsonPath("$.data.htmlCode").value("New HTML Code"));
+                .andExpect(jsonPath("$.data.instruction").value("New Instruction"));
 
     }
 
@@ -213,8 +211,7 @@ class JobControllerTest {
                 "m@e.se",
                 "New Title",
                 "New Description",
-                "New Instruction",
-                "New HTML Code"
+                "New Instruction"
         );
 
         String json = this.objectMapper.writeValueAsString(jobDto);
@@ -239,10 +236,10 @@ class JobControllerTest {
         String json = this.objectMapper.writeValueAsString(removeJob);
 
         // Given
-        doNothing().when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 1L));
+        doNothing().when(this.jobService).delete("m@e.se", 1L);
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/m@e.se" + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
@@ -259,9 +256,9 @@ class JobControllerTest {
         String json = this.objectMapper.writeValueAsString(removeJob);
 
         // Given
-        doThrow(new ObjectNotFoundException("job", 0L)).when(this.jobService).delete(new JobDtoFormRemove("m@e.se", 0L));
+        doThrow(new ObjectNotFoundException("job", 0L)).when(this.jobService).delete("m@e.se", 0L);
 
-        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/m@e.se" + "/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
@@ -278,9 +275,9 @@ class JobControllerTest {
         String json = this.objectMapper.writeValueAsString(removeJob);
 
         // Given
-        doThrow(new ObjectNotFoundException("user", "m@j.se")).when(this.jobService).delete(new JobDtoFormRemove("m@j.se", 1L));
+        doThrow(new ObjectNotFoundException("user", "m@j.se")).when(this.jobService).delete("m@j.se", 1L);
 
-        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/m@j.se" + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
@@ -304,9 +301,9 @@ class JobControllerTest {
         String json = this.objectMapper.writeValueAsString(removeJob);
 
         // Given
-        doThrow(new DoesNotExistException()).when(this.jobService).delete(new JobDtoFormRemove("a@l.se", 1L));
+        doThrow(new DoesNotExistException()).when(this.jobService).delete("a@l.se", 1L);
 
-        this.mockMvc.perform(delete(this.baseUrl + "/delete")
+        this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/a@l.se" + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))

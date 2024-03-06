@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.ad;
 
+import jakarta.persistence.EntityResult;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
 import se.sprinta.headhunterbackend.ad.converter.AdToAdDtoView;
@@ -10,6 +11,9 @@ import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
 import se.sprinta.headhunterbackend.user.dto.UserDtoView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-ads}")
@@ -26,6 +30,13 @@ public class AdController {
         this.userToUserDtoViewConverter = userToUserDtoViewConverter;
         this.adDtoFormToAdConverter = adDtoFormToAdConverter;
         this.adToAdDtoView = adToAdDtoView;
+    }
+
+    @GetMapping("/findAllAds")
+    public Result findAllAds() {
+        List<Ad> allAds = this.adService.findAllAds();
+        List<AdDtoView> allAdDtoViews = allAds.stream().map(ad -> this.adToAdDtoView.convert(ad)).toList();
+        return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAdDtoViews);
     }
 
     @GetMapping(value = "/findUserByAdId/{adId}")

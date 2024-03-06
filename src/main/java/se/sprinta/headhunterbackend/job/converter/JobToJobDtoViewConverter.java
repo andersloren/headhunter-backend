@@ -16,8 +16,8 @@ public class JobToJobDtoViewConverter
                 source.getTitle(),
                 source.getDescription(),
                 source.getUser().getEmail(),
-                source.getHtmlCode(),
-                source.getInstruction()
+                source.getInstruction(),
+                source.getNumberOfAds()
         );
     }
 }

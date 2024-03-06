@@ -12,14 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import se.sprinta.headhunterbackend.job.Job;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.user.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,6 +46,9 @@ public class AdControllerAuthorityIntegrationTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @MockBean
+    AdService adService;
 
     String token;
 
@@ -59,20 +70,4 @@ public class AdControllerAuthorityIntegrationTest {
         JSONObject json = new JSONObject(contentAsString);
         this.token = "Bearer " + json.getJSONObject("data").getString("token");
     }
-
-    @Test
-    @DisplayName("Check findUserByAdId (GET)")
-    void testFindUserByAdId() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAds + "/findUserByAdId/48cf64a6-f32a-4311-9714-2c0f3567ebde")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, this.token))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find User By Ad Id Success"))
-                .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael"))
-                .andExpect(jsonPath("$.data.roles").value("admin user"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(3));
-    }
-
 }

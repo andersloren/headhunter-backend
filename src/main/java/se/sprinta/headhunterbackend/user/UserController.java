@@ -28,14 +28,14 @@ public class UserController {
         List<UserDtoView> foundUserDtos = foundUsers.stream()
                 .map(this.userToUserDtoViewConverter::convert)
                 .toList();
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundUserDtos);
+        return new Result(true, StatusCode.SUCCESS, "Find All User Success", foundUserDtos);
     }
 
     @GetMapping("/findUser/{email}")
     public Result findUserByEmail(@PathVariable String email) {
         User foundUser = this.userService.findByUserEmail(email);
         UserDtoView foundUserDto = this.userToUserDtoViewConverter.convert(foundUser);
-        return new Result(true, StatusCode.SUCCESS, "Find One Success", foundUserDto);
+        return new Result(true, StatusCode.SUCCESS, "Find One User Success", foundUserDto);
     }
 
     @PostMapping("/register")
@@ -43,7 +43,7 @@ public class UserController {
         user.setRoles("user");
         User addedUser = this.userService.save(user);
         UserDtoView addedUserDto = this.userToUserDtoViewConverter.convert(addedUser);
-        return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
+        return new Result(true, StatusCode.SUCCESS, "Add User Success", addedUserDto);
     }
 
     @PostMapping("/addUser")
@@ -57,12 +57,12 @@ public class UserController {
     public Result updateUser(@PathVariable String email, @RequestBody String roles) {
         User user = this.userService.update(email, roles);
         UserDtoView updatedUserDto = this.userToUserDtoViewConverter.convert(user);
-        return new Result(true, StatusCode.SUCCESS, "Update Success", updatedUserDto);
+        return new Result(true, StatusCode.SUCCESS, "Update User Success", updatedUserDto);
     }
 
     @DeleteMapping("/delete/{email}")
     public Result deleteUser(@PathVariable String email) {
         this.userService.delete(email);
-        return new Result(true, StatusCode.SUCCESS, "Delete Success");
+        return new Result(true, StatusCode.SUCCESS, "Delete User Success");
     }
 }

@@ -9,6 +9,8 @@ import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 public class AdToAdDtoView implements Converter<Ad, AdDtoView> {
     @Override
     public AdDtoView convert(Ad source) {
-        return new AdDtoView(source.getHtmlCode());
+        return new AdDtoView(
+                source.getId(),
+                source.getHtmlCode());
     }
 }

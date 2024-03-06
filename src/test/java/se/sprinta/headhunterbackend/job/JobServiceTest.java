@@ -31,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@ActiveProfiles("dev")
 @ExtendWith(MockitoExtension.class)
 class JobServiceTest {
 
@@ -156,6 +155,63 @@ class JobServiceTest {
     }
 
     @Test
+    void testFindAllJobsByUserEmailSuccess() {
+        User user1 = new User(
+                "m@e.se",
+                "Mikael",
+                "admin user",
+                null);
+
+
+        User user2 = new User(
+                "a@l.se",
+                "Anders",
+                "user",
+                null);
+
+        this.userRepository.save(user1);
+        this.userRepository.save(user2);
+
+        Job j1 = new Job();
+        j1.setId(1L);
+        j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
+        j1.setUser(user1);
+        j1.setInstruction("This is an instruction");
+        j1.setHtmlCode("This is HTML code");
+
+        Job j2 = new Job();
+        j2.setId(2L);
+        j2.setDescription(".Net-junior till vårt nya kontor.");
+        j2.setUser(user1);
+        j2.setInstruction("This is an instruction");
+        j2.setHtmlCode("This is HTML code");
+
+        Job j3 = new Job();
+        j3.setId(3L);
+        j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
+        j3.setUser(user2);
+        j3.setInstruction("This is an instruction");
+        j3.setHtmlCode("This is HTML code");
+
+        this.jobs = new ArrayList<>();
+        this.jobs.add(j1);
+        this.jobs.add(j2);
+        this.jobs.add(j3);
+
+        this.user1Jobs = new ArrayList<>();
+        this.user1Jobs.add(j1);
+        this.user1Jobs.add(j2);
+
+        given(this.jobRepository.findAllByUser_Email("m@e.se")).willReturn(this.user1Jobs);
+
+        List<Job> foundJobs = this.jobService.findAllJobsByEmail("m@e.se");
+
+        assertThat(foundJobs).hasSameElementsAs(this.user1Jobs);
+
+        verify(this.jobRepository, times(1)).findAllByUser_Email(user1.getEmail());
+    }
+
+    @Test
     void testSaveJobSuccess() {
         User user1 = new User(
                 "m@e.se",
@@ -209,8 +265,7 @@ class JobServiceTest {
                 "Updated title",
                 "Updated description.",
 
-                "Updated instruction",
-                "Updated HTML code"
+                "Updated instruction"
         );
 
         Job updatedJob = new Job();
@@ -244,8 +299,7 @@ class JobServiceTest {
                 "m@e.se",
                 "Title",
                 "Description",
-                "Instruction",
-                "HTML code"
+                "Instruction"
         );
 
         // Given
@@ -275,7 +329,7 @@ class JobServiceTest {
 
         // When
         Throwable thrown = catchThrowable(() -> {
-            this.jobService.delete(new JobDtoFormRemove("m@e.se", 10L));
+            this.jobService.delete("m@e.se", 10L);
         });
 
         // Then
@@ -300,7 +354,7 @@ class JobServiceTest {
 
         // When
         Throwable thrown = catchThrowable(() -> {
-            this.jobService.delete(new JobDtoFormRemove("m@j.se", 1L));
+            this.jobService.delete("m@j.se", 1L);
         });
 
         // Then
@@ -334,61 +388,6 @@ class JobServiceTest {
                 .isInstanceOf(HttpClientErrorException.class);
     }
 }
-
-//    @Test
-//    void testSummarizeSuccess() throws JsonProcessingException {
-//        // Given
-//        JobDto jobDto = new JobDto(1L,
-//                "Programledare\n" +
-//                        "IT Program-/Projektledare\n" +
-//                        "\n" +
-//                        " \n" +
-//                        "\n" +
-//                        "Vi söker en programledare för att leda och styra projektresurser vars focus är att bidra till den totala leveransen inom ett mer omfattande IT-program.\n" +
-//                        "\n" +
-//                        "Som programledare förväntas du hantera och facilitera externa intressenter som har beroenden till programmet.\n" +
-//                        "\n" +
-//                        " \n" +
-//                        "\n" +
-//                        "Rollen kräver en kombination av teknisk expertis, dokumenterad projektledningsförmåga av större dignitet och ett tydligt affärsmannaskap.\n" +
-//                        "\n" +
-//                        "Du kommer övervaka planering, genomförande och leverans för att med intressenter, teammedlemmar och ledare säkerställa att programmet når sina mål.\n" +
-//                        "\n" +
-//                        " \n" +
-//                        "\n" +
-//                        "Programmet syftar till att ta in en ny kund till Soltak och att få alla delarna i den totala IT-leveransen på plats.\n" +
-//                        "\n" +
-//                        "Flertalet projekt är redan uppstartade och det finns även delar som ännu inte är uppstartade.\n" +
-//                        "\n" +
-//                        " \n" +
-//                        "\n" +
-//                        "Rollen behöver tillsättas omgående och initialt upptar programledarrollen 50% av en FTE.\n" +
-//                        "\n" +
-//                        "Möjlighet till utökande av projektledning av ett eller flera andra projekt."
-//        );
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonArray = objectMapper.writeValueAsString(jobDto);
-//
-//        List<Message> messages = List.of(
-//                new Message("system", "Your task is to generate a short summary of a given JSON array in at most 100 words. The summary must include the number if artifacts, each artifact's description, and the ownership information."),
-//                new Message("user", jsonArray));
-//
-//
-//        ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
-//        ChatResponse chatResponse = new ChatResponse(List.of(new Choice(0, new Message("assistent", "A summary of two artifacts owned by Albus Dumbledore."))));
-//
-//        given(this.chatClient.generate(chatRequest)).willReturn(chatResponse);
-//
-//        // When
-//
-//        String summary = this.jobService.generate(jobDto);
-//
-//        // Then
-//
-//        assertThat(summary).isEqualTo("A summary of two artifacts owned by Albus Dumbledore.");
-//        verify(this.chatClient, times(1)).generate(chatRequest);
-//    }
-
 
 
 

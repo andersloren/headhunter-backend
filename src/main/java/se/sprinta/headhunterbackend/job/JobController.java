@@ -59,9 +59,9 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedJobDto);
     }
 
-    @DeleteMapping("/delete")
-    public Result deleteJob(@RequestBody JobDtoFormRemove jobDtoFormRemove) {
-        this.jobService.delete(jobDtoFormRemove);
+    @DeleteMapping("/delete/{email}/{jobId}")
+    public Result deleteJob(@PathVariable String email, @PathVariable Long jobId) {
+        this.jobService.delete(email, jobId);
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
 

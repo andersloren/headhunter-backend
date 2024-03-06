@@ -51,8 +51,10 @@ public class JobService {
     }
 
     public List<Job> findAllJobsByEmail(String email) {
-        List<Job> allJobs = this.jobRepository.findAll();
-        return allJobs.stream().filter(job -> job.getUser().getEmail().equalsIgnoreCase(email)).collect(Collectors.toList());
+//        List<Job> allJobs = this.jobRepository.findAll();
+//        return allJobs.stream().filter(job -> job.getUser().getEmail().equalsIgnoreCase(email)).collect(Collectors.toList());
+
+        return this.jobRepository.findAllByUser_Email(email);
     }
 
     public Job findById(Long id) {
@@ -91,21 +93,18 @@ public class JobService {
         if (update.instruction() != null) {
             job.setInstruction(update.instruction());
         }
-        if (update.htmlCode() != null) {
-            job.setHtmlCode(update.htmlCode());
-        }
 
         // // TODO: 06/02/2024 add more statements here if Job gets additional fields
         return this.jobRepository.save(job);
     }
 
-    public void delete(JobDtoFormRemove jobDtoFormRemove) {
+    public void delete(String email, Long jobId) {
 
-        Job foundJob = this.jobRepository.findById(jobDtoFormRemove.id())
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobDtoFormRemove.id()));
+        Job foundJob = this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-        User foundUser = this.userRepository.findByEmail(jobDtoFormRemove.email())
-                .orElseThrow(() -> new ObjectNotFoundException("user", jobDtoFormRemove.email()));
+        User foundUser = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("user", email));
 
 
         if (!foundJob.getUser().getEmail().equalsIgnoreCase(foundUser.getEmail())) {
