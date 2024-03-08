@@ -30,8 +30,8 @@ public class JobService {
 
     private final UserRepository userRepository;
     private final UserService userService;
-
     private final ChatClient chatClient;
+    private String substringResponse;
 
     public JobService(JobRepository jobRepository, UserRepository userRepository, UserService userService, ChatClient chatClient) {
         this.jobRepository = jobRepository;
@@ -116,7 +116,7 @@ public class JobService {
         this.jobRepository.delete(foundJob);
     }
 
-    public String generate(Long id) {
+    public String generate(String documentType, Long id) {
 
         Job foundJob = this.jobRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
         String instruction1 = foundJob.getInstruction();
@@ -133,7 +133,22 @@ public class JobService {
         String response = chatResponse.choices().get(0).message().content();
 
         // To trim the response, response is being passed to makeResponseSubstring and a trimmed string is returned
-        String substringResponse = makeResponseSubstring(response);
+
+        switch (documentType) {
+            case "html":
+                this.substringResponse = makeHTMLResponseSubstring(response);
+                break;
+            case "docx":
+                // TODO: 08/03/2024 trim this response? 
+                break;
+            case "pdf":
+                // TODO: 08/03/2024 trim this response?
+                // TODO: 08/03/2024 convert this string into pdf 
+                break;
+            default:    // TODO: 08/03/2024 remove this? 
+                break;
+        }
+
         foundJob.setHtmlCode(substringResponse); // TODO: 02/03/2024  remove this once the ad setup is all finished 
 
         Ad newAd = new Ad(substringResponse);
@@ -144,7 +159,7 @@ public class JobService {
         return substringResponse;
     }
 
-    public String makeResponseSubstring(String response) {
+    public String makeHTMLResponseSubstring(String response) {
         if (response == null) throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
 
 

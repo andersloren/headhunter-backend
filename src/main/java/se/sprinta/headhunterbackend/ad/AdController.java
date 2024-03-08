@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.ad;
 
-import jakarta.persistence.EntityResult;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
 import se.sprinta.headhunterbackend.ad.converter.AdToAdDtoView;
@@ -13,7 +12,6 @@ import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
 import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-ads}")
@@ -39,7 +37,21 @@ public class AdController {
         return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAdDtoViews);
     }
 
-    @GetMapping(value = "/findUserByAdId/{adId}")
+    @GetMapping("/findById/{adId}")
+    public Result findById(@PathVariable String adId) {
+        Ad foundAd = this.adService.findById(adId);
+        AdDtoView foundAdDtoView = this.adToAdDtoView.convert(foundAd);
+        return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAdDtoView);
+    }
+
+    @GetMapping("/findAllAdsByJobId/{jobId}")
+    public Result findAllAdsByJobId(@PathVariable Long jobId) {
+        List<Ad> foundAds = this.adService.findAdsByJobId(jobId);
+        List<AdDtoView> foundAdDtoViews = foundAds.stream().map(ad -> this.adToAdDtoView.convert(ad)).toList();
+        return new Result(true, StatusCode.SUCCESS, "Find All Ads By Job Id Success", foundAdDtoViews);
+    }
+
+    @GetMapping("/findUserByAdId/{adId}")
     public Result findUserByAdId(@PathVariable String adId) {
         User foundUser = this.adService.findUserByAdId(adId);
         UserDtoView foundUserDtoView = this.userToUserDtoViewConverter.convert(foundUser);
@@ -52,5 +64,11 @@ public class AdController {
         Ad savedAd = this.adService.addAd(jobId, ad);
         AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
         return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
+    }
+
+    @DeleteMapping("/deleteAd/{adId}")
+    public Result deleteAd(@PathVariable String adId) {
+        this.adService.deleteAd(adId);
+        return new Result(true, StatusCode.SUCCESS, "Ad Delete Success");
     }
 }

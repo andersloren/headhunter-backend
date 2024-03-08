@@ -59,4 +59,11 @@ public class AdService {
 
         return this.adRepository.save(ad);
     }
+
+    public void deleteAd(String adId) {
+        Ad foundAd = this.adRepository.findById(adId)
+                .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
+
+        this.adRepository.delete(foundAd);
+    }
 }

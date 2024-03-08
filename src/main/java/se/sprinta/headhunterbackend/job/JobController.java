@@ -53,7 +53,6 @@ public class JobController {
 
     @PutMapping("/update/{id}")
     public Result updateJob(@PathVariable Long id, @Valid @RequestBody JobDtoFormUpdate update) {
-        System.out.println("GOT TO CONTROLLER!!!!!!!!!!!!!!!!!");
         Job updatedJob = this.jobService.update(id, update); // TODO: 06/02/2024 fix this at some point
         JobDtoView updatedJobDto = this.jobToJobDtoViewConverter.convert(updatedJob);
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedJobDto);
@@ -67,15 +66,14 @@ public class JobController {
 
     @PostMapping("/addJob")
     public Result addJob(@Valid @RequestBody JobDtoFormAdd jobDtoFormAdd) {
-//        Job newJob = this.jobDtoForm
         Job addedJob = this.jobService.addJob(jobDtoFormAdd);
         JobDtoView addedJobDtoView = this.jobToJobDtoViewConverter.convert(addedJob);
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedJobDtoView);
     }
 
-    @GetMapping("/generate/{id}")
-    public Result generateJobAd(@PathVariable Long id) {
-        String generatedJobAd = this.jobService.generate(id);
+    @GetMapping("/generate/{documentType}/{jobId}")
+    public Result generateJobAd(@PathVariable String documentType, @PathVariable Long jobId) {
+        String generatedJobAd = this.jobService.generate(documentType, jobId);
         return new Result(true, StatusCode.SUCCESS, "Summarize Success", generatedJobAd);
     }
 }

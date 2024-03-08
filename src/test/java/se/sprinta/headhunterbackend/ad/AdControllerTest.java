@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.StatusCode;
@@ -18,6 +19,7 @@ import se.sprinta.headhunterbackend.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -123,6 +125,35 @@ public class AdControllerTest {
                 .andExpect(jsonPath("$.data[4].htmlCode").value("htmlCode 5"));
 
         ads.stream().map(ad -> "Ad id: " + ad.getId() + ", Ad HtmlCode: " + ad.getHtmlCode()).forEach(System.out::println);
+    }
+
+    @Test
+    void testFindAdByIdSuccess() throws Exception {
+        User user1 = new User();
+        user1.setEmail("m@e.se");
+        user1.setUsername("Mikael");
+        user1.setPassword("a");
+        user1.setRoles("admin user");
+
+        Job job1 = new Job();
+        job1.setId(1L);
+        job1.setTitle("Title");
+        job1.setDescription("Description.");
+        job1.setUser(user1);
+        job1.setInstruction("Instruction");
+        job1.setHtmlCode("htmlCode");
+
+        user1.addJob(job1);
+        Ad ad1 = new Ad("abc", "htmlCode 1", job1);
+
+        given(this.adService.findById(any(String.class))).willReturn(ad1);
+
+        this.mockMvc.perform(get(this.baseUrlAds + "/findById" + "/randomStringThatMocksAdId")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find Ad Success"))
+                .andExpect(jsonPath("$.data.htmlCode").value("htmlCode 1"));
     }
 
     @Test

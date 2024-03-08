@@ -258,7 +258,6 @@ class JobServiceTest {
         job1.setTitle("Java-utvecklare");
         job1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         job1.setInstruction("This is an instruction");
-        job1.setHtmlCode("This is an HTML code");
 
         JobDtoFormUpdate update = new JobDtoFormUpdate(
                 "m@e.se",
@@ -273,7 +272,6 @@ class JobServiceTest {
         updatedJob.setDescription("Updated description.");
         updatedJob.setUser(user1);
         updatedJob.setInstruction("Updated instruction");
-        updatedJob.setHtmlCode("Updated HTML code");
 
         // Given)
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(job1));
@@ -286,7 +284,6 @@ class JobServiceTest {
         assertThat(returnedUpdatedJob.getTitle()).isEqualTo(updatedJob.getTitle());
         assertThat(returnedUpdatedJob.getDescription()).isEqualTo(updatedJob.getDescription());
         assertThat(returnedUpdatedJob.getInstruction()).isEqualTo(updatedJob.getInstruction());
-        assertThat(returnedUpdatedJob.getHtmlCode()).isEqualTo(updatedJob.getHtmlCode());
 
         // Verify
         verify(this.jobRepository, times(1)).findById(1L);
@@ -370,7 +367,7 @@ class JobServiceTest {
         String substringResponse = "<!DOCTYPE html></html>";
 
         // When
-        String responseSubstring = this.jobService.makeResponseSubstring(response);
+        String responseSubstring = this.jobService.makeHTMLResponseSubstring(response);
 
         // Then
         assertEquals(responseSubstring, substringResponse);
@@ -380,7 +377,7 @@ class JobServiceTest {
     void testMakeResponseSubstringWhenResponseIsNull() {
         // When
         Throwable thrown = catchThrowable(() -> {
-            this.jobService.makeResponseSubstring(null);
+            this.jobService.makeHTMLResponseSubstring(null);
         });
 
         // Then

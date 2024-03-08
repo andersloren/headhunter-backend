@@ -3,8 +3,17 @@ package se.sprinta.headhunterbackend.system;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import se.sprinta.headhunterbackend.ad.Ad;
+import se.sprinta.headhunterbackend.ad.AdRepository;
+import se.sprinta.headhunterbackend.ad.AdService;
+import se.sprinta.headhunterbackend.job.Job;
+import se.sprinta.headhunterbackend.job.JobService;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Transactional
@@ -26,8 +35,6 @@ public class DBDataInitializer implements CommandLineRunner {
         user1.setRoles("admin user");
 
         User user2 = new User();
-
-
         user2.setEmail("a@l.se");
         user2.setUsername("Anders");
         user2.setPassword("a");

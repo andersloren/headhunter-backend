@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.client.chat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Choice;

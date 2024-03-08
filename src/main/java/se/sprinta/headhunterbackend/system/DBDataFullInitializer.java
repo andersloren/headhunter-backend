@@ -1,4 +1,3 @@
-
 package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
@@ -18,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("dev")
 @Transactional
-public class DBDataInitializerTest implements CommandLineRunner {
+@Profile("passive")
+public class DBDataFullInitializer implements CommandLineRunner {
 
     private final UserService userService;
     private final JobService jobService;
@@ -33,7 +32,7 @@ public class DBDataInitializerTest implements CommandLineRunner {
     private final List<Ad> ads4 = new ArrayList<>();
     private final List<Ad> ads5 = new ArrayList<>();
 
-    public DBDataInitializerTest(UserService userService, JobService jobService, AdRepository adRepository, AdService adService) {
+    public DBDataFullInitializer(UserService userService, JobService jobService, AdRepository adRepository, AdService adService) {
         this.userService = userService;
         this.jobService = jobService;
         this.adRepository = adRepository;
@@ -49,12 +48,12 @@ public class DBDataInitializerTest implements CommandLineRunner {
         user1.setPassword("a");
         user1.setRoles("admin user");
 
-
         User user2 = new User();
         user2.setEmail("a@l.se");
         user2.setUsername("Anders");
         user2.setPassword("a");
         user2.setRoles("user");
+
 
         Job job1 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job1 Title", "job1 Description", "job1 Instruction"));
         Job job2 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job2 Title", "job2 Description", "job2 Instruction"));
@@ -145,6 +144,5 @@ public class DBDataInitializerTest implements CommandLineRunner {
         this.adRepository.save(ad7);
         this.adRepository.save(ad8);
         this.adRepository.save(ad9);
-
     }
 }
