@@ -34,6 +34,11 @@ public class User implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Job> jobs = new ArrayList<>();
 
+    public User(String username, String roles) {
+        this.username = username;
+        this.roles = roles;
+    }
+
     public User(String email, String username, String roles, List<Job> jobs) {
         this.email = email;
         this.username = username;

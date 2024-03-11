@@ -139,6 +139,10 @@ class UserServiceTest {
         ownUser.setPassword("123456");
         ownUser.setRoles("admin user");
 
+        User update = new User();
+        update.setUsername("Mikael - update");
+        update.setRoles("admin"); // From admin user to just admin
+
         String email = "m@e.se";
         String roles = "admin";
 
@@ -147,7 +151,7 @@ class UserServiceTest {
         given(this.userRepository.save(ownUser)).willReturn(ownUser);
 
         // When
-        User updatedUser = this.userService.update(email, roles);
+        User updatedUser = this.userService.update(email, update);
 
         // Then
         assertThat(updatedUser.getEmail()).isEqualTo(ownUser.getEmail());
@@ -162,14 +166,16 @@ class UserServiceTest {
     @Test
     void testUpdateUserWithNonExistentId() {
         String email = "abc";
-        String roles = "admin";
+        User update = new User();
+        update.setUsername("Mikael - update");
+        update.setRoles("admin"); // From admin user to just admin
 
         // Given
         given(this.userRepository.findByEmail(email)).willReturn(Optional.empty());
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            User updatedUser = this.userService.update("abc", roles);
+            User updatedUser = this.userService.update("abc", update);
         });
 
         // Then

@@ -36,10 +36,13 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(newUser);
     }
 
-    public User update(String email, String roles) { // TODO: 31/01/2024 add username
+    public User update(String email, User update) { // TODO: 31/01/2024 add username
         User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
-        String rolesFixed = roles.replace("\"", "");
+
+        foundUser.setUsername(update.getUsername());
+
+        String rolesFixed = update.getRoles().replace("\"", "");
         foundUser.setRoles(rolesFixed);
         // TODO: 31/01/2024 add username
         return this.userRepository.save(foundUser);

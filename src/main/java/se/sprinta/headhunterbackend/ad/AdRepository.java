@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface AdRepository extends JpaRepository<Ad, String> {
     List<Ad> findByJob_Id(Long jobId);
-
 }

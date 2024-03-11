@@ -149,8 +149,6 @@ public class JobService {
                 break;
         }
 
-        foundJob.setHtmlCode(substringResponse); // TODO: 02/03/2024  remove this once the ad setup is all finished 
-
         Ad newAd = new Ad(substringResponse);
         foundJob.addAd(newAd);
         newAd.setJob(foundJob);

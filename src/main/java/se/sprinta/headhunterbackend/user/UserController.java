@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.user.converter.UserDtoFormToUserConverter;
 import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
+import se.sprinta.headhunterbackend.user.dto.UserDtoForm;
 import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
@@ -16,10 +18,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserToUserDtoViewConverter userToUserDtoViewConverter;
+    private final UserDtoFormToUserConverter userDtoFormToUserConverter;
 
-    public UserController(UserService userService, UserToUserDtoViewConverter userToUserDtoViewConverter) {
+    public UserController(UserService userService, UserToUserDtoViewConverter userToUserDtoViewConverter, UserDtoFormToUserConverter userDtoFormToUserConverter) {
         this.userService = userService;
         this.userToUserDtoViewConverter = userToUserDtoViewConverter;
+        this.userDtoFormToUserConverter = userDtoFormToUserConverter;
     }
 
     @GetMapping("/findAll")
@@ -54,8 +58,9 @@ public class UserController {
     }
 
     @PutMapping("/update/{email}") // TODO: 31/01/2024 add username
-    public Result updateUser(@PathVariable String email, @RequestBody String roles) {
-        User user = this.userService.update(email, roles);
+    public Result updateUser(@PathVariable String email, @RequestBody UserDtoForm userDtoForm) {
+        User update = this.userDtoFormToUserConverter.convert(userDtoForm);
+        User user = this.userService.update(email, update);
         UserDtoView updatedUserDto = this.userToUserDtoViewConverter.convert(user);
         return new Result(true, StatusCode.SUCCESS, "Update User Success", updatedUserDto);
     }

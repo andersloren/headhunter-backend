@@ -57,7 +57,6 @@ public class AdControllerTest {
         job1.setDescription("Description.");
         job1.setUser(user1);
         job1.setInstruction("Instruction");
-        job1.setHtmlCode("htmlCode");
 
         user1.addJob(job1);
 
@@ -95,7 +94,6 @@ public class AdControllerTest {
         job1.setDescription("Description.");
         job1.setUser(user1);
         job1.setInstruction("Instruction");
-        job1.setHtmlCode("htmlCode");
 
         user1.addJob(job1);
 
@@ -141,7 +139,6 @@ public class AdControllerTest {
         job1.setDescription("Description.");
         job1.setUser(user1);
         job1.setInstruction("Instruction");
-        job1.setHtmlCode("htmlCode");
 
         user1.addJob(job1);
         Ad ad1 = new Ad("abc", "htmlCode 1", job1);
@@ -170,7 +167,6 @@ public class AdControllerTest {
         job1.setDescription("Description.");
         job1.setUser(user1);
         job1.setInstruction("Instruction");
-        job1.setHtmlCode("htmlCode");
 
         user1.addJob(job1);
 

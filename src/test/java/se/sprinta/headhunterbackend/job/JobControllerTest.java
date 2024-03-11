@@ -70,7 +70,6 @@ class JobControllerTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user);
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
 
         Job j2 = new Job();
         j2.setId(2L);
@@ -78,7 +77,6 @@ class JobControllerTest {
         j2.setDescription(".Net-junior till vårt nya kontor.");
         j2.setUser(user);
         j2.setInstruction("This is an instruction");
-        j2.setHtmlCode("This is HTML code");
 
         Job j3 = new Job();
         j3.setId(3L);
@@ -86,7 +84,6 @@ class JobControllerTest {
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user);
         j3.setInstruction("This is an instruction");
-        j3.setHtmlCode("This is HTML code");
 
         user.addJob(j1);
         user.addJob(j2);
@@ -162,7 +159,6 @@ class JobControllerTest {
         job.setTitle("Old Title");
         job.setDescription("Old Description");
         job.setInstruction("Old Instruction");
-        job.setHtmlCode("Old HTML Code");
 
         User user = new User();
         user.setEmail("m@e.se");
@@ -184,7 +180,6 @@ class JobControllerTest {
         update.setUser(user);
         update.setDescription("New Description");
         update.setInstruction("New Instruction");
-        update.setHtmlCode("New HTML Code");
 
         // Given
         given(this.jobService.update(1L, jobDtoFormUpdate)).willReturn(update);

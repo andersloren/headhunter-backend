@@ -35,9 +35,6 @@ public class Job implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String instruction;
 
-    @Column(columnDefinition = "TEXT") // TODO: 02/03/2024 remove this once the ad setup is all finished 
-    private String htmlCode;
-
     @OneToMany(mappedBy = "job", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH})
     // TODO: 02/03/2024 add cascade when needed
     private List<Ad> ads = new ArrayList<>();
@@ -92,14 +89,6 @@ public class Job implements Serializable {
 
     public void setInstruction(String instruction) {
         this.instruction = instruction;
-    }
-
-    public String getHtmlCode() {
-        return htmlCode;
-    }
-
-    public void setHtmlCode(String htmlCode) {
-        this.htmlCode = htmlCode;
     }
 
     public List<Ad> getAds() {

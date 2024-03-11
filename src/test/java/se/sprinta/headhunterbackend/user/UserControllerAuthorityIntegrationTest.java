@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.user.dto.UserDtoForm;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -162,18 +163,21 @@ public class UserControllerAuthorityIntegrationTest {
     @DisplayName("Check updateUser when updating own user with valid input (PUT)")
     void testUpdateOwnUserSuccess() throws Exception {
         String email = "m@e.se";
-        String roles = "admin";
+
+        UserDtoForm userDtoForm = new UserDtoForm("Mikael - updated", "admin");
+
+        String json = this.objectMapper.writeValueAsString(userDtoForm);
 
         this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(roles)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael"))
+                .andExpect(jsonPath("$.data.username").value("Mikael - updated"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
 
@@ -181,18 +185,21 @@ public class UserControllerAuthorityIntegrationTest {
     @DisplayName("Check updateUser when updating other user with valid input (PUT)")
     void testUpdateOtherUserSuccess() throws Exception {
         String otherEmail = "a@l.se";
-        String updatedRoles = "admin";
+
+        UserDtoForm userDtoForm = new UserDtoForm("Anders - updated", "admin");
+
+        String json = this.objectMapper.writeValueAsString(userDtoForm);
 
         this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + otherEmail)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedRoles)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
+                .andExpect(jsonPath("$.data.username").value("Anders - updated"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
 

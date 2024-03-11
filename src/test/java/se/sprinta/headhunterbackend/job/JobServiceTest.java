@@ -6,18 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
-import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
-import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
-import se.sprinta.headhunterbackend.client.chat.dto.Choice;
-import se.sprinta.headhunterbackend.client.chat.dto.Message;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.system.exception.ResponseSubstringNotPureHtmlException;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserRepository;
 
@@ -29,7 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class JobServiceTest {
@@ -76,21 +69,18 @@ class JobServiceTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user1);
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
 
         Job j2 = new Job();
         j2.setId(2L);
         j2.setDescription(".Net-junior till vårt nya kontor.");
         j2.setUser(user1);
         j2.setInstruction("This is an instruction");
-        j2.setHtmlCode("This is HTML code");
 
         Job j3 = new Job();
         j3.setId(3L);
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user2);
         j3.setInstruction("This is an instruction");
-        j3.setHtmlCode("This is HTML code");
 
         this.jobs = new ArrayList<>();
         this.jobs.add(j1);
@@ -122,7 +112,6 @@ class JobServiceTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(new User("m@e.se", "Mikael", "admin user", null));
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
         // When
@@ -132,7 +121,6 @@ class JobServiceTest {
         assertThat(foundJob.getDescription()).isEqualTo(j1.getDescription());
         assertThat(foundJob.getUser()).isEqualTo(j1.getUser());
         assertThat(foundJob.getInstruction()).isEqualTo(j1.getInstruction());
-        assertThat(foundJob.getHtmlCode()).isEqualTo(j1.getHtmlCode());
 
         // Verify
         verify(this.jobRepository, times(1)).findById(1L);
@@ -177,21 +165,18 @@ class JobServiceTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user1);
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
 
         Job j2 = new Job();
         j2.setId(2L);
         j2.setDescription(".Net-junior till vårt nya kontor.");
         j2.setUser(user1);
         j2.setInstruction("This is an instruction");
-        j2.setHtmlCode("This is HTML code");
 
         Job j3 = new Job();
         j3.setId(3L);
         j3.setDescription("HR-ninja till vår nya avdelning på Mynttorget.");
         j3.setUser(user2);
         j3.setInstruction("This is an instruction");
-        j3.setHtmlCode("This is HTML code");
 
         this.jobs = new ArrayList<>();
         this.jobs.add(j1);
@@ -225,7 +210,6 @@ class JobServiceTest {
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setUser(user1);
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
 
 
         // Given
@@ -240,7 +224,6 @@ class JobServiceTest {
         assertThat(savedJob.getDescription()).isEqualTo(j1.getDescription());
         assertThat(savedJob.getUser()).isEqualTo(j1.getUser());
         assertThat(savedJob.getInstruction()).isEqualTo(j1.getInstruction());
-        assertThat(savedJob.getHtmlCode()).isEqualTo(j1.getHtmlCode());
 
         // Verify
         verify(this.jobRepository, times(1)).save(j1);
@@ -343,7 +326,6 @@ class JobServiceTest {
         j1.setTitle("Java-utvecklare");
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
         j1.setInstruction("This is an instruction");
-        j1.setHtmlCode("This is HTML code");
 
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));

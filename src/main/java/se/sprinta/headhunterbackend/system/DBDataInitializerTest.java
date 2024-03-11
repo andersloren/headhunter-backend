@@ -49,7 +49,6 @@ public class DBDataInitializerTest implements CommandLineRunner {
         user1.setPassword("a");
         user1.setRoles("admin user");
 
-
         User user2 = new User();
         user2.setEmail("a@l.se");
         user2.setUsername("Anders");

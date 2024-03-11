@@ -10,7 +10,9 @@ import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.user.User;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

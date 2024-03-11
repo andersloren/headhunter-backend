@@ -54,6 +54,8 @@ public class DBDataFullInitializer implements CommandLineRunner {
         user2.setPassword("a");
         user2.setRoles("user");
 
+        this.userService.save(user1);
+        this.userService.save(user2);
 
         Job job1 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job1 Title", "job1 Description", "job1 Instruction"));
         Job job2 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job2 Title", "job2 Description", "job2 Instruction"));
@@ -70,18 +72,24 @@ public class DBDataFullInitializer implements CommandLineRunner {
         user1.setNumberOfJobs();
         user2.setNumberOfJobs();
 
-        this.userService.save(user1);
-        this.userService.save(user2);
-
         Ad ad1 = this.adService.addAd(1L, new Ad("htmlCode 1"));
+        Thread.sleep(1);
         Ad ad2 = this.adService.addAd(1L, new Ad("htmlCode 2"));
+        Thread.sleep(1);
         Ad ad3 = this.adService.addAd(1L, new Ad("htmlCode 3"));
+        Thread.sleep(1);
         Ad ad4 = this.adService.addAd(2L, new Ad("htmlCode 4"));
+        Thread.sleep(1);
         Ad ad5 = this.adService.addAd(2L, new Ad("htmlCode 5"));
+        Thread.sleep(1);
         Ad ad6 = this.adService.addAd(3L, new Ad("htmlCode 6"));
+        Thread.sleep(1);
         Ad ad7 = this.adService.addAd(4L, new Ad("htmlCode 7"));
+        Thread.sleep(1);
         Ad ad8 = this.adService.addAd(4L, new Ad("htmlCode 8"));
+        Thread.sleep(1);
         Ad ad9 = this.adService.addAd(5L, new Ad("htmlCode 9"));
+        Thread.sleep(1);
 
         ad1.setJob(job1);
         ad2.setJob(job1);

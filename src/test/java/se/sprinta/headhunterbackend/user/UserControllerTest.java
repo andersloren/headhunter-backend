@@ -9,13 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,27 +157,28 @@ class UserControllerTest {
     @Test
     void testUpdateUserSuccess() throws Exception {
 
-        UserDtoView userDto = new UserDtoView(
-                "m@e.se",
-                "Mikael",
-                "admin user",
-                0);
+        User user = new User();
+        user.setEmail("m@e.se");
+        user.setUsername("Mikael");
+        user.setPassword("123456");
+        user.setRoles("admin user");
 
         User updatedUser = new User();
         updatedUser.setEmail("m@e.se");
-        updatedUser.setUsername("Mikael");
-        updatedUser.setPassword("123456");
+        updatedUser.setUsername("Mikael - updated");
         updatedUser.setRoles("admin"); // Role changes from 'admin user' to 'admin'
 
-        String email = "m@e.se";
+        User update = new User(
+                "Mikael - updated",
+                "admin");
 
-        String json = this.objectMapper.writeValueAsString(userDto);
+        String json = this.objectMapper.writeValueAsString(update);
 
         // Given
-        given(this.userService.update(eq(email), Mockito.any(String.class))).willReturn(updatedUser);
+        given(this.userService.update(eq("m@e.se"), update)).willReturn(updatedUser);
 
         // When and then
-        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/m@e.se")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
@@ -188,7 +186,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael"))
+                .andExpect(jsonPath("$.data.username").value("Mikael - updated"))
                 .andExpect(jsonPath("$.data.roles").value("admin"))
                 .andExpect(jsonPath("$.data.numberOfJobs").value(0));
     }
@@ -196,15 +194,19 @@ class UserControllerTest {
     @Test
     void testUpdateUserWithNonExistentEmail() throws Exception {
         String email = "abc";
-        String roles = "admin";
+        User update = new User();
+        update.setUsername("Nonsense Username");
+        update.setUsername("No real roles");
+
+        String json = this.objectMapper.writeValueAsString(update);
 
         // Given
-        given(this.userService.update(email, roles)).willThrow(new ObjectNotFoundException("user", email));
+        given(this.userService.update(email, update)).willThrow(new ObjectNotFoundException("user", email));
 
         // When and then
         this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
                         .content(String.valueOf(MediaType.APPLICATION_JSON))
-                        .content(roles)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
