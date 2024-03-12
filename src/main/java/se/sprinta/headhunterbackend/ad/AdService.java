@@ -52,7 +52,6 @@ public class AdService {
         Job foundJob = this.jobRepository.findById(jobId)
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-
         foundJob.addAd(ad);
         foundJob.setNumberOfAds();
         this.jobService.save(foundJob);

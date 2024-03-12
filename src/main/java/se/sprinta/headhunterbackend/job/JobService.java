@@ -1,7 +1,6 @@
 package se.sprinta.headhunterbackend.job;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -11,7 +10,6 @@ import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -21,7 +19,6 @@ import se.sprinta.headhunterbackend.user.UserRepository;
 import se.sprinta.headhunterbackend.user.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -139,19 +136,19 @@ public class JobService {
                 this.substringResponse = makeHTMLResponseSubstring(response);
                 break;
             case "docx":
-                // TODO: 08/03/2024 trim this response? 
+                // TODO: 08/03/2024 trim this response?
                 break;
             case "pdf":
                 // TODO: 08/03/2024 trim this response?
-                // TODO: 08/03/2024 convert this string into pdf 
+                // TODO: 08/03/2024 convert this string into pdf
                 break;
             default:    // TODO: 08/03/2024 remove this? 
                 break;
         }
 
-        Ad newAd = new Ad(substringResponse);
-        foundJob.addAd(newAd);
-        newAd.setJob(foundJob);
+        Ad newHtmlAd = new Ad(substringResponse);
+        foundJob.addAd(newHtmlAd);
+        newHtmlAd.setJob(foundJob);
 
         this.jobRepository.save(foundJob);
         return substringResponse;

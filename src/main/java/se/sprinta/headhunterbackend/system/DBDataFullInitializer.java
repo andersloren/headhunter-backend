@@ -78,28 +78,34 @@ public class DBDataFullInitializer implements CommandLineRunner {
         Thread.sleep(1);
         Ad ad3 = this.adService.addAd(1L, new Ad("htmlCode 3"));
         Thread.sleep(1);
-        Ad ad4 = this.adService.addAd(2L, new Ad("htmlCode 4"));
+        Ad ad4 = this.adService.addAd(1L, new Ad("htmlCode 4"));
         Thread.sleep(1);
-        Ad ad5 = this.adService.addAd(2L, new Ad("htmlCode 5"));
+        Ad ad5 = this.adService.addAd(1L, new Ad("htmlCode 5"));
         Thread.sleep(1);
-        Ad ad6 = this.adService.addAd(3L, new Ad("htmlCode 6"));
+        Ad ad6 = this.adService.addAd(2L, new Ad("htmlCode 6"));
         Thread.sleep(1);
-        Ad ad7 = this.adService.addAd(4L, new Ad("htmlCode 7"));
+        Ad ad7 = this.adService.addAd(2L, new Ad("htmlCode 7"));
         Thread.sleep(1);
-        Ad ad8 = this.adService.addAd(4L, new Ad("htmlCode 8"));
+        Ad ad8 = this.adService.addAd(3L, new Ad("htmlCode 8"));
         Thread.sleep(1);
-        Ad ad9 = this.adService.addAd(5L, new Ad("htmlCode 9"));
+        Ad ad9 = this.adService.addAd(4L, new Ad("htmlCode 9"));
+        Thread.sleep(1);
+        Ad ad10 = this.adService.addAd(4L, new Ad("htmlCode 10"));
+        Thread.sleep(1);
+        Ad ad11 = this.adService.addAd(5L, new Ad("htmlCode 11"));
         Thread.sleep(1);
 
         ad1.setJob(job1);
         ad2.setJob(job1);
         ad3.setJob(job1);
-        ad4.setJob(job2);
-        ad5.setJob(job2);
-        ad6.setJob(job3);
-        ad7.setJob(job4);
-        ad8.setJob(job4);
-        ad9.setJob(job5);
+        ad4.setJob(job1);
+        ad5.setJob(job1);
+        ad6.setJob(job2);
+        ad7.setJob(job3);
+        ad8.setJob(job3);
+        ad9.setJob(job4);
+        ad10.setJob(job4);
+        ad11.setJob(job5);
 
         this.ads.add(ad1);
         this.ads.add(ad2);
@@ -110,6 +116,8 @@ public class DBDataFullInitializer implements CommandLineRunner {
         this.ads.add(ad7);
         this.ads.add(ad8);
         this.ads.add(ad9);
+        this.ads.add(ad10);
+        this.ads.add(ad11);
 
         this.jobService.save(job1);
         this.jobService.save(job2);
@@ -121,26 +129,28 @@ public class DBDataFullInitializer implements CommandLineRunner {
         this.ads1.add(ad1);
         this.ads1.add(ad2);
         this.ads1.add(ad3);
+        this.ads1.add(ad4);
+        this.ads1.add(ad5);
 
         System.out.println(" 2 *** IS THIS NULL ?? *** :" + job1);
         job1.setAds(ads1);
 
 //        List<Ad> ads2 = new ArrayList<>();
-        ads2.add(ad4);
-        ads2.add(ad5);
+        ads2.add(ad6);
+        ads2.add(ad7);
         job2.setAds(ads2);
 
 //        List<Ad> ads3 = new ArrayList<>();
-        ads3.add(ad6);
+        ads3.add(ad8);
         job3.setAds(ads3);
 
 //        List<Ad> ads4 = new ArrayList<>();
-        ads4.add(ad7);
-        ads4.add(ad8);
+        ads4.add(ad9);
+        ads4.add(ad10);
         job4.setAds(ads4);
 
 //        List<Ad> ads5 = new ArrayList<>();
-        ads5.add(ad9);
+        ads5.add(ad11);
         job5.setAds(ads5);
 
         this.adRepository.save(ad1);
@@ -152,5 +162,7 @@ public class DBDataFullInitializer implements CommandLineRunner {
         this.adRepository.save(ad7);
         this.adRepository.save(ad8);
         this.adRepository.save(ad9);
+        this.adRepository.save(ad10);
+        this.adRepository.save(ad11);
     }
 }
