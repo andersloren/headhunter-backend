@@ -349,7 +349,7 @@ class JobServiceTest {
         String substringResponse = "<!DOCTYPE html></html>";
 
         // When
-        String responseSubstring = this.jobService.makeHTMLResponseSubstring(response);
+        String responseSubstring = this.jobService.makeHtmlResponseSubstring(response);
 
         // Then
         assertEquals(responseSubstring, substringResponse);
@@ -359,7 +359,7 @@ class JobServiceTest {
     void testMakeResponseSubstringWhenResponseIsNull() {
         // When
         Throwable thrown = catchThrowable(() -> {
-            this.jobService.makeHTMLResponseSubstring(null);
+            this.jobService.makeHtmlResponseSubstring(null);
         });
 
         // Then

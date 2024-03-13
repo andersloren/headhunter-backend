@@ -116,12 +116,15 @@ public class JobService {
     public String generate(String documentType, Long id) {
 
         Job foundJob = this.jobRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
-        String instruction1 = foundJob.getInstruction();
 
         // Prepare the message for summarizing
         List<Message> messages = List.of(
-                new Message("system", instruction1),
+                new Message("system", foundJob.getInstruction()),
                 new Message("user", foundJob.getDescription()));
+
+        System.out.println("documentType: " + documentType);
+        System.out.println("instruction: " + foundJob.getInstruction());
+        System.out.println("description: " + foundJob.getDescription());
 
         ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
 
@@ -133,7 +136,7 @@ public class JobService {
 
         switch (documentType) {
             case "html":
-                this.substringResponse = makeHTMLResponseSubstring(response);
+                this.substringResponse = makeHtmlResponseSubstring(response);
                 break;
             case "docx":
                 // TODO: 08/03/2024 trim this response?
@@ -154,7 +157,7 @@ public class JobService {
         return substringResponse;
     }
 
-    public String makeHTMLResponseSubstring(String response) {
+    public String makeHtmlResponseSubstring(String response) {
         if (response == null) throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
 
 
