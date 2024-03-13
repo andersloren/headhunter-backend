@@ -17,8 +17,8 @@ public class OpenAiChatClient implements ChatClient {
     private final RestClient restClient;
 
 
-    public OpenAiChatClient(@Value("${ai.openai.endpoint}") String endpoint,
-                            @Value("${ai.openai.api-key}") String apiKey,
+    public OpenAiChatClient(@Value("${OPENAI_API_ENDPOINT}") String endpoint,
+                            @Value("${OPENAI_API_KEY}") String apiKey,
                             RestClient.Builder restClientBuilder) {
         this.restClient = restClientBuilder
                 .baseUrl(endpoint)
