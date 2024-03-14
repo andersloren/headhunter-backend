@@ -41,7 +41,7 @@ class OpenAiChatClientTest {
 
     @BeforeEach
     void setUp() {
-        this.url = "[OpenAI Endpoint]";
+        this.url = System.getenv("OPENAI_API_ENDPOINT");
 
         this.chatRequest = new ChatRequest("gpt-4", List.of(
                 new Message("system", "Your task is to generate a short summary of a given JSON array in at most 100 words. The summary must include the number of artifacts, each artifact's description, and the ownership information. Don't mention that the summary is from a given JSON array."),

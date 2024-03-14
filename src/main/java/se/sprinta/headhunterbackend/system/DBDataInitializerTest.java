@@ -17,6 +17,11 @@ import se.sprinta.headhunterbackend.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  * Database entries (User objects, Job objects, and Ad objects) for testing.
+ */
+
+
 @Component
 @Profile("dev")
 @Transactional
@@ -43,6 +48,7 @@ public class DBDataInitializerTest implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // TODO: 14/03/2024 Fix these duplicates
         User user1 = new User();
         user1.setEmail("m@e.se");
         user1.setUsername("Mikael");
@@ -114,7 +120,6 @@ public class DBDataInitializerTest implements CommandLineRunner {
         this.ads1.add(ad2);
         this.ads1.add(ad3);
 
-        System.out.println(" 2 *** IS THIS NULL ?? *** :" + job1);
         job1.setAds(ads1);
 
 //        List<Ad> ads2 = new ArrayList<>();

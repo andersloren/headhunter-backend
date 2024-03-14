@@ -20,6 +20,10 @@ import se.sprinta.headhunterbackend.user.UserService;
 
 import java.util.List;
 
+/**
+ * Business logic for Job
+ */
+
 @Service
 @Transactional
 public class JobService {

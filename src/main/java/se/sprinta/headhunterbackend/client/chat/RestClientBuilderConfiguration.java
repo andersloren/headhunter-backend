@@ -9,10 +9,10 @@ import org.springframework.web.client.RestClient;
 public class RestClientBuilderConfiguration {
 
     /**
-     * Replace the auto-configured RestClient.Builder bean which defaults to a SimpleClientHttpRequestFactory.
+     * Replace the autoconfigured RestClient.Builder bean which defaults to a SimpleClientHttpRequestFactory.
      * This bean will use JdkClientHttpRequestFactory.
      *
-     * @return
+     * @return RestClient.Builder
      */
     @Bean
     public RestClient.Builder restClientBuilder() {

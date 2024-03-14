@@ -2,19 +2,13 @@ package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import se.sprinta.headhunterbackend.ad.Ad;
-import se.sprinta.headhunterbackend.ad.AdRepository;
-import se.sprinta.headhunterbackend.ad.AdService;
-import se.sprinta.headhunterbackend.job.Job;
-import se.sprinta.headhunterbackend.job.JobService;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Database entries (User objects) for demoing and debugging purposes.
+ */
 
 @Component
 @Transactional
@@ -28,8 +22,9 @@ public class DBDataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
+        // TODO: 14/03/2024 Fix these duplicates
         User user1 = new User();
         user1.setEmail("m@e.se");
         user1.setUsername("Mikael");

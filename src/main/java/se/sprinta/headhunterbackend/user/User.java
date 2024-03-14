@@ -10,6 +10,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User is an entity that stores information that regards the user's account and the Job objects it holds.
+ * Relationship: [User] 1...* [Job]
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -27,9 +32,22 @@ public class User implements Serializable {
     @NotEmpty(message = "password is required.")
     private String password;
 
+    /**
+     * A User object has specific roles that gives its user authorities to certain parts of the app.
+     */
+
     private String roles;
 
+    /**
+     * A User object has an integer number of jobs.
+     */
+
     private int numberOfJobs;
+
+    /**
+     * A User object has an array of Job objects.
+     * Relationship: [User] 1...* [Job]
+     */
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Job> jobs = new ArrayList<>();
@@ -47,10 +65,22 @@ public class User implements Serializable {
         this.jobs = jobs;
     }
 
+    /**
+     * When a Job object is created, it has to be connected to a User object.
+     *
+     * @param newJob This is the Job object that the User will take ownership of.
+     */
+
     public void addJob(Job newJob) {
         this.jobs.add(newJob);
         setNumberOfJobs();
     }
+
+    /**
+     * When a Job object is deleted, it has to be disassociated with the User object it used to belong to.
+     *
+     * @param newJob This is the Job object that the User will take ownership of.
+     */
 
     public void removeJob(Job newJob) {
         this.jobs.remove(newJob);
@@ -62,6 +92,11 @@ public class User implements Serializable {
     public int getNumberOfJobs() {
         return numberOfJobs;
     }
+
+    /**
+     * The number of jobs a User object holds is dynamically calculated
+     * during the conversion from a User object to a UserDtoView object
+     */
 
     public void setNumberOfJobs() {
         numberOfJobs = this.jobs.size();

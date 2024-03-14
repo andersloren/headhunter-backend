@@ -11,6 +11,10 @@ import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
 
+/**
+ * Backend API endpoints for User.
+ */
+
 @RestController
 @RequestMapping("${api.endpoint.base-url-users}")
 @CrossOrigin("http://localhost:3000")
@@ -57,7 +61,7 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
     }
 
-    @PutMapping("/update/{email}") // TODO: 31/01/2024 add username
+    @PutMapping("/update/{email}")
     public Result updateUser(@PathVariable String email, @RequestBody UserDtoForm userDtoForm) {
         User update = this.userDtoFormToUserConverter.convert(userDtoForm);
         User user = this.userService.update(email, update);

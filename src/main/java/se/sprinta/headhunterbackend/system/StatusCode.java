@@ -1,5 +1,8 @@
 package se.sprinta.headhunterbackend.system;
 
+/**
+ * Customized Http codes. Suitable when we need to come up with new codes that are policy required, or very specific to our app.
+ */
 public class StatusCode {
 
     public static final int SUCCESS = 200; // Success

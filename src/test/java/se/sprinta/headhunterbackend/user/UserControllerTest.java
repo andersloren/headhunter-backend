@@ -200,6 +200,7 @@ class UserControllerTest {
 
         String json = this.objectMapper.writeValueAsString(update);
 
+
         // Given
         given(this.userService.update(email, update)).willThrow(new ObjectNotFoundException("user", email));
 

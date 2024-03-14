@@ -21,12 +21,12 @@ public class AuthService {
         this.userToUserDtoViewConverter = userToUserDtoViewConverter;
     }
 
-    /*
+    /**
      * We retrieve the user info by casting the authentication.getPrincipal() into a MyUserPrincipal object.
-     * Then, we can put that user information into a hogwartsUser object.
-     *
-     * The hogwartsUser object now holds the password, so it must be transformed into a dto.
-     * */
+     * Then, we can put that user information into a User object.
+     * <p>
+     * The User object now holds the password, so it must be transformed into a dto.
+     */
 
     public Map<String, Object> createLoginInfo(Authentication authentication) {
         // Create user info.

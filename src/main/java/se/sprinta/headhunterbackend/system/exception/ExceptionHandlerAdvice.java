@@ -26,6 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * All customized exceptions are stored here.
+ * The idea is to catch all likely exceptions here, with a default exception as a fallback, to deal with them in a proper way and prevent app crashes.
+ */
+
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 
@@ -79,6 +84,10 @@ public class ExceptionHandlerAdvice {
         return new Result(false, StatusCode.FORBIDDEN, "No permission", ex.getMessage());
     }
 
+    /**
+     * This is for AI API miscommunication.
+     */
+
     @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
     ResponseEntity<Result> handleRestClientException(HttpStatusCodeException ex) throws JsonProcessingException {
 
@@ -108,11 +117,12 @@ public class ExceptionHandlerAdvice {
                 ex.getStatusCode());
     }
 
-    /*
+    /**
      * Fallback handles any unhandled exceptions
+     *
      * @param ex
      * @return
-     * */
+     */
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

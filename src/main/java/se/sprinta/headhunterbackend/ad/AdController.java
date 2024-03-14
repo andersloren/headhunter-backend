@@ -13,15 +13,19 @@ import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
 
+/**
+ * Backend API endpoints for Ad.
+ */
+
 @RestController
 @RequestMapping("${api.endpoint.base-url-ads}")
 @CrossOrigin("http://localhost:3000")
 public class AdController {
 
-    private AdService adService;
-    private UserToUserDtoViewConverter userToUserDtoViewConverter;
-    private AdDtoFormToAdConverter adDtoFormToAdConverter;
-    private AdToAdDtoView adToAdDtoView;
+    private final AdService adService;
+    private final UserToUserDtoViewConverter userToUserDtoViewConverter;
+    private final AdDtoFormToAdConverter adDtoFormToAdConverter;
+    private final AdToAdDtoView adToAdDtoView;
 
     public AdController(AdService adService, UserToUserDtoViewConverter userToUserDtoViewConverter, AdDtoFormToAdConverter adDtoFormToAdConverter, AdToAdDtoView adToAdDtoView) {
         this.adService = adService;
@@ -33,7 +37,7 @@ public class AdController {
     @GetMapping("/findAllAds")
     public Result findAllAds() {
         List<Ad> allAds = this.adService.findAllAds();
-        List<AdDtoView> allAdDtoViews = allAds.stream().map(ad -> this.adToAdDtoView.convert(ad)).toList();
+        List<AdDtoView> allAdDtoViews = allAds.stream().map(this.adToAdDtoView::convert).toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAdDtoViews);
     }
 
@@ -44,12 +48,23 @@ public class AdController {
         return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAdDtoView);
     }
 
+    /**
+     * Searches for job and returns array of ads that is associated to it.
+     * Relationship: [Ad] *...1 [Job]
+     * @param jobId The id of the Job object that holds all the ads the user are looking for.
+     */
+
     @GetMapping("/findAllAdsByJobId/{jobId}")
     public Result findAllAdsByJobId(@PathVariable Long jobId) {
         List<Ad> foundAds = this.adService.findAdsByJobId(jobId);
-        List<AdDtoView> foundAdDtoViews = foundAds.stream().map(ad -> this.adToAdDtoView.convert(ad)).toList();
+        List<AdDtoView> foundAdDtoViews = foundAds.stream().map(this.adToAdDtoView::convert).toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Ads By Job Id Success", foundAdDtoViews);
     }
+
+    /**
+     * Searches for ad, look at the job associated to it and returns the user that owns that job.
+     * Relationship: [Ad] *...1 [Job] *...1 [User]
+     */
 
     @GetMapping("/findUserByAdId/{adId}")
     public Result findUserByAdId(@PathVariable String adId) {

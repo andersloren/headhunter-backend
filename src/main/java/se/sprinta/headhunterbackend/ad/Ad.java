@@ -9,8 +9,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-@AllArgsConstructor
+/**
+ * Ad is an entity that stores AI-generated data based on field values from a job.
+ * Relationship: [Ad] *...1 [Job]
+ */
 
+@AllArgsConstructor
 @Entity
 @Table(name = "ads")
 public class Ad implements Serializable {
@@ -19,10 +23,24 @@ public class Ad implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    /**
+     * htmlCode holds a String that makes up a job ad in Html-format
+     */
+
     @Column(columnDefinition = "TEXT")
     private String htmlCode;
 
+    /**
+     * createdDateTime is a timestamp for when the entity was originally created.
+     * Used for sorting ads chronologically.
+     */
+
     private ZonedDateTime createdDateTime = ZonedDateTime.now(ZoneId.of("Europe/Stockholm"));
+
+    /**
+     * Every Ad is part of a Job
+     * Relationship: [Ad] *...1 [Job]
+     */
 
     @ManyToOne
     @JoinColumn(name = "job_id")
@@ -39,7 +57,6 @@ public class Ad implements Serializable {
         this.id = id;
         this.htmlCode = htmlCode;
     }
-
 
     public Ad(String htmlCode, Job job) {
         this.htmlCode = htmlCode;
@@ -71,6 +88,10 @@ public class Ad implements Serializable {
     public ZonedDateTime getCreatedDateTime() {
         return createdDateTime;
     }
+
+    /**
+     * Timezone must be taken into consideration.
+     */
 
     public void setCreatedDateTime(ZonedDateTime createdDateTime) {
         this.createdDateTime = createdDateTime;

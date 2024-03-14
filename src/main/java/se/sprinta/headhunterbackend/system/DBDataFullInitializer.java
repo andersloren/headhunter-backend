@@ -16,6 +16,10 @@ import se.sprinta.headhunterbackend.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database entries (User objects, Job objects, and Ad objects) for demoing and debugging purposes.
+ */
+
 @Component
 @Transactional
 @Profile("passive")
@@ -25,6 +29,8 @@ public class DBDataFullInitializer implements CommandLineRunner {
     private final JobService jobService;
     private final AdRepository adRepository;
     private final AdService adService;
+
+    // TODO: 14/03/2024 Should ads be removed?
     private final List<Ad> ads = new ArrayList<>();
     private final List<Ad> ads1 = new ArrayList<>();
     private final List<Ad> ads2 = new ArrayList<>();
@@ -42,6 +48,7 @@ public class DBDataFullInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // TODO: 14/03/2024 Fix these duplicates
         User user1 = new User();
         user1.setEmail("m@e.se");
         user1.setUsername("Mikael");
@@ -132,7 +139,6 @@ public class DBDataFullInitializer implements CommandLineRunner {
         this.ads1.add(ad4);
         this.ads1.add(ad5);
 
-        System.out.println(" 2 *** IS THIS NULL ?? *** :" + job1);
         job1.setAds(ads1);
 
 //        List<Ad> ads2 = new ArrayList<>();
