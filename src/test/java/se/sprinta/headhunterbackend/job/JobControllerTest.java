@@ -10,11 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormRemove;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormDelete;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
@@ -227,7 +226,7 @@ class JobControllerTest {
 
     @Test
     void testDeleteSuccess() throws Exception {
-        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@e.se", 1L);
+        JobDtoFormDelete removeJob = new JobDtoFormDelete("m@e.se", 1L);
 
         String json = this.objectMapper.writeValueAsString(removeJob);
 
@@ -247,7 +246,7 @@ class JobControllerTest {
 
     @Test
     void testDeleteNonExistentId() throws Exception {
-        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@e.se", 0L);
+        JobDtoFormDelete removeJob = new JobDtoFormDelete("m@e.se", 0L);
 
         String json = this.objectMapper.writeValueAsString(removeJob);
 
@@ -266,7 +265,7 @@ class JobControllerTest {
 
     @Test
     void testDeleteNonExistentEmail() throws Exception {
-        JobDtoFormRemove removeJob = new JobDtoFormRemove("m@j.se", 1L);
+        JobDtoFormDelete removeJob = new JobDtoFormDelete("m@j.se", 1L);
 
         String json = this.objectMapper.writeValueAsString(removeJob);
 
@@ -293,7 +292,7 @@ class JobControllerTest {
         JobDtoFormAdd newJob = new JobDtoFormAdd("m@e.se", "This is a title", "This is a description.", "instruction");
         this.jobService.addJob(newJob);
 
-        JobDtoFormRemove removeJob = new JobDtoFormRemove("a@l.se", 1L);
+        JobDtoFormDelete removeJob = new JobDtoFormDelete("a@l.se", 1L);
         String json = this.objectMapper.writeValueAsString(removeJob);
 
         // Given
