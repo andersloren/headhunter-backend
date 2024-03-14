@@ -1,4 +1,6 @@
-# Welcome to Headhunter Backend
+# Welcome to the Headhunter project
+
+This is an internship project created by [Anders Lorén](github.com/andersloren) and [Mikael Engvall](github.com/MikaelEngvall).
 
 ## MySQL Scripts
 
