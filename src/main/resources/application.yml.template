@@ -1,0 +1,33 @@
+# Application Configuration Template
+# Rename this file to application.yml and fill in the placeholders with your specific values.
+
+spring:
+  datasource:
+    # Database connection URL (change localhost and port if necessary)
+    url: jdbc:mysql://localhost:3306/<DB_HOST>:<DB_PORT>/<DB_NAME>?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    # Replace these placeholders with your MySQL username and password
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      # This controls the behavior of schema updates, use "none" in production
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+
+hibernate:
+  # MySQL dialect; change if using a different database
+  dialect: org.hibernate.dialect.MySQL8Dialect
+
+api:
+  endpoint:
+    # Base URLs for your APIs, modify as needed
+    base-url-users: /api/v1/users
+    base-url-jobs: /api/v1/jobs
+    base-url-ads: /api/v1/ads
+
+ai:
+  openai:
+    # Use environment variables or a secure method to set the API keys
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}

@@ -35,6 +35,3 @@ build/
 ### Configuration Files ###
 src/main/resources/application.yml
 src/main/resources/application-dev.yml
-
-### Environment Variables ###
-secrets.env
