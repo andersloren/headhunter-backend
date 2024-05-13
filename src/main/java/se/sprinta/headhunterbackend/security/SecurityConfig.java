@@ -80,8 +80,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin") // Find all
-                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").hasAuthority("ROLE_admin") //
+                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").permitAll() // This should be changed at some point. On the front-end side, this means we will have to change how email are being checked during signup.
                                 .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
