@@ -130,7 +130,7 @@ public class JobService {
         System.out.println("instruction: " + foundJob.getInstruction());
         System.out.println("description: " + foundJob.getDescription());
 
-        ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
+        ChatRequest chatRequest = new ChatRequest("gpt-4o", messages);
 
         ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on the given chatRequest
 
