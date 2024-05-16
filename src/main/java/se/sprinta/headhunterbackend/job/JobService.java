@@ -11,6 +11,7 @@ import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
+import se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.system.exception.ResponseSubstringNotPureHtmlException;
@@ -28,13 +29,14 @@ import java.util.List;
 @Transactional
 public class JobService {
     private final JobRepository jobRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
     private final ChatClient chatClient;
-    private String substringResponse;
 
-    public JobService(JobRepository jobRepository, UserRepository userRepository, UserService userService, ChatClient chatClient) {
+    public JobService(JobRepository jobRepository,
+                      UserRepository userRepository,
+                      UserService userService,
+                      ChatClient chatClient) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -137,7 +139,7 @@ public class JobService {
 
         // To trim the response, response is being passed to makeResponseSubstring and a trimmed string is returned
 
-        this.substringResponse = makeHtmlResponseSubstring(response);
+        String substringResponse = makeHtmlResponseSubstring(response);
 
 
         Ad newHtmlAd = new Ad(substringResponse);
@@ -161,6 +163,10 @@ public class JobService {
             throw new ResponseSubstringNotPureHtmlException("HTML");
 
         return response.substring(cutBeginning, cutEnd);
+    }
+
+    public List<JobsTitleAndIdDtoView> getJobTitles(String email) {
+        return this.jobRepository.getJobTitles(email);
     }
 }
 
