@@ -96,14 +96,13 @@ public class JobController {
     /**
      * This request is being forwarded to an AI API.
      *
-     * @param documentType This is the specified type of document that the user wants the AI to format its response to.
-     * @param jobId        This is the id of the job that the user wants to create an ad for.
+     * @param jobId This is the id of the job that the user wants to create an ad for.
      * @return Result Successful Result object.
      */
 
-    @GetMapping("/generate/{documentType}/{jobId}")
-    public Result generateJobAd(@PathVariable String documentType, @PathVariable Long jobId) {
-        String generatedJobAd = this.jobService.generate(documentType, jobId);
+    @GetMapping("/generate/{jobId}")
+    public Result generateJobAd(@PathVariable Long jobId) {
+        String generatedJobAd = this.jobService.generate(jobId);
         return new Result(true, StatusCode.SUCCESS, "Summarize Success", generatedJobAd);
     }
 }

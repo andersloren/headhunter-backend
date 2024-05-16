@@ -117,7 +117,7 @@ public class JobService {
         this.jobRepository.delete(foundJob);
     }
 
-    public String generate(String documentType, Long id) {
+    public String generate(Long id) {
 
         Job foundJob = this.jobRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
 
@@ -126,7 +126,6 @@ public class JobService {
                 new Message("system", foundJob.getInstruction()),
                 new Message("user", foundJob.getDescription()));
 
-        System.out.println("documentType: " + documentType);
         System.out.println("instruction: " + foundJob.getInstruction());
         System.out.println("description: " + foundJob.getDescription());
 
@@ -138,20 +137,8 @@ public class JobService {
 
         // To trim the response, response is being passed to makeResponseSubstring and a trimmed string is returned
 
-        switch (documentType) {
-            case "html":
-                this.substringResponse = makeHtmlResponseSubstring(response);
-                break;
-            case "docx":
-                // TODO: 08/03/2024 trim this response?
-                break;
-            case "pdf":
-                // TODO: 08/03/2024 trim this response?
-                // TODO: 08/03/2024 convert this string into pdf
-                break;
-            default:    // TODO: 08/03/2024 remove this? 
-                break;
-        }
+        this.substringResponse = makeHtmlResponseSubstring(response);
+
 
         Ad newHtmlAd = new Ad(substringResponse);
         foundJob.addAd(newHtmlAd);
