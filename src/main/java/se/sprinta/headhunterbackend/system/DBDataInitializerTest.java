@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  * Database entries (User objects, Job objects, and Ad objects) for testing.
+ * * Database entries (User objects, Job objects, and Ad objects) for testing.
  */
 
 
@@ -49,23 +49,32 @@ public class DBDataInitializerTest implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // TODO: 14/03/2024 Fix these duplicates
+        User admin1 = new User();
+        admin1.setEmail("admin@hh.se");
+        admin1.setUsername("admin");
+        admin1.setPassword("a");
+        admin1.setRoles("admin");
+
         User user1 = new User();
-        user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
+        user1.setEmail("user@hh.se");
+        user1.setUsername("user");
         user1.setPassword("a");
-        user1.setRoles("admin user");
+        user1.setRoles("user");
 
         User user2 = new User();
-        user2.setEmail("a@l.se");
-        user2.setUsername("Anders");
+        user2.setEmail("user2@hh.se");
+        user2.setUsername("user2");
         user2.setPassword("a");
         user2.setRoles("user");
 
-        Job job1 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job1 Title", "job1 Description", "job1 Instruction"));
-        Job job2 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job2 Title", "job2 Description", "job2 Instruction"));
-        Job job3 = this.jobService.addJob(new JobDtoFormAdd("m@e.se", "job3 Title", "job3 Description", "job3 Instruction"));
-        Job job4 = this.jobService.addJob(new JobDtoFormAdd("a@l.se", "job4 Title", "job4 Description", "job4 Instruction"));
-        Job job5 = this.jobService.addJob(new JobDtoFormAdd("a@l.se", "job5 Title", "job5 Description", "job5 Instruction"));
+        this.userService.save(admin1);
+        this.userService.save(user1);
+
+        Job job1 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job1 Title", "job1 Description", "job1 Instruction"));
+        Job job2 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job2 Title", "job2 Description", "job2 Instruction"));
+        Job job3 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job3 Title", "job3 Description", "job3 Instruction"));
+        Job job4 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job4 Title", "job4 Description", "job4 Instruction"));
+        Job job5 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job5 Title", "job5 Description", "job5 Instruction"));
 
         user1.addJob(job1);
         user1.addJob(job2);
