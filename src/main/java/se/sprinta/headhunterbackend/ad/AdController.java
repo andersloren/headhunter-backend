@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-ads}")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:5173")
 public class AdController {
 
     private final AdService adService;
@@ -51,6 +51,7 @@ public class AdController {
     /**
      * Searches for job and returns array of ads that is associated to it.
      * Relationship: [Ad] *...1 [Job]
+     *
      * @param jobId The id of the Job object that holds all the ads the user are looking for.
      */
 
@@ -59,6 +60,12 @@ public class AdController {
         List<Ad> foundAds = this.adService.findAdsByJobId(jobId);
         List<AdDtoView> foundAdDtoViews = foundAds.stream().map(this.adToAdDtoView::convert).toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Ads By Job Id Success", foundAdDtoViews);
+    }
+
+    @GetMapping("/getNumberOfAds/{jobId}")
+    public Result getNumberOfAds(@PathVariable Long jobId) {
+        Long numberOfAds = this.adService.getNumberOfAds(jobId);
+        return new Result(true, StatusCode.SUCCESS, "Get Number of Ads Success", numberOfAds);
     }
 
     /**

@@ -12,7 +12,7 @@ import se.sprinta.headhunterbackend.system.StatusCode;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-users}")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:5173")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);

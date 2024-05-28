@@ -6,6 +6,7 @@ import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
+import se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-jobs}")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:5173")
 public class JobController {
 
     private final JobService jobService;
@@ -104,5 +105,11 @@ public class JobController {
     public Result generateJobAd(@PathVariable Long jobId) {
         String generatedJobAd = this.jobService.generate(jobId);
         return new Result(true, StatusCode.SUCCESS, "Summarize Success", generatedJobAd);
+    }
+
+    @GetMapping("/getJobsTitleAndId/{email}")
+    public Result getJobTitles(@PathVariable String email) {
+        List<JobsTitleAndIdDtoView> userJobs = this.jobService.getJobTitles(email);
+        return new Result(true, StatusCode.SUCCESS, "Find All Job Titles Success", userJobs);
     }
 }

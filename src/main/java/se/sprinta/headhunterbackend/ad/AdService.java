@@ -44,6 +44,7 @@ public class AdService {
     /**
      * Returns the user that has a job that holds the ad
      * Relationship: [Ad] *...1 [Job] *...1 [User]
+     *
      * @param adId The value used to find the right ad.
      * @return User The object that is the ultimate owner of the ad.
      */
@@ -53,8 +54,14 @@ public class AdService {
         return foundAd.getJob().getUser();
     }
 
+    public Long getNumberOfAds(Long jobId) {
+        return this.adRepository.getNumberOfAds(jobId);
+    }
+
+
     /**
      * Establishes relationship between job and ad.
+     *
      * @param jobId The id that is used to find the job
      * @return Ad The same Ad that was created.
      */
