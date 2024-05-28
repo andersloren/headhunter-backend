@@ -23,6 +23,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     List<Job> findAllByUser_Email(String email);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView(j.id, j.title) FROM Job j where j.user.email = :email")
+    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView(j.id, j.title) FROM Job j WHERE j.user.email = :email")
     List<JobsTitleAndIdDtoView> getJobTitles(String email);
 }
