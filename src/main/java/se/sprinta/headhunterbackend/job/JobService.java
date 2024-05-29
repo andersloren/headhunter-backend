@@ -11,6 +11,7 @@ import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
+import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -63,6 +64,11 @@ public class JobService {
     public Job findById(Long id) {
         return this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
+    }
+
+    public JobDtoView getJobById(Long id) {
+        return this.jobRepository.getJobById(id).
+                orElseThrow(() -> new ObjectNotFoundException("job", id));
     }
 
 

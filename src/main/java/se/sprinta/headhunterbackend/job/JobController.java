@@ -66,6 +66,13 @@ public class JobController {
         Job foundJob = this.jobService.findById(id);
         JobDtoView JobDtoView = this.jobToJobDtoViewConverter.convert(foundJob);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", JobDtoView);
+
+    }
+
+    @GetMapping("/getJobById/{id}")
+    public Result getJobById(@PathVariable Long id) {
+        JobDtoView JobDtoView = this.jobService.getJobById(id);
+        return new Result(true, StatusCode.SUCCESS, "Find One Success", JobDtoView);
     }
 
     @PutMapping("/update/{id}")
