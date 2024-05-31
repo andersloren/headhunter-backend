@@ -42,7 +42,8 @@ public class User implements Serializable {
      * A User object has an integer number of jobs.
      */
 
-    private int numberOfJobs;
+    @Column(name = "number_of_jobs")
+    private int number_of_jobs;
 
     /**
      * A User object has an array of Job objects.
@@ -61,7 +62,7 @@ public class User implements Serializable {
         this.email = email;
         this.username = username;
         this.roles = roles;
-        this.numberOfJobs = getNumberOfJobs();
+        this.number_of_jobs = getNumberOfJobs();
         this.jobs = jobs;
     }
 
@@ -90,7 +91,7 @@ public class User implements Serializable {
     // TODO: 08/02/2024 create removeJob
 
     public int getNumberOfJobs() {
-        return numberOfJobs;
+        return number_of_jobs;
     }
 
     /**
@@ -99,7 +100,7 @@ public class User implements Serializable {
      */
 
     public void setNumberOfJobs() {
-        numberOfJobs = this.jobs.size();
+        number_of_jobs = this.jobs.size();
     }
 
     public String getEmail() {

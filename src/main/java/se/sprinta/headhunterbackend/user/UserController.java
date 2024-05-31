@@ -46,6 +46,12 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Find One User Success", foundUserDto);
     }
 
+    @GetMapping("/getUserByEmail/{userEmail}")
+    public Result getUserByEmail(@PathVariable String userEmail) {
+        UserDtoView foundUserDtoView = this.userService.getUserByEmail(userEmail);
+        return new Result(true, StatusCode.SUCCESS, "Find One User Success", foundUserDtoView);
+    }
+
     @PostMapping("/register")
     public Result registerUser(@Valid @RequestBody User user) {
         user.setRoles("user");

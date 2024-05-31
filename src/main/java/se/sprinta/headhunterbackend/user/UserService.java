@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
 
@@ -33,6 +34,11 @@ public class UserService implements UserDetailsService {
     public User findByUserEmail(String email) {
         return this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
+    }
+
+    public UserDtoView getUserByEmail(String userEmail) {
+        return this.userRepository.getUserByEmail(userEmail)
+                .orElseThrow(() -> new ObjectNotFoundException("user", userEmail));
     }
 
     public User save(User newUser) {
