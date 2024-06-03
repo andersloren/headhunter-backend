@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import se.sprinta.headhunterbackend.UserInfo.UserInfo;
+import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.job.Job;
 
 import java.io.Serializable;
@@ -26,9 +28,6 @@ public class User implements Serializable {
     @NotEmpty(message = "email is required.")
     private String email;
 
-    @NotEmpty(message = "username is required.")
-    private String username;
-
     @NotEmpty(message = "password is required.")
     private String password;
 
@@ -42,6 +41,9 @@ public class User implements Serializable {
      * A User object has an integer number of jobs.
      */
 
+    @OneToOne(mappedBy = "user")
+    private UserInfo userInfo;
+
     @Column(name = "number_of_jobs")
     private int number_of_jobs;
 
@@ -53,14 +55,12 @@ public class User implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Job> jobs = new ArrayList<>();
 
-    public User(String username, String roles) {
-        this.username = username;
+    public User(String roles) {
         this.roles = roles;
     }
 
-    public User(String email, String username, String roles, List<Job> jobs) {
+    public User(String email, String roles, List<Job> jobs) {
         this.email = email;
-        this.username = username;
         this.roles = roles;
         this.number_of_jobs = getNumberOfJobs();
         this.jobs = jobs;
@@ -111,14 +111,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -141,5 +133,13 @@ public class User implements Serializable {
 
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 }

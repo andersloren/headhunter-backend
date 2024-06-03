@@ -23,7 +23,6 @@ public class UserToUserDtoViewConverter implements Converter<User, UserDtoView> 
     public UserDtoView convert(User source) {
         return new UserDtoView(
                 source.getEmail(),
-                source.getUsername(),
                 source.getRoles(),
                 source.getNumberOfJobs()
         );

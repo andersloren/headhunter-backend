@@ -42,7 +42,7 @@ public class MyUserPrincipal implements UserDetails {
     }
 
     public String getName() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override

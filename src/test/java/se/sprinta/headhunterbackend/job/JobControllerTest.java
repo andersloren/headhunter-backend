@@ -59,7 +59,6 @@ class JobControllerTest {
     void setUp() {
         User user = new User();
         user.setEmail("m@e.se");
-        user.setUsername("Mikael");
         user.setPassword("a");
         user.setRoles("admin user");
 
@@ -161,7 +160,6 @@ class JobControllerTest {
 
         User user = new User();
         user.setEmail("m@e.se");
-        user.setUsername("Mikael");
         user.setRoles("admin user");
         user.addJob(job);
 
@@ -311,7 +309,6 @@ class JobControllerTest {
     @Test
     void testAddJobSuccess() throws Exception {
         User user = new User();
-        user.setUsername("Mikael");
         user.setRoles("admin user");
         user.setEmail("m@e.se");
 

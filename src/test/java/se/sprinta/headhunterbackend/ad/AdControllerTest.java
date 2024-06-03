@@ -47,7 +47,6 @@ public class AdControllerTest {
     void setUp() {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setPassword("a");
         user1.setRoles("admin user");
 
@@ -84,7 +83,6 @@ public class AdControllerTest {
     void testFindAllAds() throws Exception {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setPassword("a");
         user1.setRoles("admin user");
 
@@ -129,7 +127,6 @@ public class AdControllerTest {
     void testFindAdByIdSuccess() throws Exception {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setPassword("a");
         user1.setRoles("admin user");
 
@@ -157,7 +154,6 @@ public class AdControllerTest {
     void testFindUserByAdIdSuccess() throws Exception {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setPassword("a");
         user1.setRoles("admin user");
 
@@ -181,7 +177,6 @@ public class AdControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find User By Ad Id Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael"))
                 .andExpect(jsonPath("$.data.roles").value("admin user"))
                 .andExpect(jsonPath("$.data.numberOfJobs").value(1));
     }

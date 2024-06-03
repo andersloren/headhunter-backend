@@ -88,7 +88,7 @@ class AdServiceTest {
 
     @Test
     void testFindAdsByJobIdSuccess() {
-        User user = new User("m@e.se", "Mikael", "admin user", null);
+        User user = new User("m@e.se", "admin user", null);
         Job job = new Job(1L, "Title", "Description", "Instruction", user, null, 0);
 
         Ad ad1 = new Ad();
@@ -123,7 +123,7 @@ class AdServiceTest {
 
     @Test
     void testFindUserByAdIdSuccess() {
-        User user = new User("m@e.se", "Mikael", "admin user", null);
+        User user = new User("m@e.se", "admin user", null);
         Job job = new Job(1L, "Title", "Description", "Instruction", user, null, 0);
 
         List<Job> jobs = new ArrayList<>();

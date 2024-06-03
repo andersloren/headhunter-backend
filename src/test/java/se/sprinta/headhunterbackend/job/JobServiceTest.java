@@ -50,14 +50,12 @@ class JobServiceTest {
     void testFindAllJobsSuccess() {
         User user1 = new User(
                 "m@e.se",
-                "Mikael",
                 "admin user",
                 null);
 
 
         User user2 = new User(
                 "a@l.se",
-                "Anders",
                 "user",
                 null);
 
@@ -110,7 +108,7 @@ class JobServiceTest {
     void testFindJobByIdSuccess() {
         Job j1 = new Job();
         j1.setDescription("Erfaren Java-utvecklare till vårt nya uppdrag hos Försvarsmakten.");
-        j1.setUser(new User("m@e.se", "Mikael", "admin user", null));
+        j1.setUser(new User("m@e.se", "admin user", null));
         j1.setInstruction("This is an instruction");
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
@@ -146,14 +144,12 @@ class JobServiceTest {
     void testFindAllJobsByUserEmailSuccess() {
         User user1 = new User(
                 "m@e.se",
-                "Mikael",
                 "admin user",
                 null);
 
 
         User user2 = new User(
                 "a@l.se",
-                "Anders",
                 "user",
                 null);
 
@@ -200,7 +196,6 @@ class JobServiceTest {
     void testSaveJobSuccess() {
         User user1 = new User(
                 "m@e.se",
-                "Mikael",
                 "admin user",
                 null);
 
@@ -233,7 +228,6 @@ class JobServiceTest {
     void testUpdateJobSuccess() {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setRoles("admin user");
 
         Job job1 = new Job();

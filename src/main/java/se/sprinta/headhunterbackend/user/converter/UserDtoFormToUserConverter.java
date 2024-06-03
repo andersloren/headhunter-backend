@@ -21,6 +21,6 @@ public class UserDtoFormToUserConverter implements Converter<UserDtoForm, User> 
 
     @Override
     public User convert(UserDtoForm source) {
-        return new User(source.username(), source.roles());
+        return new User(source.roles());
     }
 }

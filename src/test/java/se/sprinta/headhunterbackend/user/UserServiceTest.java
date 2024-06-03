@@ -43,13 +43,11 @@ class UserServiceTest {
     void testFindAllUsersSuccess() {
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("a");
         u1.setRoles("admin user");
 
         User u2 = new User();
         u2.setEmail("a@l.se");
-        u2.setUsername("Anders");
         u2.setPassword("a");
         u2.setRoles("user");
 
@@ -75,7 +73,6 @@ class UserServiceTest {
         // Given
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
@@ -86,7 +83,6 @@ class UserServiceTest {
 
         // Then
         assertThat(returnedUser.getEmail()).isEqualTo(u1.getEmail());
-        assertThat(returnedUser.getUsername()).isEqualTo(u1.getUsername());
         assertThat(returnedUser.getRoles()).isEqualTo(u1.getRoles());
     }
 
@@ -111,7 +107,6 @@ class UserServiceTest {
         // Setup
         User newUser = new User();
         newUser.setEmail("m@e.se");
-        newUser.setUsername("Mikael");
         newUser.setPassword("123456");
         newUser.setRoles("admin user");
 
@@ -123,7 +118,6 @@ class UserServiceTest {
         User returnedUser = this.userService.save(newUser);
 
         // Then
-        assertThat(returnedUser.getUsername()).isEqualTo(newUser.getUsername());
         assertThat(returnedUser.getPassword()).isEqualTo(newUser.getPassword());
         assertThat(returnedUser.getRoles()).isEqualTo(newUser.getRoles());
 
@@ -135,12 +129,10 @@ class UserServiceTest {
     void testUpdateOwnUserSuccess() {
         User ownUser = new User();
         ownUser.setEmail("m@e.se");
-        ownUser.setUsername("Mikael");
         ownUser.setPassword("123456");
         ownUser.setRoles("admin user");
 
         User update = new User();
-        update.setUsername("Mikael - update");
         update.setRoles("admin"); // From admin user to just admin
 
         String email = "m@e.se";
@@ -155,7 +147,6 @@ class UserServiceTest {
 
         // Then
         assertThat(updatedUser.getEmail()).isEqualTo(ownUser.getEmail());
-        assertThat(updatedUser.getUsername()).isEqualTo(ownUser.getUsername());
         assertThat(updatedUser.getRoles()).isEqualTo(roles);
 
         // Verify
@@ -167,7 +158,6 @@ class UserServiceTest {
     void testUpdateUserWithNonExistentId() {
         String email = "abc";
         User update = new User();
-        update.setUsername("Mikael - update");
         update.setRoles("admin"); // From admin user to just admin
 
         // Given
@@ -189,7 +179,6 @@ class UserServiceTest {
     void testDeleteUserSuccess() {
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 

@@ -32,7 +32,6 @@ public class AdRepositoryTest {
     void setup() {
         User user1 = new User();
         user1.setEmail("m@e.se");
-        user1.setUsername("Mikael");
         user1.setPassword("a");
         user1.setRoles("admin user");
 

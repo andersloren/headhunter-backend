@@ -51,19 +51,16 @@ public class DBDataInitializerTest implements CommandLineRunner {
         // TODO: 14/03/2024 Fix these duplicates
         User admin1 = new User();
         admin1.setEmail("admin@hh.se");
-        admin1.setUsername("admin");
         admin1.setPassword("a");
         admin1.setRoles("admin");
 
         User user1 = new User();
         user1.setEmail("user@hh.se");
-        user1.setUsername("user");
         user1.setPassword("a");
         user1.setRoles("user");
 
         User user2 = new User();
         user2.setEmail("user2@hh.se");
-        user2.setUsername("user2");
         user2.setPassword("a");
         user2.setRoles("user");
 

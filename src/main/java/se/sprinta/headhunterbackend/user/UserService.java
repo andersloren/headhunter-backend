@@ -7,9 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
 import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Business logic for Job
@@ -58,8 +60,6 @@ public class UserService implements UserDetailsService {
     public User update(String email, User update) {
         User foundUser = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
-
-        foundUser.setUsername(update.getUsername());
 
         // TODO: 14/03/2024 Is this replace still needed?
         String rolesFixed = update.getRoles().replace("\"", "");

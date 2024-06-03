@@ -25,13 +25,11 @@ class UserRepositoryTest {
     void setUp() {
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
         u2.setEmail("a@l.se");
-        u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");
 
@@ -57,7 +55,6 @@ class UserRepositoryTest {
         User user = this.userRepository.findByEmail("m@e.se").get();
 
         assertEquals("m@e.se", user.getEmail());
-        assertEquals("Mikael", user.getUsername());
         assertEquals("admin user", user.getRoles());
     }
 }

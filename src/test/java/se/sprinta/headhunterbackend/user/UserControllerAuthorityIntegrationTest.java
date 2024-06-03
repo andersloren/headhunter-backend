@@ -68,11 +68,9 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Find All User Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].email").value("a@l.se"))
-                .andExpect(jsonPath("$.data[0].username").value("Anders"))
                 .andExpect(jsonPath("$.data[0].roles").value("user"))
                 .andExpect(jsonPath("$.data[0].numberOfJobs").value(2))
                 .andExpect(jsonPath("$.data[1].email").value("m@e.se"))
-                .andExpect(jsonPath("$.data[1].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[1].roles").value("admin user"));
     }
 
@@ -105,7 +103,6 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
@@ -118,7 +115,6 @@ public class UserControllerAuthorityIntegrationTest {
     void testAddUserSuccess() throws Exception {
         User user = new User();
         user.setEmail("m@j.se");
-        user.setUsername("Mehrdad");
         user.setPassword("02468");
 
         String json = this.objectMapper.writeValueAsString(user);
@@ -131,7 +127,6 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add User Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad"))
                 .andExpect(jsonPath("$.data.email").value("m@j.se"));
     }
 
@@ -139,7 +134,6 @@ public class UserControllerAuthorityIntegrationTest {
     @DisplayName("Check addUser with invalid input (POST)")
     void testAddUserInvalidInput() throws Exception {
         User user = new User();
-        user.setUsername("");
         user.setPassword("");
         user.setRoles("");
 
@@ -164,7 +158,7 @@ public class UserControllerAuthorityIntegrationTest {
     void testUpdateOwnUserSuccess() throws Exception {
         String email = "m@e.se";
 
-        UserDtoForm userDtoForm = new UserDtoForm("Mikael - updated", "admin");
+        UserDtoForm userDtoForm = new UserDtoForm( "admin");
 
         String json = this.objectMapper.writeValueAsString(userDtoForm);
 
@@ -186,7 +180,7 @@ public class UserControllerAuthorityIntegrationTest {
     void testUpdateOtherUserSuccess() throws Exception {
         String otherEmail = "a@l.se";
 
-        UserDtoForm userDtoForm = new UserDtoForm("Anders - updated", "admin");
+        UserDtoForm userDtoForm = new UserDtoForm( "admin");
 
         String json = this.objectMapper.writeValueAsString(userDtoForm);
 
@@ -199,7 +193,6 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders - updated"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
 
@@ -235,7 +228,6 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
@@ -299,10 +291,8 @@ public class UserControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Find All User Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].email").value("a@l.se"))
-                .andExpect(jsonPath("$.data[0].username").value("Anders"))
                 .andExpect(jsonPath("$.data[0].roles").value("user"))
                 .andExpect(jsonPath("$.data[1].email").value("m@e.se"))
-                .andExpect(jsonPath("$.data[1].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[1].roles").value("admin user"));
 
     }

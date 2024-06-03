@@ -50,13 +50,11 @@ class UserControllerTest {
     void testFindAllUsersSuccess() throws Exception {
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
         u2.setEmail("a@l.se");
-        u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");
 
@@ -72,10 +70,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All User Success"))
-                .andExpect(jsonPath("$.data[0].username").value("Mikael"))
                 .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
                 .andExpect(jsonPath("$.data[0].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].username").value("Anders"))
                 .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
                 .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
@@ -84,13 +80,11 @@ class UserControllerTest {
     void testFindUserByIdSuccess() throws Exception {
         User u1 = new User();
         u1.setEmail("m@e.se");
-        u1.setUsername("Mikael");
         u1.setPassword("123456");
         u1.setRoles("admin user");
 
         User u2 = new User();
         u2.setEmail("a@l.se");
-        u2.setUsername("Anders");
         u2.setPassword("654321");
         u2.setRoles("user");
 
@@ -107,7 +101,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One User Success"))
                 .andExpect(jsonPath("$.data.email").value("a@l.se"))
-                .andExpect(jsonPath("$.data.username").value("Anders"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
@@ -131,7 +124,6 @@ class UserControllerTest {
         // Setup
         User newUser = new User();
         newUser.setEmail("m@j.se");
-        newUser.setUsername("Mehrdad Javan");
         newUser.setPassword("2468");
         newUser.setRoles("admin");
 
@@ -147,7 +139,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add User Success"))
-                .andExpect(jsonPath("$.data.username").value("Mehrdad Javan"))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
     }
 
@@ -159,17 +150,14 @@ class UserControllerTest {
 
         User user = new User();
         user.setEmail("m@e.se");
-        user.setUsername("Mikael");
         user.setPassword("123456");
         user.setRoles("admin user");
 
         User updatedUser = new User();
         updatedUser.setEmail("m@e.se");
-        updatedUser.setUsername("Mikael - updated");
         updatedUser.setRoles("admin"); // Role changes from 'admin user' to 'admin'
 
         User update = new User(
-                "Mikael - updated",
                 "admin");
 
         String json = this.objectMapper.writeValueAsString(update);
@@ -186,7 +174,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
                 .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.username").value("Mikael - updated"))
                 .andExpect(jsonPath("$.data.roles").value("admin"))
                 .andExpect(jsonPath("$.data.numberOfJobs").value(0));
     }
@@ -195,8 +182,7 @@ class UserControllerTest {
     void testUpdateUserWithNonExistentEmail() throws Exception {
         String email = "abc";
         User update = new User();
-        update.setUsername("Nonsense Username");
-        update.setUsername("No real roles");
+        update.setRoles("No real roles");
 
         String json = this.objectMapper.writeValueAsString(update);
 

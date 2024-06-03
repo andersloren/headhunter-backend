@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +45,9 @@ public class SecurityConfig {
     private String baseUrlJobs;
     @Value("${api.endpoint.base-url-ads}")
     private String baseUrlAds;
+    @Value("/api/v1/userinfo")
+    private String baseUrlUserInfo;
+
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
@@ -86,6 +90,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.PUT, this.baseUrlUserInfo + "/updateUserInfo/{email}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlUserInfo + "/getUserInfo/{email}").hasAuthority("ROLE_user")
 //                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
@@ -94,8 +100,9 @@ public class SecurityConfig {
                                 // Disallow everything else
                                 .anyRequest().authenticated() // Always a good idea to put this as last
                 )
-                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // This is for H2 browser console access
-                .csrf(csrf -> csrf.disable()) // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.
+                        .
+                headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // This is for H2 browser console access
+                .csrf(AbstractHttpConfigurer::disable) // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.
                 .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(this.customBasicAuthenticationEntryPoint))
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(Customizer.withDefaults())

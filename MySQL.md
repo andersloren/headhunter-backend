@@ -7,7 +7,6 @@ SELECT * FROM ads;
 -- Relationship Table between USERS and JOBS
 SELECT
 u.email AS user_email,
-u.username AS user_username,
 j.id AS job_id,
 j.title AS job_title
 FROM
