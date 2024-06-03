@@ -13,9 +13,13 @@ package se.sprinta.headhunterbackend.job.dto;
 // TODO: 14/03/2024 Remove 'email' if it is not being used by the update method.
 
 public record JobDtoFormUpdate(
-        String email,
         String title,
         String description,
-        String instruction
+        String instruction,
+        String recruiterName,
+        String adCompany,
+        String adEmail,
+        String adPhone,
+        String applicationDeadline
 ) {
 }

@@ -93,17 +93,15 @@ public class JobService {
         Job job = this.jobRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("job", id));
 
-        if (update.title() != null) {
-            job.setTitle(update.title());
-        }
-        if (update.description() != null) {
-            job.setDescription(update.description());
-        }
-        if (update.instruction() != null) {
-            job.setInstruction(update.instruction());
-        }
+        job.setTitle(update.title());
+        job.setDescription(update.description());
+        job.setInstruction(update.instruction());
+        job.setRecruiterName(update.recruiterName());
+        job.setAdCompany(update.adCompany());
+        job.setAdEmail(update.adEmail());
+        job.setAdPhone(update.adPhone());
+        job.setApplicationDeadline(update.applicationDeadline());
 
-        // // TODO: 06/02/2024 add more statements here if Job gets additional fields
         return this.jobRepository.save(job);
     }
 

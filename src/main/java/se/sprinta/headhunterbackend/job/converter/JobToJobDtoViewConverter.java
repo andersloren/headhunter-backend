@@ -23,8 +23,20 @@ public class JobToJobDtoViewConverter
     @Override
     public JobDtoView convert(Job source) {
         return new JobDtoView(
+
                 source.getTitle(),
-                source.getDescription()
+
+                source.getDescription(),
+
+                source.getRecruiterName(),
+
+                source.getAdCompany(),
+
+                source.getAdEmail(),
+
+                source.getAdPhone(),
+
+                source.getApplicationDeadline()
         );
     }
 }

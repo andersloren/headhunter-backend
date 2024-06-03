@@ -77,7 +77,7 @@ public class JobController {
 
     @PutMapping("/update/{id}")
     public Result updateJob(@PathVariable Long id, @Valid @RequestBody JobDtoFormUpdate update) {
-        Job updatedJob = this.jobService.update(id, update); // TODO: 06/02/2024 fix this at some point // // TODO: 14/03/2024 What is that todo talking about?
+        Job updatedJob = this.jobService.update(id, update);
         JobDtoView updatedJobDto = this.jobToJobDtoViewConverter.convert(updatedJob);
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedJobDto);
     }

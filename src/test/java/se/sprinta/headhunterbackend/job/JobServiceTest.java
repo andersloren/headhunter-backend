@@ -237,11 +237,11 @@ class JobServiceTest {
         job1.setInstruction("This is an instruction");
 
         JobDtoFormUpdate update = new JobDtoFormUpdate(
-                "m@e.se",
                 "Updated title",
                 "Updated description.",
 
-                "Updated instruction"
+                "Updated instruction",
+                "", "", "", "", ""
         );
 
         Job updatedJob = new Job();
@@ -270,10 +270,10 @@ class JobServiceTest {
     @Test
     void testUpdateJobWithNonExistentId() {
         JobDtoFormUpdate nonExistentJob = new JobDtoFormUpdate(
-                "m@e.se",
                 "Title",
                 "Description",
-                "Instruction"
+                "Instruction",
+                "", "", "", "", ""
         );
 
         // Given

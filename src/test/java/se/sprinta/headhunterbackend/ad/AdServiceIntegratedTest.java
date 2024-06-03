@@ -39,7 +39,7 @@ public class AdServiceIntegratedTest {
     @Test
     void testSaveAdSuccess() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         User user = new User("m@e.se", "admin user", null);
-        Job job = new Job(1L, "Title", "Description", "Instruction", user, null, 0);
+        Job job = new Job(1L, "Title", "Description", "Instruction", "", "", "", "", "", user, null, 0);
         Ad newAd = new Ad("abc", "htmlCode", job);
         List<Ad> ads = new ArrayList<>();
         ads.add(newAd);

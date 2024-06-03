@@ -35,6 +35,20 @@ public class Job implements Serializable {
     private String title;
 
     /**
+     * Contact information
+     */
+
+    private String recruiterName;
+
+    private String adCompany;
+
+    private String adEmail;
+
+    private String adPhone;
+
+    private String applicationDeadline;
+
+    /**
      * The job has a description that the AI will use to generate an ad.
      */
 
@@ -156,5 +170,45 @@ public class Job implements Serializable {
 
     public void setNumberOfAds() {
         this.numberOfAds = this.ads.size();
+    }
+
+    public String getRecruiterName() {
+        return recruiterName;
+    }
+
+    public void setRecruiterName(String recruiterName) {
+        this.recruiterName = recruiterName;
+    }
+
+    public String getAdCompany() {
+        return adCompany;
+    }
+
+    public void setAdCompany(String adCompany) {
+        this.adCompany = adCompany;
+    }
+
+    public String getAdEmail() {
+        return adEmail;
+    }
+
+    public void setAdEmail(String adEmail) {
+        this.adEmail = adEmail;
+    }
+
+    public String getAdPhone() {
+        return adPhone;
+    }
+
+    public void setAdPhone(String adPhone) {
+        this.adPhone = adPhone;
+    }
+
+    public String getApplicationDeadline() {
+        return applicationDeadline;
+    }
+
+    public void setApplicationDeadline(String applicationDeadline) {
+        this.applicationDeadline = applicationDeadline;
     }
 }

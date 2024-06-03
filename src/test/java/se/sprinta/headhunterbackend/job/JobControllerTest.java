@@ -164,10 +164,10 @@ class JobControllerTest {
         user.addJob(job);
 
         JobDtoFormUpdate jobDtoFormUpdate = new JobDtoFormUpdate(
-                "m@e.se",
                 "New Title",
                 "New Description",
-                "New Instruction"
+                "New Instruction",
+                "", "", "", "", ""
         );
 
         String json = this.objectMapper.writeValueAsString(jobDtoFormUpdate);
@@ -201,10 +201,10 @@ class JobControllerTest {
 
         // Given
         JobDtoFormUpdate jobDto = new JobDtoFormUpdate(
-                "m@e.se",
                 "New Title",
                 "New Description",
-                "New Instruction"
+                "New Instruction",
+                "", "", "", "", ""
         );
 
         String json = this.objectMapper.writeValueAsString(jobDto);

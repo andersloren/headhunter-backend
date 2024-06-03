@@ -12,7 +12,17 @@ package se.sprinta.headhunterbackend.job.dto;
 
 public record JobDtoView(
         String title,
-        String description
+        String description,
+
+        String recruiterName,
+
+        String adCompany,
+
+        String adEmail,
+
+        String adPhone,
+
+        String applicationDeadline
 ) {
 }
 
