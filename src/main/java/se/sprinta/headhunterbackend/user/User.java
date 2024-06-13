@@ -134,12 +134,4 @@ public class User implements Serializable {
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
     }
-
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
 }

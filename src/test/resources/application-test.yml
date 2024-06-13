@@ -1,0 +1,28 @@
+active-application-yml: application-dev.yml in test
+
+spring:
+  datasource:
+    profiles:
+      active: test
+    url: jdbc:mysql://${HEADHUNTER_DB_VALUES}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+hibernate:
+  dialect: org.hibernate.dialect.MySQL8Dialect
+
+api:
+  endpoint:
+    base-url-users: /api/v1/users
+    base-url-jobs: /api/v1/jobs
+    base-url-ads: /api/v1/ads
+    base-url-userInfo: /api/v1/userInfo
+
+ai:
+  openai:
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}

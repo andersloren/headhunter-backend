@@ -5,6 +5,7 @@
 SELECT * FROM jobs;
 SELECT * FROM _users;
 SELECT * FROM ads;
+SELECT * FROM user_info;
 
 -- Relationship Table between USERS and JOBS
 SELECT

@@ -63,7 +63,7 @@ public class AdControllerAuthorityIntegrationTest {
 
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlUsers + "/login")
-                        .with(httpBasic("m@e.se",
+                        .with(httpBasic("admin@hh.se",
                                 "a"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
