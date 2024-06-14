@@ -33,9 +33,9 @@ public class UserService implements UserDetailsService {
         return this.userRepository.findAll();
     }
 
-    public User findByUserEmail(String email) {
-        return this.userRepository.findByEmail(email)
-                .orElseThrow(() -> new ObjectNotFoundException("user", email));
+    public User findUserByEmail(String userEmail) {
+        return this.userRepository.findUserByEmail(userEmail)
+                .orElseThrow(() -> new ObjectNotFoundException("user", userEmail));
     }
 
     public UserDtoView getUserByEmail(String userEmail) {
@@ -51,17 +51,17 @@ public class UserService implements UserDetailsService {
     /**
      * Updates a user. Certain precautions has to be made for the roles.
      *
-     * @param email  Is used to find the User object that we want to update.
+     * @param userEmail  Is used to find the User object that we want to update.
      * @param update Holds potentially both username and roles, or at least one of them.
      *               Any double quotes are being removed by the logic.
      * @return The updated User object.
      */
 
-    public User update(String email, User update) {
-        User foundUser = this.userRepository.findByEmail(email)
-                .orElseThrow(() -> new ObjectNotFoundException("user", email));
+    public User update(String userEmail, User update) {
+        User foundUser = this.userRepository.findUserByEmail(userEmail)
+                .orElseThrow(() -> new ObjectNotFoundException("user", userEmail));
 
-        // TODO: 14/03/2024 Is this replace still needed?
+
         String rolesFixed = update.getRoles().replace("\"", "");
         foundUser.setRoles(rolesFixed);
         return this.userRepository.save(foundUser);
@@ -69,7 +69,7 @@ public class UserService implements UserDetailsService {
 
 
     public void delete(String email) {
-        User foundUser = this.userRepository.findByEmail(email)
+        User foundUser = this.userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
         this.userRepository.delete(foundUser);
     }
@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDetails userDetails = this.userRepository.findByEmail(email) // First, we need to find this user from database.
+        UserDetails userDetails = this.userRepository.findUserByEmail(email) // First, we need to find this user from database.
                 .map(MyUserPrincipal::new) // If found, wrap the returned user instance in a MyUserPrincipal instance.
                 .orElseThrow(() -> new UsernameNotFoundException("email " + email + " is not found")); // Otherwise, throw an exception.
         return userDetails;

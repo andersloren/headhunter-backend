@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "_users")
+@Table(name = "\"users\"")
 public class User implements Serializable {
 
     @Id
@@ -73,7 +73,10 @@ public class User implements Serializable {
      */
 
     public void addJob(Job newJob) {
-        this.jobs.add(newJob);
+        if (newJob == null) throw new NullPointerException("User cannot be assigned null Job");
+        if (newJob.getUser() != this) throw new IllegalStateException("Job already belong to other user");
+        this.getJobs().add(newJob);
+        newJob.setUser(this);
         setNumberOfJobs();
     }
 
@@ -84,7 +87,10 @@ public class User implements Serializable {
      */
 
     public void removeJob(Job newJob) {
-        this.jobs.remove(newJob);
+        if (newJob == null) throw new NullPointerException("User cannot be assigned null Job");
+        if (newJob.getUser() != this) throw new IllegalStateException("Job already belong to other user");
+        this.getJobs().remove(newJob);
+        newJob.setUser(null);
         setNumberOfJobs();
     }
 

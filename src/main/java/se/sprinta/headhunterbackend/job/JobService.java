@@ -73,7 +73,7 @@ public class JobService {
 
 
     public Job addJob(JobDtoFormAdd jobDtoFormAdd) {
-        User foundUser = this.userService.findByUserEmail(jobDtoFormAdd.email());
+        User foundUser = this.userService.findUserByEmail(jobDtoFormAdd.email());
 
         Job newJob = new Job();
         newJob.setTitle(jobDtoFormAdd.title());
@@ -110,7 +110,7 @@ public class JobService {
         Job foundJob = this.jobRepository.findById(jobId)
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-        User foundUser = this.userRepository.findByEmail(email)
+        User foundUser = this.userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("user", email));
 
 

@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.system;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.UserInfo.UserInfo;
 import se.sprinta.headhunterbackend.UserInfo.UserInfoService;
@@ -14,7 +15,7 @@ import se.sprinta.headhunterbackend.user.UserService;
 
 @Component
 @Transactional
-//@Profile("passive")
+@Profile("production")
 public class DBDataInitializer implements CommandLineRunner {
 
     private final UserService userService;

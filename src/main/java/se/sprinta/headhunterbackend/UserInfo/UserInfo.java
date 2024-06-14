@@ -11,6 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 @Entity
+@Table(name = "\"user_info\"")
 public class UserInfo implements Serializable {
 
     @Id
@@ -22,7 +23,7 @@ public class UserInfo implements Serializable {
     private String organization;
 
     @OneToOne()
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "\"user\"")
     private User user;
 
     public UserInfo(String name, String organization, User user) {

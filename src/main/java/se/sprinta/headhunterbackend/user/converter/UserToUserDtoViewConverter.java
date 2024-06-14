@@ -21,6 +21,9 @@ public class UserToUserDtoViewConverter implements Converter<User, UserDtoView> 
      */
     @Override
     public UserDtoView convert(User source) {
+        if (source == null) {
+            throw new IllegalStateException("Source in userToUserDtoView.convert() cannot be null");
+        }
         return new UserDtoView(
                 source.getEmail(),
                 source.getRoles(),

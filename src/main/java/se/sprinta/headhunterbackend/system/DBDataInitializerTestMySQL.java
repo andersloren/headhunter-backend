@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.ad.AdService;
-import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobService;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.user.User;
 import se.sprinta.headhunterbackend.user.UserService;
 
@@ -23,9 +21,9 @@ import java.util.List;
 
 
 @Component
-@Profile("dev")
+@Profile("test-mysql")
 @Transactional
-public class DBDataInitializerTest implements CommandLineRunner {
+public class DBDataInitializerTestMySQL implements CommandLineRunner {
 
     private final UserService userService;
     private final JobService jobService;
@@ -38,7 +36,7 @@ public class DBDataInitializerTest implements CommandLineRunner {
     private final List<Ad> ads4 = new ArrayList<>();
     private final List<Ad> ads5 = new ArrayList<>();
 
-    public DBDataInitializerTest(UserService userService, JobService jobService, AdRepository adRepository, AdService adService) {
+    public DBDataInitializerTestMySQL(UserService userService, JobService jobService, AdRepository adRepository, AdService adService) {
         this.userService = userService;
         this.jobService = jobService;
         this.adRepository = adRepository;
@@ -48,14 +46,13 @@ public class DBDataInitializerTest implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // TODO: 14/03/2024 Fix these duplicates
         User admin1 = new User();
         admin1.setEmail("admin@hh.se");
         admin1.setPassword("a");
         admin1.setRoles("admin");
 
         User user1 = new User();
-        user1.setEmail("user@hh.se");
+        user1.setEmail("user1@hh.se");
         user1.setPassword("a");
         user1.setRoles("user");
 
@@ -66,8 +63,9 @@ public class DBDataInitializerTest implements CommandLineRunner {
 
         this.userService.save(admin1);
         this.userService.save(user1);
+        this.userService.save(user2);
 
-        Job job1 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job1 Title", "job1 Description", "job1 Instruction"));
+        /*Job job1 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job1 Title", "job1 Description", "job1 Instruction"));
         Job job2 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job2 Title", "job2 Description", "job2 Instruction"));
         Job job3 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job3 Title", "job3 Description", "job3 Instruction"));
         Job job4 = this.jobService.addJob(new JobDtoFormAdd("user@hh.se", "job4 Title", "job4 Description", "job4 Instruction"));
@@ -146,6 +144,8 @@ public class DBDataInitializerTest implements CommandLineRunner {
         ads5.add(ad9);
         job5.setAds(ads5);
 
+
+
         this.adRepository.save(ad1);
         this.adRepository.save(ad2);
         this.adRepository.save(ad3);
@@ -154,7 +154,7 @@ public class DBDataInitializerTest implements CommandLineRunner {
         this.adRepository.save(ad6);
         this.adRepository.save(ad7);
         this.adRepository.save(ad8);
-        this.adRepository.save(ad9);
+        this.adRepository.save(ad9);*/
 
     }
 }

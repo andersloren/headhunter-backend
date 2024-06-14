@@ -1,114 +1,142 @@
-package se.sprinta.headhunterbackend.user;
+package se.sprinta.headhunterbackend.job;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.user.UserRepository;
+import se.sprinta.headhunterbackend.user.UserService;
+import se.sprinta.headhunterbackend.user.dto.UserDtoView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class JobServiceMockTest {
 
     @Mock
     UserRepository userRepository;
-
     @Mock
     PasswordEncoder passwordEncoder;
 
     @InjectMocks
     UserService userService;
 
-    List<User> users;
-
-    @BeforeEach
-    void setUp() {
-    }
-
+    List<User> users = new ArrayList<>();
 
     @Test
     void testFindAllUsersSuccess() {
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-        u1.setPassword("a");
-        u1.setRoles("admin user");
-
-        User u2 = new User();
-        u2.setEmail("a@l.se");
-        u2.setPassword("a");
-        u2.setRoles("user");
-
-        this.users = new ArrayList<>();
-        this.users.add(u1);
-        this.users.add(u2);
-
         // Given
         given(this.userRepository.findAll()).willReturn(this.users);
 
         // When
         List<User> actualUsers = this.userService.findAll();
+        System.out.println(actualUsers.size());
 
         // Then
         assertThat(actualUsers.size()).isEqualTo(this.users.size());
 
         // Verify
-        verify(this.userRepository, times(1)).findAll();
+        then(this.userRepository).should().findAll();
     }
+
 
     @Test
     void testFindUserByEmailSuccess() {
-        // Given
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-        u1.setPassword("123456");
-        u1.setRoles("admin user");
+        User user = new User();
+        user.setEmail("admin@hh.se");
+        user.setRoles("admin");
 
-        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(u1));
+        given(this.userRepository.findUserByEmail("admin@hh.se")).willReturn(Optional.of(user));
 
         // When
-        User returnedUser = this.userService.findByUserEmail("m@e.se");
+        User returnedUser = this.userService.findUserByEmail("admin@hh.se");
 
         // Then
-        assertThat(returnedUser.getEmail()).isEqualTo(u1.getEmail());
-        assertThat(returnedUser.getRoles()).isEqualTo(u1.getRoles());
+        assertEquals(returnedUser.getEmail(), "admin@hh.se");
+        assertEquals(returnedUser.getRoles(), "admin");
+
+        // Verify
+        then(this.userRepository).should().findUserByEmail("admin@hh.se");
     }
 
     @Test
     void testFindUserByEmailWithNonExistentEmail() {
         // Given
-        given(this.userRepository.findByEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
+        given(this.userRepository.findUserByEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            User user = this.userService.findByUserEmail("abc");
+            this.userService.findUserByEmail("abc");
         });
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find user with Email abc");
+
+        // Verify
+        then(this.userRepository).should().findUserByEmail("abc");
+    }
+
+    @Test
+    void testGetUserByEmailSuccess() {
+        UserDtoView userDtoView = new UserDtoView(
+                "admin@hh.se",
+                "admin",
+                0
+        );
+
+        given(this.userRepository.getUserByEmail("admin@hh.se")).willReturn(Optional.of(userDtoView));
+
+        // When
+        UserDtoView returnedUserDtoView = this.userService.getUserByEmail("admin@hh.se");
+
+        // Then
+        assertEquals(returnedUserDtoView.email(), "admin@hh.se");
+        assertEquals(returnedUserDtoView.roles(), "admin");
+        assertEquals(returnedUserDtoView.number_of_jobs(), 0);
+
+        // Verify
+        then(this.userRepository).should().getUserByEmail("admin@hh.se");
+    }
+
+    @Test
+    void testGetUserByEmailWithNonExistentEmail() {
+        // Given
+        given(this.userRepository.getUserByEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
+
+        // When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.userService.getUserByEmail("abc");
+        });
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find user with Email abc");
+
+        // Verify
+        then(this.userRepository).should().getUserByEmail("abc");
     }
 
     @Test
     void testSaveUserSuccess() {
         // Setup
         User newUser = new User();
-        newUser.setEmail("m@e.se");
+        newUser.setEmail("admin@hh.se");
         newUser.setPassword("123456");
-        newUser.setRoles("admin user");
+        newUser.setRoles("admin");
 
         // Given
         given(this.userRepository.save(newUser)).willReturn(newUser);
@@ -118,8 +146,8 @@ class UserServiceTest {
         User returnedUser = this.userService.save(newUser);
 
         // Then
-        assertThat(returnedUser.getPassword()).isEqualTo(newUser.getPassword());
-        assertThat(returnedUser.getRoles()).isEqualTo(newUser.getRoles());
+        assertEquals(returnedUser.getEmail(), "admin@hh.se");
+        assertEquals(returnedUser.getRoles(), "admin");
 
         // Verify
         then(this.userRepository).should().save(newUser);
@@ -139,7 +167,7 @@ class UserServiceTest {
         String roles = "admin";
 
         // Given
-        given(this.userRepository.findByEmail(email)).willReturn(Optional.of(ownUser));
+        given(this.userRepository.findUserByEmail(email)).willReturn(Optional.of(ownUser));
         given(this.userRepository.save(ownUser)).willReturn(ownUser);
 
         // When
@@ -150,8 +178,8 @@ class UserServiceTest {
         assertThat(updatedUser.getRoles()).isEqualTo(roles);
 
         // Verify
-        verify(this.userRepository, times(1)).findByEmail(email);
-        verify(this.userRepository, times(1)).save(ownUser);
+        then(this.userRepository).should().findUserByEmail(email);
+        then(this.userRepository).should().save(ownUser);
     }
 
     @Test
@@ -161,7 +189,7 @@ class UserServiceTest {
         update.setRoles("admin"); // From admin user to just admin
 
         // Given
-        given(this.userRepository.findByEmail(email)).willReturn(Optional.empty());
+        given(this.userRepository.findUserByEmail(email)).willReturn(Optional.empty());
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
@@ -172,34 +200,32 @@ class UserServiceTest {
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find user with Email abc");
-        verify(this.userRepository, times(1)).findByEmail("abc");
+
+        // Verify
+        then(this.userRepository).should().findUserByEmail("abc");
     }
 
     @Test
     void testDeleteUserSuccess() {
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-        u1.setPassword("123456");
-        u1.setRoles("admin user");
+        User user = new User();
+        user.setEmail("user@hh.se");
+        user.setRoles("user");
 
         // Given
-        given(this.userRepository.findByEmail("m@e.se")).willReturn(Optional.of(u1));
-        doNothing().when(this.userRepository).delete(u1);
+        given(this.userRepository.findUserByEmail("user@hh.se")).willReturn(Optional.of(user));
+        willDoNothing().given(this.userRepository).delete(user);
 
         // When
-        this.userService.delete("m@e.se");
+        this.userService.delete("user@hh.se");
 
         // Then
-        verify(this.userRepository, times(1)).findByEmail("m@e.se");
+        then(this.userRepository).should().delete(user);
     }
 
     @Test
     void testDeleteUserWithNonExistentId() {
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-
         // Given
-        given(this.userRepository.findByEmail("abc")).willReturn(Optional.empty());
+        given(this.userRepository.findUserByEmail("abc")).willReturn(Optional.empty());
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
@@ -210,6 +236,9 @@ class UserServiceTest {
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find user with Email abc");
+
+        // Verify
+        then(this.userRepository).should().findUserByEmail("abc");
     }
 
 }

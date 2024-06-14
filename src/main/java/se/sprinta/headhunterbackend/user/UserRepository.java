@@ -26,11 +26,9 @@ public interface UserRepository extends JpaRepository<User, String> {
      * Note that Email is the id of a User object.
      */
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findUserByEmail(String email);
 
     @Query("SELECT new se.sprinta.headhunterbackend.user.dto.UserDtoView(u.email, u.roles, u.number_of_jobs) FROM User u where u.email = :email")
     Optional<UserDtoView> getUserByEmail(String email);
-
-
 
 }

@@ -1,6 +1,7 @@
 package se.sprinta.headhunterbackend.user;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
@@ -41,7 +42,7 @@ public class UserController {
 
     @GetMapping("/findUser/{email}")
     public Result findUserByEmail(@PathVariable String email) {
-        User foundUser = this.userService.findByUserEmail(email);
+        User foundUser = this.userService.findUserByEmail(email);
         UserDtoView foundUserDto = this.userToUserDtoViewConverter.convert(foundUser);
         return new Result(true, StatusCode.SUCCESS, "Find One User Success", foundUserDto);
     }
@@ -60,15 +61,15 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Add User Success", addedUserDto);
     }
 
-    @PostMapping("/addUser")
+/*    @PostMapping("/addUser")
     public Result addUser(@Valid @RequestBody User user) {
         User addedUser = this.userService.save(user);
         UserDtoView addedUserDto = this.userToUserDtoViewConverter.convert(addedUser);
         return new Result(true, StatusCode.SUCCESS, "Add Success", addedUserDto);
-    }
+    }*/
 
     @PutMapping("/update/{email}")
-    public Result updateUser(@PathVariable String email, @RequestBody UserDtoForm userDtoForm) {
+    public Result updateUser(@PathVariable String email, @RequestBody @NotNull UserDtoForm userDtoForm) {
         User update = this.userDtoFormToUserConverter.convert(userDtoForm);
         User user = this.userService.update(email, update);
         UserDtoView updatedUserDto = this.userToUserDtoViewConverter.convert(user);

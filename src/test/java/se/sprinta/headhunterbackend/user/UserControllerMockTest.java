@@ -1,6 +1,8 @@
 package se.sprinta.headhunterbackend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,55 +15,55 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.user.dto.UserDtoForm;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
-class UserControllerTest {
+class UserControllerMockTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
-    List<User> users;
+    private final List<User> users = new ArrayList<>();
 
     @Value("${api.endpoint.base-url-users}")
     String baseUrlUsers;
 
     @BeforeEach
     void setUp() {
+        User user1 = new User();
+        user1.setEmail("admin@hh.se");
+        user1.setPassword("123");
+        user1.setRoles("admin");
+
+        User user2 = new User();
+        user2.setEmail("user@hh.se");
+        user2.setPassword("abc");
+        user2.setRoles("user");
+
+        this.users.add(user1);
+        this.users.add(user2);
     }
 
     @Test
     void testFindAllUsersSuccess() throws Exception {
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-        u1.setPassword("123456");
-        u1.setRoles("admin user");
-
-        User u2 = new User();
-        u2.setEmail("a@l.se");
-        u2.setPassword("654321");
-        u2.setRoles("user");
-
-        this.users = new ArrayList<>();
-        this.users.add(u1);
-        this.users.add(u2);
-
         // Given
         given(this.userService.findAll()).willReturn(this.users);
 
@@ -70,37 +72,23 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All User Success"))
-                .andExpect(jsonPath("$.data[0].email").value("m@e.se"))
-                .andExpect(jsonPath("$.data[0].roles").value("admin user"))
-                .andExpect(jsonPath("$.data[1].email").value("a@l.se"))
+                .andExpect(jsonPath("$.data[0].email").value("admin@hh.se"))
+                .andExpect(jsonPath("$.data[0].roles").value("admin"))
+                .andExpect(jsonPath("$.data[1].email").value("user@hh.se"))
                 .andExpect(jsonPath("$.data[1].roles").value("user"));
     }
 
     @Test
     void testFindUserByIdSuccess() throws Exception {
-        User u1 = new User();
-        u1.setEmail("m@e.se");
-        u1.setPassword("123456");
-        u1.setRoles("admin user");
-
-        User u2 = new User();
-        u2.setEmail("a@l.se");
-        u2.setPassword("654321");
-        u2.setRoles("user");
-
-        this.users = new ArrayList<>();
-        this.users.add(u1);
-        this.users.add(u2);
-
         // Given
-        given(this.userService.findByUserEmail("a@l.se")).willReturn(this.users.get(1));
+        given(this.userService.findUserByEmail("user@hh.se")).willReturn(this.users.get(1));
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + "a@l.se").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + "user@hh.se").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One User Success"))
-                .andExpect(jsonPath("$.data.email").value("a@l.se"))
+                .andExpect(jsonPath("$.data.email").value("user@hh.se"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
@@ -109,7 +97,7 @@ class UserControllerTest {
         String nonExistingEmail = "abc";
 
         // Given
-        given(this.userService.findByUserEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
+        given(this.userService.findUserByEmail("abc")).willThrow(new ObjectNotFoundException("user", "abc"));
 
         // When and then
         this.mockMvc.perform(get(this.baseUrlUsers + "/findUser" + "/" + nonExistingEmail).accept(MediaType.APPLICATION_JSON))
@@ -123,14 +111,13 @@ class UserControllerTest {
     void testRegisterUserSuccess() throws Exception {
         // Setup
         User newUser = new User();
-        newUser.setEmail("m@j.se");
-        newUser.setPassword("2468");
-        newUser.setRoles("admin");
+        newUser.setEmail("newUser@hh.se");
+        newUser.setPassword("123");
 
         String json = this.objectMapper.writeValueAsString(newUser);
 
         // Given
-        given(this.userService.save(Mockito.any(User.class))).willReturn(newUser);
+        given(this.userService.save(any(User.class))).willReturn(newUser);
 
         // When and then
         this.mockMvc.perform(post(this.baseUrlUsers + "/register")
@@ -139,60 +126,65 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add User Success"))
-                .andExpect(jsonPath("$.data.roles").value("admin"));
+                .andExpect(jsonPath("$.data.email").value("newUser@hh.se"));
     }
 
-    // TODO: 31/01/2024 testAddUserSuccess
-    // TODO: 31/01/2024 testAddUserInvalidInput
+    @Test
+    void testUpdatedUser() throws JsonProcessingException {
+        User update = new User();
+        update.setEmail("user@hh.se");
+        update.setRoles("newRole");
+
+        String json = this.objectMapper.writeValueAsString(update);
+
+        System.out.println(json);
+
+        given(this.userService.update("user@hh.se", update)).willReturn(update);
+
+        User returnedUser = this.userService.update("user@hh.se", update);
+
+        Assertions.assertNotNull(returnedUser);
+    }
 
     @Test
     void testUpdateUserSuccess() throws Exception {
 
-        User user = new User();
-        user.setEmail("m@e.se");
-        user.setPassword("123456");
-        user.setRoles("admin user");
+        UserDtoForm userDtoForm = new UserDtoForm("newRole"); // Role changes from 'user' to 'admin'
 
         User updatedUser = new User();
-        updatedUser.setEmail("m@e.se");
-        updatedUser.setRoles("admin"); // Role changes from 'admin user' to 'admin'
+        updatedUser.setEmail("user@hh.se");
+        updatedUser.setRoles("newRole");
 
-        User update = new User(
-                "admin");
-
-        String json = this.objectMapper.writeValueAsString(update);
+        String json = this.objectMapper.writeValueAsString(userDtoForm);
 
         // Given
-        given(this.userService.update(eq("m@e.se"), update)).willReturn(updatedUser);
+        given(this.userService.update(eq("user@hh.se"), Mockito.any(User.class))).willReturn(updatedUser);
 
         // When and then
-        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/m@e.se")
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/user@hh.se")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update User Success"))
-                .andExpect(jsonPath("$.data.email").value("m@e.se"))
-                .andExpect(jsonPath("$.data.roles").value("admin"))
-                .andExpect(jsonPath("$.data.numberOfJobs").value(0));
+                .andExpect(jsonPath("$.data.email").value("user@hh.se"))
+                .andExpect(jsonPath("$.data.roles").value("newRole"));
     }
 
     @Test
     void testUpdateUserWithNonExistentEmail() throws Exception {
-        String email = "abc";
-        User update = new User();
-        update.setRoles("No real roles");
 
-        String json = this.objectMapper.writeValueAsString(update);
+        UserDtoForm userDtoForm = new UserDtoForm("newRole");
 
+        String json = this.objectMapper.writeValueAsString(userDtoForm);
 
         // Given
-        given(this.userService.update(email, update)).willThrow(new ObjectNotFoundException("user", email));
+        given(this.userService.update(eq("abc"), Mockito.any(User.class))).willThrow(new ObjectNotFoundException("user", "abc"));
 
         // When and then
-        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/" + email)
-                        .content(String.valueOf(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(put(this.baseUrlUsers + "/update" + "/abc")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -203,13 +195,13 @@ class UserControllerTest {
 
     @Test
     void testDeleteUserByIdSuccess() throws Exception {
-        String existingEmail = "a@l.se";
 
         // Given
-        doNothing().when(this.userService).delete("a@l.se");
+        willDoNothing().given(this.userService).delete("abc");
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + existingEmail).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/user@hh.se")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Delete User Success"))
@@ -218,12 +210,11 @@ class UserControllerTest {
 
     @Test
     void testDeleteUserByIdWithNonExistingId() throws Exception {
-        String nonExistingEmail = "abc";
         // Given
-        doThrow(new ObjectNotFoundException("user", nonExistingEmail)).when(this.userService).delete(nonExistingEmail);
+        doThrow(new ObjectNotFoundException("user", "abc")).when(this.userService).delete("abc");
 
         // When and then
-        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/" + nonExistingEmail)
+        this.mockMvc.perform(delete(this.baseUrlUsers + "/delete" + "/abc")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))

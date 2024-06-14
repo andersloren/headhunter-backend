@@ -45,7 +45,7 @@ public class SecurityConfig {
     private String baseUrlJobs;
     @Value("${api.endpoint.base-url-ads}")
     private String baseUrlAds;
-    @Value("/api/v1/userinfo")
+    @Value("${api.endpoint.base-url-userInfo}")
     private String baseUrlUserInfo;
 
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
@@ -87,15 +87,15 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").permitAll() // This should be changed at some point. On the front-end side, this means we will have to change how email are being checked during signup.
                                 .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
-                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
+//                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlUserInfo + "/updateUserInfo/{email}").hasAuthority("ROLE_user")
                                 .requestMatchers(HttpMethod.GET, this.baseUrlUserInfo + "/getUserInfo/{email}").hasAuthority("ROLE_user")
 //                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAds + "/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 
                                 // Disallow everything else
                                 .anyRequest().authenticated() // Always a good idea to put this as last

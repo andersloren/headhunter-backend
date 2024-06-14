@@ -323,7 +323,7 @@ class JobServiceTest {
 
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(j1));
-        given(this.userRepository.findByEmail("m@j.se")).willThrow(new ObjectNotFoundException("user", "m@j.se"));
+        given(this.userRepository.findUserByEmail("m@j.se")).willThrow(new ObjectNotFoundException("user", "m@j.se"));
 
         // When
         Throwable thrown = catchThrowable(() -> {
