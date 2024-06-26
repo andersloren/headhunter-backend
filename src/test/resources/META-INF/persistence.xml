@@ -1,0 +1,25 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+    <persistence-unit
+            name="PersistenceXMLTest"
+            transaction-type="RESOURCE_LOCAL">
+        <class>se.sprinta.headhunterbackend.account.Account</class>
+        <class>se.sprinta.headhunterbackend.job.Job</class>
+        <class>se.sprinta.headhunterbackend.accountInfo.AccountInfo</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver"
+                      value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:h2:mem:headhunter-test-h2"/>
+            <property name="hibernate.hbm2ddl.auto"
+                      value="create"/>
+            <property name="jakarta.persistence.jdbc.user"
+                      value="root"/>
+            <property name="jakarta.persistence.jdbc.password"
+                      value="1234"/>
+        </properties>
+    </persistence-unit>
+</persistence>

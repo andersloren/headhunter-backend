@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
-import se.sprinta.headhunterbackend.user.MyUserPrincipal;
+import se.sprinta.headhunterbackend.account.MyAccountPrincipal;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -30,7 +30,7 @@ public class JwtProvider {
                 .map(GrantedAuthority::getAuthority) // Inverse of what we did in MyUserPrincipal
                 .collect(Collectors.joining(" ")); // Space delimiter as decided earlier
 
-        String username = ((MyUserPrincipal) authentication.getPrincipal()).getName();
+        String email = ((MyAccountPrincipal) authentication.getPrincipal()).getName();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -38,7 +38,7 @@ public class JwtProvider {
                 .expiresAt(now.plus(expiresIn, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("roles", authorities) // The user's roles (user, admin)
-                .claim("username", username) // This user's username
+                .claim("email", email) // This user's username
                 .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

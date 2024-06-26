@@ -7,12 +7,15 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +35,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 @Configuration
 public class SecurityConfig {
 
@@ -39,14 +44,14 @@ public class SecurityConfig {
 
     private final RSAPrivateKey privateKey;
 
-    @Value("${api.endpoint.base-url-users}")
-    private String baseUrlUsers;
-    @Value("${api.endpoint.base-url-jobs}")
+    @Value("${api.endpoint.base-url-account}")
+    private String baseUrlAccount;
+    @Value("${api.endpoint.base-url-job}")
     private String baseUrlJobs;
-    @Value("${api.endpoint.base-url-ads}")
+    @Value("${api.endpoint.base-url-ad}")
     private String baseUrlAds;
-    @Value("/api/v1/userinfo")
-    private String baseUrlUserInfo;
+    @Value("${api.endpoint.base-url-accountInfo}")
+    private String baseUrlAccountInfo;
 
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
@@ -83,26 +88,44 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest
-                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findAll").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlUsers + "/findUser/{email}").permitAll() // This should be changed at some point. On the front-end side, this means we will have to change how email are being checked during signup.
-                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/register").permitAll()
-                                .requestMatchers(HttpMethod.POST, this.baseUrlUsers + "/addUser").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.PUT, this.baseUrlUsers + "/update/{email}").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.DELETE, this.baseUrlUsers + "/delete/{email}").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.PUT, this.baseUrlUserInfo + "/updateUserInfo/{email}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlUserInfo + "/getUserInfo/{email}").hasAuthority("ROLE_user")
-//                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete").hasAuthority("ROLE_admin")
-                                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
-                                .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAds + "/**")).permitAll()
+                .authorizeHttpRequests(auth -> auth
 
-                                // Disallow everything else
-                                .anyRequest().authenticated() // Always a good idea to put this as last
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                        /**
+                         * Account requests
+                         */
+
+                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findById/{id}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.POST, this.baseUrlAccount + "/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
+
+                        /**
+                         * Job requests
+                         */
+
+                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findAll").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findById/{id}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.POST, this.baseUrlJobs + "/addJob/{id}").hasAuthority("ROLE_user")
+                        .requestMatchers(HttpMethod.PUT, this.baseUrlJobs + "/update/{id}").hasAuthority("ROLE_user")
+                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete/{email}/{id}").hasAuthority("ROLE_user")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/generate/{id}").hasAuthority("ROLE_user")
+
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAccount + "/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAds + "/**")).permitAll()
+
+                        .anyRequest().authenticated()
                 )
+
                         .
-                headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable()) // This is for H2 browser console access
-                .csrf(AbstractHttpConfigurer::disable) // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.
+                headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // This is for H2 browser console access
+                .csrf(csrf -> {
+                    csrf.disable();
+                    csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"));
+                })
+                // If not turned off, there will be problems when sending POST or PUT to server, resulting in 401.
                 .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(this.customBasicAuthenticationEntryPoint))
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(Customizer.withDefaults())

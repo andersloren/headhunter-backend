@@ -2,11 +2,13 @@ package se.sprinta.headhunterbackend.ad;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.account.Account;
 
 import java.util.List;
 
@@ -22,10 +24,13 @@ public class AdService {
     private final JobService jobService;
     private final JobRepository jobRepository;
 
-    public AdService(AdRepository adRepository, JobService jobService, JobRepository jobRepository) {
+    private final AdDtoFormToAdConverter adDtoFormToAdConverter;
+
+    public AdService(AdRepository adRepository, JobService jobService, JobRepository jobRepository, AdDtoFormToAdConverter adDtoFormToAdConverter) {
         this.adRepository = adRepository;
         this.jobService = jobService;
         this.jobRepository = jobRepository;
+        this.adDtoFormToAdConverter = adDtoFormToAdConverter;
     }
 
     public List<Ad> findAllAds() {
@@ -45,19 +50,18 @@ public class AdService {
      * Returns the user that has a job that holds the ad
      * Relationship: [Ad] *...1 [Job] *...1 [User]
      *
-     * @param adId The value used to find the right ad.
+     * @param id The value used to find the right ad.
      * @return User The object that is the ultimate owner of the ad.
      */
 
-    public User findUserByAdId(String adId) {
-        Ad foundAd = findById(adId);
-        return foundAd.getJob().getUser();
+    public Account findUserByAdId(String id) {
+        Ad foundAd = findById(id);
+        return foundAd.getJob().getAccount();
     }
 
-    public Long getNumberOfAds(Long jobId) {
+    public long getNumberOfAds(long jobId) {
         return this.adRepository.getNumberOfAds(jobId);
     }
-
 
     /**
      * Establishes relationship between job and ad.
@@ -66,18 +70,20 @@ public class AdService {
      * @return Ad The same Ad that was created.
      */
 
-    public Ad addAd(Long jobId, Ad ad) {
+    public Ad addAd(Long jobId, AdDtoForm adDtoForm) {
+        if (adDtoForm == null) throw new NullPointerException("Ad can't be null");
+
         Job foundJob = this.jobRepository.findById(jobId)
                 .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-        foundJob.addAd(ad);
-        foundJob.setNumberOfAds();
-        this.jobService.save(foundJob);
+        Ad newAd = new Ad();
+        newAd.setHtmlCode(adDtoForm.htmlCode());
 
-        // TODO: 14/03/2024 Is this really necessary? Should be handled by cascade. 
-        ad.setJob(foundJob);
+        foundJob.addAd(newAd);
 
-        return this.adRepository.save(ad);
+        // Dirty check on foundUser, so is automatically persisted
+
+        return this.adRepository.save(newAd);
     }
 
     public void deleteAd(String adId) {

@@ -2,10 +2,10 @@ package se.sprinta.headhunterbackend.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import se.sprinta.headhunterbackend.user.MyUserPrincipal;
-import se.sprinta.headhunterbackend.user.User;
-import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
-import se.sprinta.headhunterbackend.user.dto.UserDtoView;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.MyAccountPrincipal;
+import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewConverter;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
 public class AuthService {
 
     private final JwtProvider jwtProvider;
-    private final UserToUserDtoViewConverter userToUserDtoViewConverter;
+    private final AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
 
-    public AuthService(JwtProvider jwtProvider, UserToUserDtoViewConverter userToUserDtoViewConverter) {
+    public AuthService(JwtProvider jwtProvider, AccountToAccountDtoViewConverter accountToAccountDtoViewConverter) {
         this.jwtProvider = jwtProvider;
-        this.userToUserDtoViewConverter = userToUserDtoViewConverter;
+        this.accountToAccountDtoViewConverter = accountToAccountDtoViewConverter;
     }
 
     /**
@@ -30,16 +30,16 @@ public class AuthService {
 
     public Map<String, Object> createLoginInfo(Authentication authentication) {
         // Create user info.
-        MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-        User user = principal.getUser();
-        UserDtoView userDto = this.userToUserDtoViewConverter.convert(user);
+        MyAccountPrincipal principal = (MyAccountPrincipal) authentication.getPrincipal();
+        Account account = principal.getUser();
+        AccountDtoView accountDtoView = this.accountToAccountDtoViewConverter.convert(account);
 
         // Create a JWT.
         String token = this.jwtProvider.createToken(authentication);
 
         Map<String, Object> loginResultMap = new HashMap<>();
 
-        loginResultMap.put("userInfo", userDto);
+        loginResultMap.put("accountInfo", accountDtoView);
         loginResultMap.put("token", token);
 
         return loginResultMap;

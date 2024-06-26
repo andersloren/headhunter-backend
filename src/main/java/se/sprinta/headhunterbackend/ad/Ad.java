@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 
 @AllArgsConstructor
 @Entity
-@Table(name = "ads")
+@Table(name = "ad")
 public class Ad implements Serializable {
 
     @Id
