@@ -1,10 +1,12 @@
 package se.sprinta.headhunterbackend.job;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import se.sprinta.headhunterbackend.ad.Ad;
-import se.sprinta.headhunterbackend.user.User;
+import se.sprinta.headhunterbackend.account.Account;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,14 +14,14 @@ import java.util.List;
 
 
 /**
- * Job is an entity that stores information on a job that a user wants to create ads for.
- * Relationship: [Ad] *...1 [Job] *...1 [User]
+ * Job is an entity that stores information on a job that an account wants to create ads for.
+ * Relationship: [Ad] *...1 [Job] *...1 [Account]
  */
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "jobs")
+@Table(name = "job")
 public class Job implements Serializable {
 
     @Id
@@ -27,12 +29,28 @@ public class Job implements Serializable {
     private Long id;
 
     /**
-     * The job has a title that the user uses to identify its jobs.
+     * The job has a title that the account uses to identify its jobs.
      */
 
     // TODO: 14/03/2024 Remove @NotEmpty? It's commented out.
 //    @NotEmpty(message = "title is required")
     private String title;
+
+    /**
+     * The job has a description that the AI will use to generate an ad.
+     */
+
+    @Column(columnDefinition = "TEXT")
+    // TODO: 14/03/2024 Remove @NotEmpty? It's commented out.
+//    @NotEmpty(message = "description is required")
+    private String description;
+
+    /**
+     * The job has an instruction that the AI will use to handle the description of the Job.
+     */
+
+    @Column(columnDefinition = "TEXT")
+    private String instruction;
 
     /**
      * Contact information
@@ -49,36 +67,21 @@ public class Job implements Serializable {
     private String applicationDeadline;
 
     /**
-     * The job has a description that the AI will use to generate an ad.
-     */
-
-    @Column(columnDefinition = "TEXT")
-    // TODO: 14/03/2024 Remove @NotEmpty? It's commented out.
-//    @NotEmpty(message = "description is required.")
-    private String description;
-
-    /**
-     * The job has an instruction that the AI will use to handle the description of the Job.
-     */
-
-    @Column(columnDefinition = "TEXT")
-    private String instruction;
-
-    /**
-     * The job belongs to a user.
-     * Relationship: [Job] *...1 [User]
+     * The job belongs to an account.
+     * Relationship: [Job] *...1 [Account]
      */
 
     @ManyToOne()
-    @JoinColumn(name = "\"user_id\"")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     /**
-     * Every Job object belongs to a User object.
-     * Relationship: [Job] *...1 [User]
+     * Every Job object belongs to an account object.
+     * Relationship: [Job] *...1 [Account]
      */
 
-    @OneToMany(mappedBy = "job", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     // TODO: 02/03/2024 add cascade when needed
     private List<Ad> ads = new ArrayList<>();
 
@@ -88,27 +91,39 @@ public class Job implements Serializable {
 
     private int numberOfAds;
 
-    /**
-     * When an Ad object is created, it has to be connected to a Job object.
-     *
-     * @param ad Ad is the object that holds the AI-generated data.
-     */
-
-    public void addAd(Ad ad) {
-        this.ads.add(ad);
-        setNumberOfAds();
+    public Job(String title, String description, String instruction) {
+        this.title = title;
+        this.description = description;
+        this.instruction = instruction;
     }
 
     /**
-     * When an Ad object is deleted, it has to be unconnected to the Job object it used to belong to.
+     * When an Ad object is created, it has to be connected to a Job object.
      *
-     * @param ad Ad is the object that holds the AI-generated data.
+     * @param newAd Ad is the object that holds the AI-generated data.
      */
 
-    // TODO: 14/03/2024 Remove this method? Cascade solves this?
-    public void removeAd(Ad ad) {
-        this.ads.remove(ad);
-        setNumberOfAds();
+
+    public void addAd(Ad newAd) {
+        if (newAd == null) throw new NullPointerException("Can't add null Job");
+        if (newAd.getJob() != null) throw new IllegalStateException("Ad already has a job");
+        this.getAds().add(newAd);
+        this.setNumberOfAds();
+        newAd.setJob(this);
+    }
+
+    /**
+     * When an Ad is deleted, it has to be disassociated with its Job object.
+     *
+     * @param oldAd is the object to be removed that holds AI-generated data.
+     */
+
+    public void removeAd(Ad oldAd) {
+        if (oldAd == null) throw new NullPointerException("Can't remove null Job");
+        if (oldAd.getJob() == null) throw new IllegalStateException("This ad doesn't belong to this Job");
+        this.getAds().remove(oldAd);
+        this.setNumberOfAds();
+        oldAd.setJob(null);
     }
 
     public Long getId() {
@@ -135,12 +150,12 @@ public class Job implements Serializable {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String getInstruction() {
@@ -210,5 +225,19 @@ public class Job implements Serializable {
 
     public void setApplicationDeadline(String applicationDeadline) {
         this.applicationDeadline = applicationDeadline;
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", instruction='" + instruction + '\'' +
+                ", recruiterName='" + recruiterName + '\'' +
+                ", adCompany='" + adCompany + '\'' +
+                ", adEmail='" + adEmail + '\'' +
+                ", adPhone='" + adPhone + '\'' +
+                ", applicationDeadline='" + applicationDeadline + '\'' +
+                '}';
     }
 }

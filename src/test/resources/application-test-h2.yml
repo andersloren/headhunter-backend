@@ -1,16 +1,22 @@
-active-application-yml: application-test-h2.yml in test-h2
+active-application-yml: H2 in test
 
 spring:
   datasource:
     profiles:
       active: test-h2
-    url: jdbc:h2:mem:headhunter-db-test-h2;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+    #    url: jdbc:h2:mem:${Headhunter_H2_Test_Env}
+    url: jdbc:h2:mem:headhunter-test-h2
     driverClassName: org.h2.Driver
-    username: ${H2_TEST_USERNAME}
-    password: ${H2_TEST_PASSWORD}
+    username: ${H2_Test_Username}
+    password: ${H2_Test_Password}
   jpa:
     hibernate:
       ddl-auto: create
+      dialect: org.hibernate.dialect.H2Dialect
+    properties:
+      format_sql: true
+      use_sql_comments: true
+      generate_statistics: true
     show-sql: true
   h2:
     console:

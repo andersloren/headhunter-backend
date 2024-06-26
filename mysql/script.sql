@@ -2,33 +2,33 @@
  This script can be used in MySQL (and maybe other SQL:s) to monitor the relationship tables.
  */
 
-SELECT * FROM jobs;
-SELECT * FROM _users;
-SELECT * FROM ads;
-SELECT * FROM user_info;
+SELECT * FROM job;
+SELECT * FROM account;
+SELECT * FROM ad;
+SELECT * FROM account_info;
 
--- Relationship Table between USERS and JOBS
+-- Relationship Table between ACCOUNT and JOB
 SELECT
-    u.email AS user_email,
-    u.username AS user_username,
+    ac.email AS account_email,
+    ac.username AS account_username,
     j.id AS job_id,
     j.title AS job_title
 FROM
-    _users u
+    account u
 JOIN
-    jobs j ON u.email = j.user_id
+    job j ON u.email = j.account_id
 ORDER BY
     u.email, j.id;
 
--- Relationship Table between JOBS and ADS
+-- Relationship Table between JOB and AD
 SELECT
     j.id AS job_id,
     j.title AS job_title,
     a.id AS ad_id,
     a.html_code AS ad_htmlCode
 FROM
-    jobs j
+    job j
 JOIN
-    ads a ON j.id = a.job_id
+    a ad ON j.id = a.job_id
 ORDER BY
     j.id, a.id;

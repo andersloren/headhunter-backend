@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.job.Job;
 
 @Log4j2
 @SpringBootApplication
@@ -19,12 +21,12 @@ public class HeadhunterBackendApplication {
         SpringApplication.run(HeadhunterBackendApplication.class, args);
     }
 
-    @Bean
+/*    @Bean
     ApplicationRunner applicationRunner(Environment environment) {
         return args -> {
             log.info("Active Configuration File: " + environment.getProperty("active-application-yml"));
         };
-    }
+    }*/
 }
 
 

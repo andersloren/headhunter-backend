@@ -7,9 +7,9 @@ import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
-import se.sprinta.headhunterbackend.user.User;
-import se.sprinta.headhunterbackend.user.converter.UserToUserDtoViewConverter;
-import se.sprinta.headhunterbackend.user.dto.UserDtoView;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewConverter;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 
 import java.util.List;
 
@@ -18,18 +18,18 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("${api.endpoint.base-url-ads}")
+@RequestMapping("${api.endpoint.base-url-ad}")
 @CrossOrigin("http://localhost:5173")
 public class AdController {
 
     private final AdService adService;
-    private final UserToUserDtoViewConverter userToUserDtoViewConverter;
+    private final AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
     private final AdDtoFormToAdConverter adDtoFormToAdConverter;
     private final AdToAdDtoView adToAdDtoView;
 
-    public AdController(AdService adService, UserToUserDtoViewConverter userToUserDtoViewConverter, AdDtoFormToAdConverter adDtoFormToAdConverter, AdToAdDtoView adToAdDtoView) {
+    public AdController(AdService adService, AccountToAccountDtoViewConverter accountToAccountDtoViewConverter, AdDtoFormToAdConverter adDtoFormToAdConverter, AdToAdDtoView adToAdDtoView) {
         this.adService = adService;
-        this.userToUserDtoViewConverter = userToUserDtoViewConverter;
+        this.accountToAccountDtoViewConverter = accountToAccountDtoViewConverter;
         this.adDtoFormToAdConverter = adDtoFormToAdConverter;
         this.adToAdDtoView = adToAdDtoView;
     }
@@ -75,15 +75,14 @@ public class AdController {
 
     @GetMapping("/findUserByAdId/{adId}")
     public Result findUserByAdId(@PathVariable String adId) {
-        User foundUser = this.adService.findUserByAdId(adId);
-        UserDtoView foundUserDtoView = this.userToUserDtoViewConverter.convert(foundUser);
-        return new Result(true, StatusCode.SUCCESS, "Find User By Ad Id Success", foundUserDtoView);
+        Account foundAccount = this.adService.findUserByAdId(adId);
+        AccountDtoView foundAccountDtoView = this.accountToAccountDtoViewConverter.convert(foundAccount);
+        return new Result(true, StatusCode.SUCCESS, "Find User By Ad Id Success", foundAccountDtoView);
     }
 
     @PostMapping("/saveAd/{jobId}")
     public Result saveAd(@PathVariable Long jobId, @RequestBody AdDtoForm adDtoForm) {
-        Ad ad = this.adDtoFormToAdConverter.convert(adDtoForm);
-        Ad savedAd = this.adService.addAd(jobId, ad);
+        Ad savedAd = this.adService.addAd(jobId, adDtoForm);
         AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
         return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
     }

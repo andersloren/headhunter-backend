@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 /**
  * Input Job data format.
  *
- * @param email The email of the user that holds the job.
  *              Relationship: [Job] *...1 [User]
  * @param title The title of the job.
  * @param description The description of the job that the AI will use to generate an ad.
@@ -13,9 +12,8 @@ import jakarta.validation.constraints.NotEmpty;
  */
 
 public record JobDtoFormAdd(
-        String email,
         String title,
-        @NotEmpty(message = "Description is required.")
+        @NotEmpty(message = "Description is required")
         String description,
         String instruction
 ) {

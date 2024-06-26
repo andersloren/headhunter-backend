@@ -19,5 +19,4 @@ public class RestClientBuilderConfiguration {
         return RestClient.builder()
                 .requestFactory(new JdkClientHttpRequestFactory());
     }
-
 }

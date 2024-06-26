@@ -1,10 +1,12 @@
 package se.sprinta.headhunterbackend.job;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView;
+import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +25,20 @@ public interface JobRepository extends JpaRepository<Job, Long> {
      * * Note that Email is the id of a User object.
      */
 
-    List<Job> findAllByUser_Email(String email);
+    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j WHERE j.account.email = :userEmail")
+    List<JobDtoView> getAllJobDtosByUserEmail(String userEmail);
+
+    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j")
+    List<JobDtoView> getAllJobDtos();
 
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j WHERE j.id = :jobId")
-    Optional<JobDtoView> getJobById(Long jobId);
+    Optional<JobDtoView> getFullJobDtoByJobId(Long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobsTitleAndIdDtoView(j.id, j.title) FROM Job j WHERE j.user.email =:email")
-    List<JobsTitleAndIdDtoView> getJobTitles(String email);
+    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView(j.id, j.title) FROM Job j WHERE j.account.email =:email")
+    List<JobIdAndTitleDtoView> getAllJobsDtoIdAndTitlesByEmail(String email);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Job", nativeQuery = true)
+    void deleteJobTable();
 }

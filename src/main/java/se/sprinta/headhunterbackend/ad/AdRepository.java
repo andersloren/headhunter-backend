@@ -1,8 +1,11 @@
 package se.sprinta.headhunterbackend.ad;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import se.sprinta.headhunterbackend.account.Account;
 
 import java.util.List;
 
@@ -20,6 +23,11 @@ public interface AdRepository extends JpaRepository<Ad, String> {
 
     List<Ad> findByJob_Id(Long jobId);
 
-    @Query("SELECT COUNT(a) FROM Ad a WHERE a.job.id = :jobId")
-    Long getNumberOfAds(Long jobId);
+    @Query("SELECT COUNT(ad) FROM Ad ad WHERE ad.job.id = :jobId")
+    long getNumberOfAds(long jobId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Ad", nativeQuery = true)
+    void deleteAdTable();
 }

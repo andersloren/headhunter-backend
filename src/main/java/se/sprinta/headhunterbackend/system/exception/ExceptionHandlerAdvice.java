@@ -69,7 +69,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(AccountStatusException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     Result handleAccountStatusException(AccountStatusException ex) {
-        return new Result(false, StatusCode.UNAUTHORIZED, "User account is abnormal", ex.getMessage());
+        return new Result(false, StatusCode.UNAUTHORIZED, "Account is abnormal", ex.getMessage());
     }
 
     @ExceptionHandler(InvalidBearerTokenException.class)

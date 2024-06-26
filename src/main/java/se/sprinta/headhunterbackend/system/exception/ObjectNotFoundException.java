@@ -1,5 +1,7 @@
 package se.sprinta.headhunterbackend.system.exception;
 
+import java.util.Objects;
+
 /**
  * Common exception that is suitable for customization to our needs.
  *
@@ -15,7 +17,7 @@ public class ObjectNotFoundException extends RuntimeException {
      */
 
     public ObjectNotFoundException(String objectName, String id) {
-        super(objectName == "user" ? "Could not find " + objectName + " with Email " + id : "Could not find " + objectName + " with Id " + id);
+        super(Objects.equals(objectName, "account") ? "Could not find " + objectName + " with Email " + id : "Could not find " + objectName + " with Id " + id);
     }
 
     /**

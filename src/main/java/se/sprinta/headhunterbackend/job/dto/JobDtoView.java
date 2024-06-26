@@ -10,10 +10,13 @@ package se.sprinta.headhunterbackend.job.dto;
  * @param description The description of the job that is being used by the AI to generate an ad.
  */
 
+// TODO: 17/06/2024 Should instruction be included here? 
+
 public record JobDtoView(
         String title,
+        
         String description,
-
+        
         String recruiterName,
 
         String adCompany,

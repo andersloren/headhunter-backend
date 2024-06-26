@@ -1,12 +1,13 @@
-active-application-yml: application-test-mysql.yml in test-mysql
+active-application-yml: MySQL in test
 
 spring:
   datasource:
     profiles:
       active: test-mysql
-    url: jdbc:mysql://${HEADHUNTER_TEST_DB_VALUES}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    #    url: jdbc:mysql://${Headhunter_MySQL_Test_Env}
+    url: jdbc:mysql://localhost:3306/headhunter-test?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: ${MySQL_Username}
+    password: ${MySQL_Password}
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,10 +17,10 @@ spring:
 
 api:
   endpoint:
-    base-url-users: /api/v1/users
-    base-url-jobs: /api/v1/jobs
-    base-url-ads: /api/v1/ads
-    base-url-userInfo: /api/v1/userInfo
+    base-url-account: /api/v1/account
+    base-url-job: /api/v1/job
+    base-url-ad: /api/v1/ad
+    base-url-accountInfo: /api/v1/accountInfo
 
 ai:
   openai:

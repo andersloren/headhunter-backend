@@ -11,7 +11,7 @@ import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
 
 @RestController
-@RequestMapping("${api.endpoint.base-url-users}")
+@RequestMapping("${api.endpoint.base-url-account}")
 @CrossOrigin("http://localhost:5173")
 public class AuthController {
 
@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public Result getLoginInfo(Authentication authentication) {
-        LOGGER.debug("Authenticated user: '{}'", authentication.getName());
-        return new Result(true, StatusCode.SUCCESS, "User Info and JSON Web Token", this.authService.createLoginInfo(authentication));
+        LOGGER.debug("Authenticated account: '{}'", authentication.getName());
+        return new Result(true, StatusCode.SUCCESS, "Account Info and JSON Web Token", this.authService.createLoginInfo(authentication));
     }
 }
