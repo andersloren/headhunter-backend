@@ -9,12 +9,14 @@ import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @ActiveProfiles("test-h2")
@@ -73,13 +75,33 @@ public class AccountServiceH2Test {
 
     @Test
     @DisplayName("findById - Invalid Input - Exception")
-    void test_FindById_InvalidInput_Success() {
+    void test_FindById_InvalidInput_Exception() {
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
                 () -> this.accountService.findById("Invalid Email"));
 
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find account with Email Invalid Email");
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Non-Existing Email - Success")
+    void test_CheckEmailUnique_NonExistingEmail_ReturnsTrue_Success() {
+        boolean isEmailNotAvailableInDatabase = this.accountService.checkEmailUnique("availableEmail@hh.se");
+
+        assertTrue(isEmailNotAvailableInDatabase);
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Existing Email - Exception")
+    void test_CheckEmailUnique_ExistingEmail_Exception() {
+        Throwable thrown = assertThrows(EmailNotFreeException.class,
+                () -> this.accountService.checkEmailUnique("admin-h2@hh.se"));
+
+        assertThat(thrown)
+                .isInstanceOf(EmailNotFreeException.class)
+                .hasMessage("admin-h2@hh.se is already registered");
+
     }
 
     @Test

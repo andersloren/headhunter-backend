@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormUpdate;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
@@ -111,7 +112,7 @@ class AccountControllerMockTest {
 
     @Test
     @DisplayName("getAccountById - Non-existent Id (Exception)")
-    void test_FindAccountByI_NonExistentId() throws Exception {
+    void test_FindAccountById_NonExistentId() throws Exception {
         String nonExistingEmail = "abc";
 
         // Given
@@ -122,6 +123,36 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Non-Existing Email - Success")
+    void test_CheckEmailUnique_NonExistingEmail_Success() throws Exception {
+        // Given
+        given(this.accountService.checkEmailUnique("availableEmail@hh.se")).willReturn(false);
+
+        // When and then
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Email is available"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Existing Email - Exception")
+    void test_CheckEmailUnique_ExistingEmail_Exception() throws Exception {
+        // Given
+        given(this.accountService.checkEmailUnique("admin@hh.se")).willThrow(new EmailNotFreeException("admin@hh.se"));
+
+        // When and then
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin@hh.se")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
+                .andExpect(jsonPath("$.message").value("admin@hh.se is already registered"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 

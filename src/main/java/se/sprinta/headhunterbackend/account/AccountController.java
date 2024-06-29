@@ -44,10 +44,10 @@ public class AccountController {
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundAccountDtos);
     }
 
-    @GetMapping("/isEmailAvailable/{email}")
-    public Result isEmailAvailable(@PathVariable String email) {
-        boolean isEmailAvailable = this.accountService.isEmailAvailable(email);
-        return new Result(true, StatusCode.SUCCESS, "Email checked", isEmailAvailable);
+    @GetMapping("/checkEmailUnique/{email}")
+    public Result checkEmailUnique(@PathVariable String email) {
+        this.accountService.checkEmailUnique(email);
+        return new Result(true, StatusCode.SUCCESS, "Email is available");
     }
 
     @GetMapping("/getAccountDtoByEmail/{userEmail}")

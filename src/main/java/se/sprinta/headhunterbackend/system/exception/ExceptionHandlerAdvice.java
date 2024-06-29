@@ -46,6 +46,12 @@ public class ExceptionHandlerAdvice {
         return new Result(false, StatusCode.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(EmailNotFreeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    Result handleEmailNotFreeException(EmailNotFreeException ex) {
+        return new Result(false, StatusCode.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     Result handleValidationException(MethodArgumentNotValidException ex) {

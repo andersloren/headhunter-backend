@@ -96,10 +96,11 @@ public class SecurityConfig {
                          */
 
                         .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findById/{id}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/checkEmailUnique/{email}").permitAll()
                         .requestMatchers(HttpMethod.POST, this.baseUrlAccount + "/register").permitAll()
                         .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
+
 
                         /**
                          * Job requests
