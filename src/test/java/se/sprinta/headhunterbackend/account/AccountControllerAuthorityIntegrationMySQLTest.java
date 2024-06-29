@@ -104,6 +104,76 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - Admin Permission - Non-Existing Email - Success")
+    void test_CheckEmailUnique_AdminPermission_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Email is available"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - User Permission - Non-Existing Email - Success")
+    void test_CheckEmailUnique_UserPermission_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, userToken()))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Email is available"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - No Authorization - Non-Existing Email - Success")
+    void test_CheckEmailUnique_NoAuthorization_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Email is available"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - Admin Permission - Existing Email - Exception")
+    void test_CheckEmailUnique_AdminPermission_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
+                .andExpect(jsonPath("$.message").value("admin-mysql@hh.se is already registered"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - User Permission - Existing Email - Exception")
+    void test_CheckEmailUnique_UserPermission_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, userToken()))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
+                .andExpect(jsonPath("$.message").value("admin-mysql@hh.se is already registered"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("(GET) - checkEmailUnique - No Authorization - Existing Email - Exception")
+    void test_CheckEmailUnique_NoAuthorization_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
+                .andExpect(jsonPath("$.message").value("admin-mysql@hh.se is already registered"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
 
     @Test
     @DisplayName("(GET) - getAccountDtoByEmail - Admin Permission - Success")
@@ -156,10 +226,10 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(POST) register - Admin No Permission - Exception")
+    @DisplayName("(POST) register - Admin Permission - Exception")
     void test_RegisterAccount_AdminNoPermission_Exception() throws Exception {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
-                "newUser@hh.se",
+                "user4-mysql@hh.se",
                 "a"
         );
 
@@ -168,12 +238,14 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
         this.mockMvc.perform(post(this.baseUrlAccount + "/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
-                .andExpect(jsonPath("$.data").value("Access Denied"));
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Account Success"))
+                .andExpect(jsonPath("$.data.email").value("user4-mysql@hh.se"))
+                .andExpect(jsonPath("$.data.roles").value("user"))
+                .andExpect(jsonPath("$.data.number_of_jobs").value(0));
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
+import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentCaptor.*;
 import static org.mockito.BDDMockito.*;
 
@@ -50,6 +50,33 @@ class AccountServiceMockTest {
 
         // Verify
         then(this.accountRepository).should().findAll();
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Non-Existing Email")
+    void test_CheckEmailUnique_NonExistingEmail_ReturnsTrue_Success() {
+        // Given
+        given(this.accountRepository.checkEmailUnique("availableEmail@hh.se")).willReturn(true);
+
+        // When
+        boolean isEmailNotAvailableInDatabase = this.accountService.checkEmailUnique("availableEmail@hh.se");
+
+        // Then
+        assertTrue(isEmailNotAvailableInDatabase);
+    }
+
+    @Test
+    @DisplayName("checkEmailUnique - Existing Email - Exception")
+    void test_CheckEmailUnique_ExistingEmail_Exception() {
+        // Given
+        given(this.accountRepository.checkEmailUnique("admin@hh.se")).willReturn(false);
+
+        Throwable thrown = assertThrows(EmailNotFreeException.class,
+                () -> this.accountService.checkEmailUnique("admin@hh.se"));
+
+        assertThat(thrown)
+                .isInstanceOf(EmailNotFreeException.class)
+                .hasMessage("admin@hh.se is already registered");
     }
 
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.List;
@@ -42,9 +43,12 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new ObjectNotFoundException("account", email));
     }
 
-    public boolean isEmailAvailable(String email) {
-        return this.accountRepository.isEmailAvailable(email);
+    public boolean checkEmailUnique(String email) {
+        boolean isEmailNotTaken = this.accountRepository.checkEmailUnique(email);
+        if (!isEmailNotTaken) throw new EmailNotFreeException(email);
+        return true;
     }
+
 
     public List<AccountDtoView> getAllAccountDtoViews() {
         return this.accountRepository.getAllAccountDtoViews();
