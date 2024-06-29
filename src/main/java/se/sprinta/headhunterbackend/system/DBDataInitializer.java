@@ -14,7 +14,6 @@ import se.sprinta.headhunterbackend.account.AccountService;
 
 @Component
 @Transactional
-@Profile("passive")
 public class DBDataInitializer implements CommandLineRunner {
 
     private final AccountService accountService;

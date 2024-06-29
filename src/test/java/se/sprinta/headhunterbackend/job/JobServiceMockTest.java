@@ -114,7 +114,7 @@ class JobServiceMockTest {
     void test_GetJobIdAndTitlesDtosByEmailSuccess() {
 
         // Given
-        given(this.jobRepository.getAllJobsDtoIdAndTitlesByEmail("user@hh.se")).willReturn(this.jobIdAndTitleDtoViews);
+        given(this.jobRepository.getAllJobIdAndTitlesDtosByEmail("user@hh.se")).willReturn(this.jobIdAndTitleDtoViews);
 
         // When
         List<JobIdAndTitleDtoView> jobIdAndTitleDtoView = this.jobService.getAllJobIdAndTitlesDtosByEmail("user@hh.se");
@@ -123,7 +123,7 @@ class JobServiceMockTest {
         assertEquals(this.jobIdAndTitleDtoViews.size(), jobIdAndTitleDtoView.size());
 
         // Verify
-        then(this.jobRepository).should().getAllJobsDtoIdAndTitlesByEmail("user@hh.se");
+        then(this.jobRepository).should().getAllJobIdAndTitlesDtosByEmail("user@hh.se");
     }
 
     @Test

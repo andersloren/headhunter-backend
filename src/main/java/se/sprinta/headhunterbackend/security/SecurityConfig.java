@@ -108,6 +108,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findAll").hasAuthority("ROLE_admin")
                         .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findById/{id}").hasAuthority("ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/getAllJobDtosByUserEmail/{email}").hasAuthority("ROLE_user")
                         .requestMatchers(HttpMethod.POST, this.baseUrlJobs + "/addJob/{id}").hasAuthority("ROLE_user")
                         .requestMatchers(HttpMethod.PUT, this.baseUrlJobs + "/update/{id}").hasAuthority("ROLE_user")
                         .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete/{email}/{id}").hasAuthority("ROLE_user")

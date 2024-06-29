@@ -121,7 +121,7 @@ class JobRepositoryH2Test {
     @Test
     @DisplayName("getAllJobsDtoIdAndTitlesByEmail - Success")
     void test_GetAllJobsDtoIdAndTitlesByEmail_Success() {
-        List<JobIdAndTitleDtoView> foundJobIdAndTitleDtoViews = this.jobRepository.getAllJobsDtoIdAndTitlesByEmail("user1-h2@hh.se");
+        List<JobIdAndTitleDtoView> foundJobIdAndTitleDtoViews = this.jobRepository.getAllJobIdAndTitlesDtosByEmail("user1-h2@hh.se");
 
         System.out.println("\ngetAllJobsDtoIdAndTitlesByEmail (user1-h2@hh.se)");
         System.out.println("size: " + foundJobIdAndTitleDtoViews.size());

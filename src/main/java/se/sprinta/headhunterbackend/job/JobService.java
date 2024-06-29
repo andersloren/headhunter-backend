@@ -57,7 +57,7 @@ public class JobService {
     }
 
     public List<JobIdAndTitleDtoView> getAllJobIdAndTitlesDtosByEmail(String email) {
-        return this.jobRepository.getAllJobsDtoIdAndTitlesByEmail(email);
+        return this.jobRepository.getAllJobIdAndTitlesDtosByEmail(email);
     }
 
     public Job findById(long jobId) {

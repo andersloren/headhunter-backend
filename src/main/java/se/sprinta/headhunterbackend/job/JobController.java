@@ -58,6 +58,12 @@ public class JobController {
      * @return Result Successful Result object.
      */
 
+    @GetMapping("/getAllJobIdAndTitlesDtosByEmail/{email}")
+    public Result getAllJobIdAndTitlesDtosByEmail(@PathVariable String email) {
+        List<JobIdAndTitleDtoView> userJobs = this.jobService.getAllJobIdAndTitlesDtosByEmail(email);
+        return new Result(true, StatusCode.SUCCESS, "Find All Job Id and Titles Dtos Successful", userJobs);
+    }
+
     @GetMapping("/getAllJobDtosByUserEmail/{email}")
     public Result getAllJobsByUserEmail(@PathVariable String email) {
         List<JobDtoView> userJobs = this.jobService.getAllJobDtosByUserEmail(email);
