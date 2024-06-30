@@ -25,7 +25,7 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     Optional<Account> findAccountByEmail(String email);
 
     @Query("SELECT COUNT(ac) = 0 FROM Account ac WHERE ac.email = :email")
-    boolean checkEmailUnique(String email);
+    boolean validateEmailAvailable(String email);
 
     @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ac.email, ac.roles, ac.number_of_jobs) FROM Account ac where ac.email = :email")
     Optional<AccountDtoView> getAccountDtoByEmail(String email);

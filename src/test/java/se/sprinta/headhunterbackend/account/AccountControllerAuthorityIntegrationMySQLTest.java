@@ -105,9 +105,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - Admin Permission - Non-Existing Email - Success")
-    void test_CheckEmailUnique_AdminPermission_NonExistingEmail_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - Admin Permission - Non-Existing Email - Success")
+    void test_validateEmailAvailable_AdminPermission_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -117,9 +117,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - User Permission - Non-Existing Email - Success")
-    void test_CheckEmailUnique_UserPermission_NonExistingEmail_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - User Permission - Non-Existing Email - Success")
+    void test_ValidateEmailAvailable_UserPermission_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -129,9 +129,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - No Authorization - Non-Existing Email - Success")
-    void test_CheckEmailUnique_NoAuthorization_NonExistingEmail_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - No Authorization - Non-Existing Email - Success")
+    void test_ValidateEmailAvailable_NoAuthorization_NonExistingEmail_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -140,9 +140,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - Admin Permission - Existing Email - Exception")
-    void test_CheckEmailUnique_AdminPermission_ExistingEmail_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - Admin Permission - Existing Email - Exception")
+    void test_ValidateEmailAvailable_AdminPermission_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin-mysql@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -152,9 +152,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - User Permission - Existing Email - Exception")
-    void test_CheckEmailUnique_UserPermission_ExistingEmail_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - User Permission - Existing Email - Exception")
+    void test_ValidateEmailAvailable_UserPermission_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin-mysql@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -164,9 +164,9 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) - checkEmailUnique - No Authorization - Existing Email - Exception")
-    void test_CheckEmailUnique_NoAuthorization_ExistingEmail_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin-mysql@hh.se")
+    @DisplayName("(GET) - validateEmailAvailable - No Authorization - Existing Email - Exception")
+    void test_ValidateEmailAvailable_NoAuthorization_ExistingEmail_Exception() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin-mysql@hh.se")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))

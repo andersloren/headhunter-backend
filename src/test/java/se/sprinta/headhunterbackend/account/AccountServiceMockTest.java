@@ -53,26 +53,26 @@ class AccountServiceMockTest {
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Non-Existing Email")
-    void test_CheckEmailUnique_NonExistingEmail_ReturnsTrue_Success() {
+    @DisplayName("validateEmailAvailable - Non-Existing Email")
+    void test_ValidateEmailAvailable_NonExistingEmail_ReturnsTrue_Success() {
         // Given
-        given(this.accountRepository.checkEmailUnique("availableEmail@hh.se")).willReturn(true);
+        given(this.accountRepository.validateEmailAvailable("availableEmail@hh.se")).willReturn(true);
 
         // When
-        boolean isEmailNotAvailableInDatabase = this.accountService.checkEmailUnique("availableEmail@hh.se");
+        boolean isEmailNotAvailableInDatabase = this.accountService.validateEmailAvailable("availableEmail@hh.se");
 
         // Then
         assertTrue(isEmailNotAvailableInDatabase);
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Existing Email - Exception")
-    void test_CheckEmailUnique_ExistingEmail_Exception() {
+    @DisplayName("validateEmailAvailable - Existing Email - Exception")
+    void test_ValidateEmailAvailable_ExistingEmail_Exception() {
         // Given
-        given(this.accountRepository.checkEmailUnique("admin@hh.se")).willReturn(false);
+        given(this.accountRepository.validateEmailAvailable("admin@hh.se")).willReturn(false);
 
         Throwable thrown = assertThrows(EmailNotFreeException.class,
-                () -> this.accountService.checkEmailUnique("admin@hh.se"));
+                () -> this.accountService.validateEmailAvailable("admin@hh.se"));
 
         assertThat(thrown)
                 .isInstanceOf(EmailNotFreeException.class)

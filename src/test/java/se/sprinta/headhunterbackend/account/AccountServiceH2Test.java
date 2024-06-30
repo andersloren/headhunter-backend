@@ -44,6 +44,10 @@ public class AccountServiceH2Test {
     void test_FindAll_Success() {
         List<Account> actualAccounts = this.accountService.findAll();
 
+        for (Account ac : actualAccounts) {
+            System.out.println(ac.getEmail());
+        }
+
         assertEquals(actualAccounts.size(), 4);
         assertEquals(actualAccounts.get(0).getEmail(), "admin-h2@hh.se");
         assertEquals(actualAccounts.get(0).getRoles(), "admin");
@@ -85,18 +89,18 @@ public class AccountServiceH2Test {
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Non-Existing Email - Success")
-    void test_CheckEmailUnique_NonExistingEmail_ReturnsTrue_Success() {
-        boolean isEmailNotAvailableInDatabase = this.accountService.checkEmailUnique("availableEmail@hh.se");
+    @DisplayName("validateEmailAvailable - Non-Existing Email - Success")
+    void test_ValidateEmailAvailable_NonExistingEmail_ReturnsTrue_Success() {
+        boolean isEmailNotAvailableInDatabase = this.accountService.validateEmailAvailable("availableEmail@hh.se");
 
         assertTrue(isEmailNotAvailableInDatabase);
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Existing Email - Exception")
-    void test_CheckEmailUnique_ExistingEmail_Exception() {
+    @DisplayName("validateEmailAvailable - Existing Email - Exception")
+    void test_ValidateEmailAvailable_ExistingEmail_Exception() {
         Throwable thrown = assertThrows(EmailNotFreeException.class,
-                () -> this.accountService.checkEmailUnique("admin-h2@hh.se"));
+                () -> this.accountService.validateEmailAvailable("admin-h2@hh.se"));
 
         assertThat(thrown)
                 .isInstanceOf(EmailNotFreeException.class)

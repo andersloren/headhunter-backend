@@ -43,9 +43,9 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new ObjectNotFoundException("account", email));
     }
 
-    public boolean checkEmailUnique(String email) {
-        boolean isEmailNotTaken = this.accountRepository.checkEmailUnique(email);
-        if (!isEmailNotTaken) throw new EmailNotFreeException(email);
+    public boolean validateEmailAvailable(String email) {
+        boolean isEmailAvailable = this.accountRepository.validateEmailAvailable(email);
+        if (!isEmailAvailable) throw new EmailNotFreeException(email);
         return true;
     }
 

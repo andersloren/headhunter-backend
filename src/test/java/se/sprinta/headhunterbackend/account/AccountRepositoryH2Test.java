@@ -73,16 +73,16 @@ class AccountRepositoryH2Test {
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Email Exist")
-    void test_CheckEmailUnique_Success() {
-        boolean numberOfEmailInputInInDatabase = this.accountRepository.checkEmailUnique("admin-h2@hh.se");
+    @DisplayName("validateEmailAvailable - Email Exist")
+    void test_ValidateEmailAvailable_Success() {
+        boolean numberOfEmailInputInInDatabase = this.accountRepository.validateEmailAvailable("admin-h2@hh.se");
         assertFalse(numberOfEmailInputInInDatabase);
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Email Does not Exist")
-    void test_CheckEmailUnique_InvalidInput() {
-        boolean numberOfEmailInputInInDatabase = this.accountRepository.checkEmailUnique("availableEmail@hh.se");
+    @DisplayName("validateEmailAvailable - Email Does not Exist")
+    void test_validateEmailAvailable_InvalidInput() {
+        boolean numberOfEmailInputInInDatabase = this.accountRepository.validateEmailAvailable("availableEmail@hh.se");
         assertTrue(numberOfEmailInputInInDatabase);
     }
 }

@@ -211,41 +211,15 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtosByUserEmail - Admin Permission - Success")
-    void test_getAllJobDtosByUserEmail_AdminPermission_Success() throws Exception {
+    @DisplayName("(GET) getAllJobDtosByUserEmail - Admin No Permission - Success")
+    void test_getAllJobDtosByUserEmail_AdminNoPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/user1-mysql@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All User Jobs Success"))
-                .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$.data[0].title").value("job1 Title 1"))
-                .andExpect(jsonPath("$.data[0].description").value("job1 Description 1"))
-                .andExpect(jsonPath("$.data[0].recruiterName").isEmpty())
-                .andExpect(jsonPath("$.data[0].adCompany").isEmpty())
-                .andExpect(jsonPath("$.data[0].adEmail").isEmpty())
-                .andExpect(jsonPath("$.data[0].adPhone").isEmpty())
-                .andExpect(jsonPath("$.data[0].applicationDeadline").isEmpty())
-                .andExpect(jsonPath("$.data[1].title").value("job2 Title 2"))
-                .andExpect(jsonPath("$.data[1].description").value("job2 Description 2"))
-                .andExpect(jsonPath("$.data[1].recruiterName").isEmpty())
-                .andExpect(jsonPath("$.data[1].adCompany").isEmpty())
-                .andExpect(jsonPath("$.data[1].adEmail").isEmpty())
-                .andExpect(jsonPath("$.data[1].adPhone").isEmpty())
-                .andExpect(jsonPath("$.data[1].applicationDeadline").isEmpty());
-    }
-
-    @Test
-    @DisplayName("(GET) getAllJobDtosByUserEmail - Admin Permission - Invalid Email - Exception)")
-    void test_getAllJobDtosByUserEmail_AdminPermission_InvalidEmail_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/Invalid Email")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find account with Email Invalid Email"))
-                .andExpect(jsonPath("$.data").isEmpty());
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
     @Test

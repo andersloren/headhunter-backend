@@ -127,13 +127,13 @@ class AccountControllerMockTest {
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Non-Existing Email - Success")
-    void test_CheckEmailUnique_NonExistingEmail_Success() throws Exception {
+    @DisplayName("validateEmailAvailable - Non-Existing Email - Success")
+    void test_ValidateEmailAvailable_NonExistingEmail_Success() throws Exception {
         // Given
-        given(this.accountService.checkEmailUnique("availableEmail@hh.se")).willReturn(false);
+        given(this.accountService.validateEmailAvailable("availableEmail@hh.se")).willReturn(true);
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/availableEmail@hh.se")
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -142,13 +142,13 @@ class AccountControllerMockTest {
     }
 
     @Test
-    @DisplayName("checkEmailUnique - Existing Email - Exception")
-    void test_CheckEmailUnique_ExistingEmail_Exception() throws Exception {
+    @DisplayName("validateEmailAvailable - Existing Email - Exception")
+    void test_ValidateEmailAvailable_ExistingEmail_Exception() throws Exception {
         // Given
-        given(this.accountService.checkEmailUnique("admin@hh.se")).willThrow(new EmailNotFreeException("admin@hh.se"));
+        given(this.accountService.validateEmailAvailable("admin@hh.se")).willThrow(new EmailNotFreeException("admin@hh.se"));
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/checkEmailUnique" + "/admin@hh.se")
+        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin@hh.se")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))

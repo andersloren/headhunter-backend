@@ -44,9 +44,9 @@ public class AccountController {
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundAccountDtos);
     }
 
-    @GetMapping("/checkEmailUnique/{email}")
-    public Result checkEmailUnique(@PathVariable String email) {
-        this.accountService.checkEmailUnique(email);
+    @GetMapping("/validateEmailAvailable/{email}")
+    public Result validateEmailAvailable(@PathVariable String email) {
+        this.accountService.validateEmailAvailable(email);
         return new Result(true, StatusCode.SUCCESS, "Email is available");
     }
 
