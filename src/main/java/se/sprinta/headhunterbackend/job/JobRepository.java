@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 
@@ -34,8 +35,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j WHERE j.id = :jobId")
     Optional<JobDtoView> getFullJobDtoByJobId(Long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView(j.id, j.title) FROM Job j WHERE j.account.email =:email")
-    List<JobIdAndTitleDtoView> getAllJobIdAndTitlesDtosByEmail(String email);
+    @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobCardDtoView(j.id, j.title, j.applicationDeadline) FROM Job j WHERE j.account.email =:email")
+    List<JobCardDtoView> getAllJobCardsByUserEmail(String email);
 
     @Modifying
     @Transactional

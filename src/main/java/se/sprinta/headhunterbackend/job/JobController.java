@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.job.converter.JobDtoFormAddToJobConverter;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
-import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
+import se.sprinta.headhunterbackend.job.dto.*;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
 
@@ -58,9 +55,9 @@ public class JobController {
      * @return Result Successful Result object.
      */
 
-    @GetMapping("/getAllJobIdAndTitlesDtosByEmail/{email}")
-    public Result getAllJobIdAndTitlesDtosByEmail(@PathVariable String email) {
-        List<JobIdAndTitleDtoView> userJobs = this.jobService.getAllJobIdAndTitlesDtosByEmail(email);
+    @GetMapping("/getAllJobCardsByUserEmail/{email}")
+    public Result getAllJobCardDtosByUserEmail(@PathVariable String email) {
+        List<JobCardDtoView> userJobs = this.jobService.getAllJobCardsByUserEmail(email);
         return new Result(true, StatusCode.SUCCESS, "Find All Job Id and Titles Dtos Successful", userJobs);
     }
 
@@ -122,9 +119,9 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Generate Ad Success", generatedJobAd);
     }
 
-    @GetMapping("/getJobIdAndTitleDtos/{email}")
+    @GetMapping("/getAllJobCardDtosByUserEmail/{email}")
     public Result getJobTitles(@PathVariable String email) {
-        List<JobIdAndTitleDtoView> userJobs = this.jobService.getAllJobIdAndTitlesDtosByEmail(email);
+        List<JobCardDtoView> userJobs = this.jobService.getAllJobCardsByUserEmail(email);
         return new Result(true, StatusCode.SUCCESS, "Find All Job Titles Success", userJobs);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.account.AccountRepository;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
@@ -150,16 +151,18 @@ public class JobServiceH2Test {
     }
 
     @Test
-    @DisplayName("getAllJobsDtoIdAndTitlesByEmail - Success")
-    void test_GetAllJobIdAndTitlesDtosByEmail_Success() {
+    @DisplayName("getAllJobCardsByUserEmail - Success")
+    void test_GetAllJobCardsByUserEmail_Success() {
         String email = "user1-h2@hh.se";
-        List<JobIdAndTitleDtoView> allJobs = this.jobService.getAllJobIdAndTitlesDtosByEmail(email);
+        List<JobCardDtoView> allJobs = this.jobService.getAllJobCardsByUserEmail(email);
 
         assertEquals(2, allJobs.size());
         assertEquals(allJobs.get(0).id(), 1L);
         assertEquals(allJobs.get(0).title(), "job1 Title 1");
+        assertEquals(allJobs.get(0).applicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allJobs.get(1).id(), 2L);
         assertEquals(allJobs.get(1).title(), "job2 Title 2");
+        assertEquals(allJobs.get(1).applicationDeadline(), "job2 applicationDeadline 2");
     }
 
     @Test

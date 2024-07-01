@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 
@@ -119,21 +120,23 @@ class JobRepositoryH2Test {
     }
 
     @Test
-    @DisplayName("getAllJobsDtoIdAndTitlesByEmail - Success")
-    void test_GetAllJobsDtoIdAndTitlesByEmail_Success() {
-        List<JobIdAndTitleDtoView> foundJobIdAndTitleDtoViews = this.jobRepository.getAllJobIdAndTitlesDtosByEmail("user1-h2@hh.se");
+    @DisplayName("getAllJobCardsByUserEmail - Success")
+    void test_GetAllJobCardsByUserEmail_Success() {
+        List<JobCardDtoView> foundJobCardDtoView = this.jobRepository.getAllJobCardsByUserEmail("user1-h2@hh.se");
 
-        System.out.println("\ngetAllJobsDtoIdAndTitlesByEmail (user1-h2@hh.se)");
-        System.out.println("size: " + foundJobIdAndTitleDtoViews.size());
-        for (JobIdAndTitleDtoView job : foundJobIdAndTitleDtoViews) {
+        System.out.println("\ngetAllJobCardsByUserEmail (user1-h2@hh.se)");
+        System.out.println("size: " + foundJobCardDtoView.size());
+        for (JobCardDtoView job : foundJobCardDtoView) {
             System.out.println(job.title());
         }
 
-        assertEquals(foundJobIdAndTitleDtoViews.size(), 2);
+        assertEquals(foundJobCardDtoView.size(), 2);
 
-        assertEquals(foundJobIdAndTitleDtoViews.get(0).title(), "job1 Title 1");
-        assertEquals(foundJobIdAndTitleDtoViews.get(0).id(), 1L);
-        assertEquals(foundJobIdAndTitleDtoViews.get(1).title(), "job2 Title 2");
-        assertEquals(foundJobIdAndTitleDtoViews.get(1).id(), 2L);
+        assertEquals(foundJobCardDtoView.get(0).id(), 1L);
+        assertEquals(foundJobCardDtoView.get(0).title(), "job1 Title 1");
+        assertEquals(foundJobCardDtoView.get(0).applicationDeadline(), "job1 applicationDeadline 1");
+        assertEquals(foundJobCardDtoView.get(1).id(), 2L);
+        assertEquals(foundJobCardDtoView.get(1).title(), "job2 Title 2");
+        assertEquals(foundJobCardDtoView.get(1).applicationDeadline(), "job2 applicationDeadline 2");
     }
 }

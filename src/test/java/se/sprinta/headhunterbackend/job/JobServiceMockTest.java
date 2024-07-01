@@ -1,20 +1,17 @@
 package se.sprinta.headhunterbackend.job;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.sprinta.headhunterbackend.account.AccountService;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Choice;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
@@ -52,7 +49,7 @@ class JobServiceMockTest {
     private final List<Job> jobs = new ArrayList<>();
     private final List<JobDtoView> jobDtos = new ArrayList<>();
 
-    private final List<JobIdAndTitleDtoView> jobIdAndTitleDtoViews = new ArrayList<>();
+    private final List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
 
     @Test
     @DisplayName("findAllJobs - List<Job>")
@@ -110,20 +107,20 @@ class JobServiceMockTest {
 
 
     @Test
-    @DisplayName("getJobsDtoIdAndTitlesByEmail - List<JobDtoView>")
-    void test_GetJobIdAndTitlesDtosByEmailSuccess() {
+    @DisplayName("getAllJobCardsByUserEmail - List<JobDtoView>")
+    void test_GetAllJobCardsByUserEmail_Success() {
 
         // Given
-        given(this.jobRepository.getAllJobIdAndTitlesDtosByEmail("user@hh.se")).willReturn(this.jobIdAndTitleDtoViews);
+        given(this.jobRepository.getAllJobCardsByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
 
         // When
-        List<JobIdAndTitleDtoView> jobIdAndTitleDtoView = this.jobService.getAllJobIdAndTitlesDtosByEmail("user@hh.se");
+        List<JobCardDtoView> jobDtos = this.jobService.getAllJobCardsByUserEmail("user@hh.se");
 
         // Then
-        assertEquals(this.jobIdAndTitleDtoViews.size(), jobIdAndTitleDtoView.size());
+        assertEquals(this.jobCardDtoViews.size(), jobDtos.size());
 
         // Verify
-        then(this.jobRepository).should().getAllJobIdAndTitlesDtosByEmail("user@hh.se");
+        then(this.jobRepository).should().getAllJobCardsByUserEmail("user@hh.se");
     }
 
     @Test

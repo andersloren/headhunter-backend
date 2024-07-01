@@ -7,7 +7,7 @@ import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
 import se.sprinta.headhunterbackend.client.chat.dto.Message;
-import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
@@ -56,8 +56,8 @@ public class JobService {
         return this.jobRepository.getAllJobDtosByUserEmail(email);
     }
 
-    public List<JobIdAndTitleDtoView> getAllJobIdAndTitlesDtosByEmail(String email) {
-        return this.jobRepository.getAllJobIdAndTitlesDtosByEmail(email);
+    public List<JobCardDtoView> getAllJobCardsByUserEmail(String email) {
+        return this.jobRepository.getAllJobCardsByUserEmail(email);
     }
 
     public Job findById(long jobId) {

@@ -64,21 +64,25 @@ public class H2DatabaseInitializer {
         Job job1 = new Job();
         job1.setTitle("job1 Title 1");
         job1.setDescription("job1 Description 1");
+        job1.setApplicationDeadline("job1 applicationDeadline 1");
         job1.setInstruction("job1 Instruction 1");
 
         Job job2 = new Job();
         job2.setTitle("job2 Title 2");
         job2.setDescription("job2 Description 2");
+        job2.setApplicationDeadline("job2 applicationDeadline 2");
         job2.setInstruction("job2 Instruction 2");
 
         Job job3 = new Job();
         job3.setTitle("job3 Title 3");
         job3.setDescription("job3 Description 3");
+        job3.setApplicationDeadline("job3 applicationDeadline 3");
         job3.setInstruction("job3 Instruction 3");
 
         Job job4 = new Job();
         job4.setTitle("Fullstack Utvecklare");
         job4.setDescription("Tjänsten omfattar en utvecklare som behärskar frontend, backend och databashantering. I frontend används React för att skapa en interaktiv web applikation. Användaren lotsas runt med hjälp av React Router. Även DOMPurify, Bootstrap 5, CSS och Styled Components används för att lösa olika utmaningar. I backend används Java, Spring Boot, Spring Security och en koppling mot ett AI API. Databasen hanteras av MySQL. Azure används som molnplattform för projektet. Utvecklaren arbetar både indivuduellt och i tillsammans med teamet. Nya libraries och frameworks kan komma att introduceras. Projektet beräknas ha passerat utvecklingsfasen om 2 år.");
+        job4.setApplicationDeadline("job4 applicationDeadline 4");
         job4.setInstruction("Du ska skapa en jobbannons på svenska i HTML-format med en professionell CSS styling. För att omarbeta en arbetsbeskrivning till en jobbannons, börja med att läsa igenom arbetsbeskrivningen noggrant för att förstå de huvudsakliga arbetsuppgifterna, nödvändiga kompetenser och kvalifikationer. Sedan, översätt denna information till en mer engagerande och tilltalande form som lockar potentiella kandidater. Det är viktigt att framhäva företagets kultur och de unika fördelarna med att arbeta där. Börja annonsen med en kort introduktion till företaget, följt av en översikt av jobbrollen. Använd en positiv och inkluderande ton, och undvik jargong. Gör klart vilka huvudsakliga ansvarsområden rollen innefattar och vilka färdigheter och erfarenheter som är önskvärda. Inkludera även information om eventuella förmåner eller möjligheter till personlig och professionell utveckling. Avsluta med hur man ansöker till tjänsten, inklusive viktiga datum och kontaktinformation. Kom ihåg att vara tydlig och koncis för att hålla potentiella kandidaters uppmärksamhet. En välformulerad jobbannons ska inte bara informera utan också inspirera och locka rätt talanger till att söka.");
 
         /**
