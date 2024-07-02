@@ -57,7 +57,7 @@ public class JobServiceH2Test {
     void test_FindAllSuccess_Success() {
         List<Job> allJobs = this.jobService.findAll();
 
-        assertEquals(4, allJobs.size());
+        assertEquals(allJobs.size(), 4);
 
         assertEquals(allJobs.get(0).getId(), 1L);
         assertEquals(allJobs.get(0).getTitle(), "job1 Title 1");

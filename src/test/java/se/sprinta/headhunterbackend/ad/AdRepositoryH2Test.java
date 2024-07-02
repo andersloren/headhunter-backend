@@ -1,14 +1,11 @@
 package se.sprinta.headhunterbackend.ad;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
-
-import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test-h2")

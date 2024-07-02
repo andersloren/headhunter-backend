@@ -36,7 +36,7 @@ public class AdController {
 
     @GetMapping("/findAllAds")
     public Result findAllAds() {
-        List<Ad> allAds = this.adService.findAllAds();
+        List<Ad> allAds = this.adService.findAll();
         List<AdDtoView> allAdDtoViews = allAds.stream().map(this.adToAdDtoView::convert).toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAdDtoViews);
     }
@@ -57,7 +57,7 @@ public class AdController {
 
     @GetMapping("/findAllAdsByJobId/{jobId}")
     public Result findAllAdsByJobId(@PathVariable Long jobId) {
-        List<Ad> foundAds = this.adService.findAdsByJobId(jobId);
+        List<Ad> foundAds = this.adService.getAdsByJobId(jobId);
         List<AdDtoView> foundAdDtoViews = foundAds.stream().map(this.adToAdDtoView::convert).toList();
         return new Result(true, StatusCode.SUCCESS, "Find All Ads By Job Id Success", foundAdDtoViews);
     }
@@ -75,7 +75,7 @@ public class AdController {
 
     @GetMapping("/findUserByAdId/{adId}")
     public Result findUserByAdId(@PathVariable String adId) {
-        Account foundAccount = this.adService.findUserByAdId(adId);
+        Account foundAccount = this.adService.getAccountByAdId(adId);
         AccountDtoView foundAccountDtoView = this.accountToAccountDtoViewConverter.convert(foundAccount);
         return new Result(true, StatusCode.SUCCESS, "Find User By Ad Id Success", foundAccountDtoView);
     }
@@ -89,7 +89,7 @@ public class AdController {
 
     @DeleteMapping("/deleteAd/{adId}")
     public Result deleteAd(@PathVariable String adId) {
-        this.adService.deleteAd(adId);
+        this.adService.delete(adId);
         return new Result(true, StatusCode.SUCCESS, "Ad Delete Success");
     }
 }

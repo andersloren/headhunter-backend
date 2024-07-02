@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.job.JobService;
@@ -33,8 +34,12 @@ public class AdService {
         this.adDtoFormToAdConverter = adDtoFormToAdConverter;
     }
 
-    public List<Ad> findAllAds() {
+    public List<Ad> findAll() {
         return this.adRepository.findAll();
+    }
+
+    public List<AdDtoView> getAllAdDtos() {
+        return this.adRepository.getAllAdDtos();
     }
 
     public Ad findById(String id) {
@@ -42,25 +47,38 @@ public class AdService {
                 .orElseThrow(() -> new ObjectNotFoundException("ad", id));
     }
 
-    public List<Ad> findAdsByJobId(Long id) {
-        return this.adRepository.findByJob_Id(id);
+    public List<Ad> getAdsByJobId(long jobId) {
+        this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("ad", jobId));
+
+        return this.adRepository.getAdsByJobId(jobId);
+    }
+
+    public List<AdDtoView> getAdDtosByJobId(Long jobId) {
+        return this.adRepository.getAdDtosByJobId(jobId);
     }
 
     /**
      * Returns the user that has a job that holds the ad
      * Relationship: [Ad] *...1 [Job] *...1 [User]
      *
-     * @param id The value used to find the right ad.
-     * @return User The object that is the ultimate owner of the ad.
+     * @param adId The value used to find the right ad.
+     * @return Account The object that is the ultimate owner of the ad.
      */
 
-    public Account findUserByAdId(String id) {
-        Ad foundAd = findById(id);
-        return foundAd.getJob().getAccount();
+    public Account getAccountByAdId(String adId) {
+        this.adRepository.findById(adId)
+                .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
+
+        return this.adRepository.getAccountByAdId(adId);
     }
 
     public long getNumberOfAds(long jobId) {
         return this.adRepository.getNumberOfAds(jobId);
+    }
+
+    public Ad save(Ad ad) {
+        return this.adRepository.save(ad);
     }
 
     /**
@@ -86,7 +104,7 @@ public class AdService {
         return this.adRepository.save(newAd);
     }
 
-    public void deleteAd(String adId) {
+    public void delete(String adId) {
         Ad foundAd = this.adRepository.findById(adId)
                 .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
 

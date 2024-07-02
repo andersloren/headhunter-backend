@@ -47,26 +47,18 @@ public class Ad implements Serializable {
     private Job job;
 
     public Ad() {
+        this.setCreatedDateTime();
     }
 
     public Ad(String htmlCode) {
+        this();
         this.htmlCode = htmlCode;
     }
 
     public Ad(String id, String htmlCode) {
+        this();
         this.id = id;
         this.htmlCode = htmlCode;
-    }
-
-    public Ad(String htmlCode, Job job) {
-        this.htmlCode = htmlCode;
-        this.job = job;
-    }
-
-    public Ad(String id, String htmlCode, Job job) {
-        this.id = id;
-        this.htmlCode = htmlCode;
-        this.job = job;
     }
 
     public String getId() {
@@ -93,8 +85,8 @@ public class Ad implements Serializable {
      * Timezone must be taken into consideration.
      */
 
-    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setCreatedDateTime() {
+        this.createdDateTime = ZonedDateTime.now();
     }
 
     public Job getJob() {

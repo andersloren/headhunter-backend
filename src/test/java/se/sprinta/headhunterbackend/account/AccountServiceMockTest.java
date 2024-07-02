@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.account;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
-import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
-import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
+import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentCaptor.*;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
