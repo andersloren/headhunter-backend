@@ -11,10 +11,12 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.system.StatusCode;
@@ -36,7 +38,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
+//@SpringBootTest
+@WebMvcTest(AccountController.class)
 @AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
 class AccountControllerMockTest {
 
@@ -49,30 +52,20 @@ class AccountControllerMockTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final List<Account> accounts = new ArrayList<>();
-    private final List<AccountDtoView> accountDtoViews = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
+    private List<AccountDtoView> accountDtos = new ArrayList<>();
 
     @Value("${api.endpoint.base-url-account}")
     String baseUrlAccount;
 
     @BeforeEach
     void setUp() {
-        Account admin = new Account();
-        admin.setEmail("admin@hh.se");
-        admin.setPassword("123");
-        admin.setRoles("admin");
-
-        Account user1 = new Account();
-        user1.setEmail("user@hh.se");
-        user1.setPassword("abc");
-        user1.setRoles("user");
-
-        this.accounts.add(admin);
-        this.accounts.add(user1);
+        this.accounts = MockDatabaseInitializer.initializeMockAccounts();
+        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
     }
 
     @Test
-    @DisplayName("findAll")
+    @DisplayName("findAll - Success")
     void test_findAll_Success() throws Exception {
         // Given
         given(this.accountService.findAll()).willReturn(this.accounts);
@@ -82,32 +75,40 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Account Success"))
-                .andExpect(jsonPath("$.data[0].email").value("admin@hh.se"))
+                .andExpect(jsonPath("$.data[0].email").value("admin-mock@hh.se"))
+                .andExpect(jsonPath("$.data[0].password").isNotEmpty())
                 .andExpect(jsonPath("$.data[0].roles").value("admin"))
-                .andExpect(jsonPath("$.data[1].email").value("user@hh.se"))
-                .andExpect(jsonPath("$.data[1].roles").value("user"));
+                .andExpect(jsonPath("$.data[0].number_of_jobs").value(0))
+                .andExpect(jsonPath("$.data[1].email").value("user1-mock@hh.se"))
+                .andExpect(jsonPath("$.data[1].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[1].roles").value("user"))
+                .andExpect(jsonPath("$.data[1].number_of_jobs").value(2))
+                .andExpect(jsonPath("$.data[2].email").value("user2-mock@hh.se"))
+                .andExpect(jsonPath("$.data[2].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[2].roles").value("user"))
+                .andExpect(jsonPath("$.data[2].number_of_jobs").value(1))
+                .andExpect(jsonPath("$.data[3].email").value("user3-mock@hh.se"))
+                .andExpect(jsonPath("$.data[3].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[3].roles").value("user"))
+                .andExpect(jsonPath("$.data[3].number_of_jobs").value(1));
     }
 
     @Test
     @DisplayName("getAccountById - Success")
     void test_GetAccountById_Success() throws Exception {
-        AccountDtoView accountDtoView = new AccountDtoView(
-                "user@hh.se",
-                "user",
-                0
-        );
+        AccountDtoView accountDtoView = this.accountDtos.get(1);
 
         // Given
-        given(this.accountService.getAccountDtoByEmail("user@hh.se")).willReturn(accountDtoView);
+        given(this.accountService.getAccountDtoByEmail("user1-mock@hh.se")).willReturn(accountDtoView);
 
         // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/user@hh.se").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/user1-mock@hh.se").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Account Success"))
-                .andExpect(jsonPath("$.data.email").value("user@hh.se"))
-                .andExpect(jsonPath("$.data.roles").value("user"))
-                .andExpect(jsonPath("$.data.number_of_jobs").value(0));
+                .andExpect(jsonPath("$.data.email").value(this.accountDtos.get(1).email()))
+                .andExpect(jsonPath("$.data.roles").value(this.accountDtos.get(1).roles()))
+                .andExpect(jsonPath("$.data.number_of_jobs").value(this.accountDtos.get(1).number_of_jobs()));
     }
 
     @Test

@@ -24,7 +24,7 @@ public class AccountServiceComplmentaryH2Test {
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeDatabase();
+        this.dbInit.initializeH2Database();
     }
 
     @Test

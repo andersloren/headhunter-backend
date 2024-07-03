@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +34,7 @@ class JobRepositoryH2Test {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.dbInit.initializeDatabase();
+        this.dbInit.initializeH2Database();
     }
 
     @AfterEach

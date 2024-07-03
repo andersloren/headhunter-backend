@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.account;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,11 +8,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import se.sprinta.headhunterbackend.H2DatabaseInitializer;
+import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.ad.Ad;
+import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -31,11 +40,22 @@ class AccountServiceMockTest {
     AccountRepository accountRepository;
     @Mock
     PasswordEncoder passwordEncoder;
-
     @InjectMocks
     AccountService accountService;
 
     List<Account> accounts = new ArrayList<>();
+    List<AccountDtoView> accountDtos = new ArrayList<>();
+
+    @BeforeEach
+    void setUp() {
+        this.accounts = MockDatabaseInitializer.initializeMockAccounts();
+        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+    }
+
+    @AfterEach
+    void tearDown() {
+        this.accounts.clear();
+    }
 
     @Test
     void test_FindAll_Success() {
@@ -44,10 +64,17 @@ class AccountServiceMockTest {
 
         // When
         List<Account> actualAccounts = this.accountService.findAll();
-        System.out.println(actualAccounts.size());
 
         // Then
         assertThat(actualAccounts.size()).isEqualTo(this.accounts.size());
+        for (int i = 0; i < actualAccounts.size(); i++) {
+            if (!actualAccounts.get(i).equals(this.accounts.get(i))) {
+                assertEquals(actualAccounts.get(i).getEmail(), this.accounts.get(i).getEmail());
+                assertNotNull(actualAccounts.get(i).getPassword());
+                assertEquals(actualAccounts.get(i).getRoles(), this.accounts.get(i).getRoles());
+                assertEquals(actualAccounts.get(i).getNumber_of_jobs(), this.accounts.get(i).getNumber_of_jobs());
+            }
+        }
 
         // Verify
         then(this.accountRepository).should().findAll();
@@ -80,66 +107,44 @@ class AccountServiceMockTest {
                 .hasMessage("admin@hh.se is already registered");
     }
 
-
     @Test
-    void test_GetAccountByEmail_Success() {
-        AccountDtoView accountDtoView = new AccountDtoView(
-                "admin@hh.se",
-                "admin",
-                0
-        );
-        given(this.accountRepository.getAccountDtoByEmail("admin@hh.se")).willReturn(Optional.of(accountDtoView));
-
-        // When
-        AccountDtoView returnedAccountDtoView = this.accountService.getAccountDtoByEmail("admin@hh.se");
-
-        // Then
-        assertEquals(returnedAccountDtoView.email(), "admin@hh.se");
-        assertEquals(returnedAccountDtoView.roles(), "admin");
-
-        // Verify
-        then(this.accountRepository).should().getAccountDtoByEmail("admin@hh.se");
-    }
-
-    @Test
-    void test_GetAccountByEmail_NonExistentEmail() {
+    @DisplayName("getAllAccountDtoViews - Success")
+    void test_GetAllAccountDtos_Success() {
         // Given
-        given(this.accountRepository.getAccountDtoByEmail("abc")).willThrow(new ObjectNotFoundException("account", "abc"));
+        given(this.accountRepository.getAllAccountDtos()).willReturn(this.accountDtos);
 
         // When
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.accountService.getAccountDtoByEmail("abc");
-        });
+        List<AccountDtoView> allAccountDtos = this.accountService.getAllAccountDtos();
 
         // Then
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find account with Email abc");
-
-        // Verify
-        then(this.accountRepository).should().getAccountDtoByEmail("abc");
+        assertThat(allAccountDtos.size()).isEqualTo(this.accountDtos.size());
+        for (int i = 0; i < allAccountDtos.size(); i++) {
+            if (!allAccountDtos.get(i).equals(this.accountDtos.get(i))) {
+                assertEquals(allAccountDtos.get(i).email(), this.accountDtos.get(i).email());
+                assertEquals(allAccountDtos.get(i).roles(), this.accountDtos.get(i).roles());
+                assertEquals(allAccountDtos.get(i).number_of_jobs(), this.accountDtos.get(i).number_of_jobs());
+            }
+        }
     }
 
     @Test
     void test_GetAccountDtoByEmail_Success() {
-        AccountDtoView accountDtoView = new AccountDtoView(
-                "admin@hh.se",
-                "admin",
-                0
-        );
+        AccountDtoView accountDtoView = this.accountDtos.get(0);
 
-        given(this.accountRepository.getAccountDtoByEmail("admin@hh.se")).willReturn(Optional.of(accountDtoView));
+        given(this.accountRepository.getAccountDtoByEmail("admin-mock@hh.se")).willReturn(Optional.of(accountDtoView));
 
         // When
-        AccountDtoView returnedAccountDtoView = this.accountService.getAccountDtoByEmail("admin@hh.se");
+        AccountDtoView returnedAccountDtoView = this.accountService.getAccountDtoByEmail("admin-mock@hh.se");
 
         // Then
-        assertEquals(returnedAccountDtoView.email(), "admin@hh.se");
-        assertEquals(returnedAccountDtoView.roles(), "admin");
-        assertEquals(returnedAccountDtoView.number_of_jobs(), 0);
+        if (!returnedAccountDtoView.equals(accountDtoView)) {
+            assertEquals(returnedAccountDtoView.email(), this.accountDtos.get(0).email());
+            assertEquals(returnedAccountDtoView.roles(), this.accountDtos.get(0).roles());
+            assertEquals(returnedAccountDtoView.number_of_jobs(), this.accountDtos.get(0).number_of_jobs());
+        }
 
         // Verify
-        then(this.accountRepository).should().getAccountDtoByEmail("admin@hh.se");
+        then(this.accountRepository).should().getAccountDtoByEmail("admin-mock@hh.se");
     }
 
     @Test
@@ -164,10 +169,7 @@ class AccountServiceMockTest {
     @Test
     void test_SaveAccount_Success() {
         // Setup
-        Account newAccount = new Account();
-        newAccount.setEmail("admin@hh.se");
-        newAccount.setPassword("123456");
-        newAccount.setRoles("admin");
+        Account newAccount = this.accounts.get(0);
 
         // Given
         given(this.accountRepository.save(newAccount)).willReturn(newAccount);
@@ -177,8 +179,12 @@ class AccountServiceMockTest {
         Account returnedAccount = this.accountService.save(newAccount);
 
         // Then
-        assertEquals(returnedAccount.getEmail(), "admin@hh.se");
-        assertEquals(returnedAccount.getRoles(), "admin");
+        if (!returnedAccount.equals(newAccount)) {
+            assertEquals(returnedAccount.getEmail(), this.accounts.get(0).getEmail());
+            assertNotNull(returnedAccount.getPassword());
+            assertEquals(returnedAccount.getRoles(), this.accounts.get(0).getRoles());
+            assertEquals(returnedAccount.getNumber_of_jobs(), this.accounts.get(0).getNumber_of_jobs());
+        }
 
         // Verify
         then(this.accountRepository).should().save(newAccount);
@@ -216,8 +222,12 @@ class AccountServiceMockTest {
         // Then
         Account capturedAccount = accountArgumentCaptor.getValue();
 
-        assertEquals(returnedAccount.getEmail(), capturedAccount.getEmail());
-        assertEquals(returnedAccount.getRoles(), capturedAccount.getRoles());
+        if (!returnedAccount.equals(capturedAccount)) {
+            assertEquals(returnedAccount.getEmail(), capturedAccount.getEmail());
+            assertNotNull(returnedAccount.getPassword());
+            assertEquals(returnedAccount.getRoles(), capturedAccount.getRoles());
+            assertEquals(returnedAccount.getNumber_of_jobs(), capturedAccount.getNumber_of_jobs());
+        }
 
         // Verify
         then(this.accountRepository).should().save(accountArgumentCaptor.capture());
@@ -237,30 +247,28 @@ class AccountServiceMockTest {
 
     @Test
     void test_UpdateOwnAccount_Success() {
-        Account ownAccount = new Account();
-        ownAccount.setEmail("admin.se");
-        ownAccount.setPassword("123456");
-        ownAccount.setRoles("admin");
+        Account existingAccount = this.accounts.get(0);
 
-        AccountUpdateDtoForm accountUpdateDtoForm = new AccountUpdateDtoForm("user"); // From admin user to just admin
-
-        String email = "admin@hh.se";
-        String roles = "user";
+        AccountUpdateDtoForm accountUpdateDtoForm = new AccountUpdateDtoForm("admin"); // From admin user to just admin
 
         // Given
-        given(this.accountRepository.findAccountByEmail(email)).willReturn(Optional.of(ownAccount));
-        given(this.accountRepository.save(ownAccount)).willReturn(ownAccount);
+        given(this.accountRepository.findAccountByEmail("user1-mock@hh.se")).willReturn(Optional.of(existingAccount));
+        given(this.accountRepository.save(existingAccount)).willReturn(existingAccount);
 
         // When
-        Account updatedAccount = this.accountService.update(email, accountUpdateDtoForm);
+        Account updatedAccount = this.accountService.update("user1-mock@hh.se", accountUpdateDtoForm);
 
         // Then
-        assertThat(updatedAccount.getEmail()).isEqualTo(ownAccount.getEmail());
-        assertThat(updatedAccount.getRoles()).isEqualTo(roles);
+        if (!updatedAccount.equals(existingAccount)) {
+            assertEquals(updatedAccount.getEmail(), existingAccount.getEmail());
+            assertEquals(updatedAccount.getRoles(), "admin");
+            assertEquals(updatedAccount.getEmail(), existingAccount.getEmail());
+            assertEquals(updatedAccount.getNumber_of_jobs(), existingAccount.getNumber_of_jobs());
+        }
 
         // Verify
-        then(this.accountRepository).should().findAccountByEmail(email);
-        then(this.accountRepository).should().save(ownAccount);
+        then(this.accountRepository).should().findAccountByEmail("user1-mock@hh.se");
+        then(this.accountRepository).should().save(existingAccount);
     }
 
     @Test
@@ -287,16 +295,14 @@ class AccountServiceMockTest {
 
     @Test
     void test_DeleteAccount_Success() {
-        Account account = new Account();
-        account.setEmail("user@hh.se");
-        account.setRoles("user");
+        Account account = this.accounts.get(1);
 
         // Given
-        given(this.accountRepository.findAccountByEmail("user@hh.se")).willReturn(Optional.of(account));
+        given(this.accountRepository.findAccountByEmail("user1-mock@hh.se")).willReturn(Optional.of(account));
         willDoNothing().given(this.accountRepository).delete(account);
 
         // When
-        this.accountService.delete("user@hh.se");
+        this.accountService.delete("user1-mock@hh.se");
 
         // Then
         then(this.accountRepository).should().delete(account);

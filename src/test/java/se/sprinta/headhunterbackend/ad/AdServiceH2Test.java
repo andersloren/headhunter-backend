@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
-import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.time.ZonedDateTime;
@@ -37,20 +34,20 @@ public class AdServiceH2Test {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private H2DatabaseInitializer dbInit;
+    private H2DatabaseInitializer h2DbInit;
 
     List<Job> jobs = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.jobs = this.dbInit.getJobs();
-        this.dbInit.initializeDatabase();
+        this.jobs = this.h2DbInit.getJobs();
+        this.h2DbInit.initializeH2Database();
     }
 
     @AfterEach
     void tearDown() {
-        this.dbInit.clearDatabase();
+        this.h2DbInit.clearDatabase();
     }
 
     @Test

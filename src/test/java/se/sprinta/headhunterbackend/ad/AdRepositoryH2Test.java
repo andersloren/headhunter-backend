@@ -24,7 +24,7 @@ class AdRepositoryH2Test {
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeDatabase();
+        this.dbInit.initializeH2Database();
     }
 
     @AfterEach

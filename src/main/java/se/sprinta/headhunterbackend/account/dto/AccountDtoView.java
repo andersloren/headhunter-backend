@@ -1,5 +1,7 @@
 package se.sprinta.headhunterbackend.account.dto;
 
+import java.util.Objects;
+
 /**
  * Output User data format.
  *
@@ -16,4 +18,18 @@ public record AccountDtoView(
         long number_of_jobs
 
 ) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountDtoView that = (AccountDtoView) o;
+        return number_of_jobs == that.number_of_jobs && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, roles, number_of_jobs);
+    }
 }
+
+

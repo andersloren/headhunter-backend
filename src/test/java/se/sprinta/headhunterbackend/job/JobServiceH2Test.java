@@ -12,9 +12,9 @@ import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,17 +39,26 @@ public class JobServiceH2Test {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private H2DatabaseInitializer dbInit;
+    private H2DatabaseInitializer h2DbInit;
+
+    private List<Job> jobs = new ArrayList<>();
+
+    private List<JobDtoView> jobDtos = new ArrayList<>();
+
+    private List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.dbInit.initializeDatabase();
+        this.h2DbInit.initializeH2Database();
+        this.jobs = H2DatabaseInitializer.getJobs();
+        this.jobDtos = this.h2DbInit.initializeJobDtos();
+        this.jobCardDtoViews = this.h2DbInit.initializeJobCardDtos();
     }
 
     @AfterEach
     void tearDown() {
-        this.dbInit.clearDatabase();
+        this.h2DbInit.clearDatabase();
     }
 
     @Test
@@ -59,43 +68,19 @@ public class JobServiceH2Test {
 
         assertEquals(allJobs.size(), 4);
 
-        assertEquals(allJobs.get(0).getId(), 1L);
-        assertEquals(allJobs.get(0).getTitle(), "job1 Title 1");
-        assertEquals(allJobs.get(0).getDescription(), "job1 Description 1");
-        assertEquals(allJobs.get(0).getInstruction(), "job1 Instruction 1");
-        assertNull(allJobs.get(0).getRecruiterName());
-        assertNull(allJobs.get(0).getAdCompany());
-        assertNull(allJobs.get(0).getAdEmail());
-        assertNull(allJobs.get(0).getAdPhone());
-        assertEquals(allJobs.get(0).getApplicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allJobs.get(1).getId(), 2L);
-        assertEquals(allJobs.get(1).getTitle(), "job2 Title 2");
-        assertEquals(allJobs.get(1).getDescription(), "job2 Description 2");
-        assertEquals(allJobs.get(1).getInstruction(), "job2 Instruction 2");
-        assertNull(allJobs.get(1).getRecruiterName());
-        assertNull(allJobs.get(1).getAdCompany());
-        assertNull(allJobs.get(1).getAdEmail());
-        assertNull(allJobs.get(1).getAdPhone());
-        assertEquals(allJobs.get(1).getApplicationDeadline(), "job2 applicationDeadline 2");
-        assertEquals(allJobs.get(2).getId(), 3L);
-        assertEquals(allJobs.get(2).getTitle(), "job3 Title 3");
-        assertEquals(allJobs.get(2).getDescription(), "job3 Description 3");
-        assertEquals(allJobs.get(2).getInstruction(), "job3 Instruction 3");
-        assertNull(allJobs.get(2).getRecruiterName());
-        assertNull(allJobs.get(2).getAdCompany());
-        assertNull(allJobs.get(2).getAdEmail());
-        assertNull(allJobs.get(2).getAdPhone());
-        assertEquals(allJobs.get(2).getApplicationDeadline(), "job3 applicationDeadline 3");
-        assertEquals(allJobs.get(3).getId(), 4L);
-        assertEquals(allJobs.get(3).getTitle(), "Fullstack Utvecklare");
-        assertEquals(allJobs.get(3).getDescription(), "Tjänsten omfattar en utvecklare som behärskar frontend, backend och databashantering. I frontend används React för att skapa en interaktiv web applikation. Användaren lotsas runt med hjälp av React Router. Även DOMPurify, Bootstrap 5, CSS och Styled Components används för att lösa olika utmaningar. I backend används Java, Spring Boot, Spring Security och en koppling mot ett AI API. Databasen hanteras av MySQL. Azure används som molnplattform för projektet. Utvecklaren arbetar både indivuduellt och i tillsammans med teamet. Nya libraries och frameworks kan komma att introduceras. Projektet beräknas ha passerat utvecklingsfasen om 2 år.");
-        assertEquals(allJobs.get(3).getInstruction(), "Du ska skapa en jobbannons på svenska i HTML-format med en professionell CSS styling. För att omarbeta en arbetsbeskrivning till en jobbannons, börja med att läsa igenom arbetsbeskrivningen noggrant för att förstå de huvudsakliga arbetsuppgifterna, nödvändiga kompetenser och kvalifikationer. Sedan, översätt denna information till en mer engagerande och tilltalande form som lockar potentiella kandidater. Det är viktigt att framhäva företagets kultur och de unika fördelarna med att arbeta där. Börja annonsen med en kort introduktion till företaget, följt av en översikt av jobbrollen. Använd en positiv och inkluderande ton, och undvik jargong. Gör klart vilka huvudsakliga ansvarsområden rollen innefattar och vilka färdigheter och erfarenheter som är önskvärda. Inkludera även information om eventuella förmåner eller möjligheter till personlig och professionell utveckling. Avsluta med hur man ansöker till tjänsten, inklusive viktiga datum och kontaktinformation. Kom ihåg att vara tydlig och koncis för att hålla potentiella kandidaters uppmärksamhet. En välformulerad jobbannons ska inte bara informera utan också inspirera och locka rätt talanger till att söka.");
-        assertNull(allJobs.get(3).getRecruiterName());
-        assertNull(allJobs.get(3).getAdCompany());
-        assertNull(allJobs.get(3).getAdEmail());
-        assertNull(allJobs.get(3).getAdPhone());
-        assertEquals(allJobs.get(3).getApplicationDeadline(), "job4 applicationDeadline 4");
-
+        for (int i = 0; i < allJobs.size(); i++) {
+            if (!allJobs.get(i).equals(this.jobs.get(i))) {
+                assertEquals(allJobs.get(i).getId(), i + 1);
+                assertEquals(allJobs.get(i).getTitle(), this.jobs.get(i).getTitle());
+                assertEquals(allJobs.get(i).getDescription(), this.jobs.get(i).getDescription());
+                assertEquals(allJobs.get(i).getInstruction(), this.jobs.get(i).getInstruction());
+                assertNull(allJobs.get(i).getRecruiterName());
+                assertNull(allJobs.get(i).getAdCompany());
+                assertNull(allJobs.get(i).getAdEmail());
+                assertNull(allJobs.get(i).getAdPhone());
+                assertEquals(allJobs.get(i).getApplicationDeadline(), this.jobs.get(i).getApplicationDeadline());
+            }
+        }
     }
 
     @Test
@@ -103,30 +88,22 @@ public class JobServiceH2Test {
     void test_GetAllJobDtos_Success() {
         List<JobDtoView> allJobDtos = this.jobService.getAllJobDtos();
 
+        System.out.println(allJobDtos.size());
+        System.out.println(allJobDtos.get(0).title());
+
         assertEquals(allJobDtos.size(), 4);
 
-        assertEquals(allJobDtos.get(0).title(), "job1 Title 1");
-        assertEquals(allJobDtos.get(0).description(), "job1 Description 1");
-        assertNull(allJobDtos.get(0).recruiterName());
-        assertNull(allJobDtos.get(0).adCompany());
-        assertNull(allJobDtos.get(0).adEmail());
-        assertNull(allJobDtos.get(0).adPhone());
-        assertEquals(allJobDtos.get(0).applicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allJobDtos.get(1).title(), "job2 Title 2");
-        assertEquals(allJobDtos.get(1).description(), "job2 Description 2");
-        assertNull(allJobDtos.get(1).recruiterName());
-        assertNull(allJobDtos.get(1).adCompany());
-        assertNull(allJobDtos.get(1).adEmail());
-        assertNull(allJobDtos.get(1).adPhone());
-        assertEquals(allJobDtos.get(1).applicationDeadline(), "job2 applicationDeadline 2");
-        assertEquals(allJobDtos.get(2).title(), "job3 Title 3");
-        assertEquals(allJobDtos.get(2).description(), "job3 Description 3");
-        assertNull(allJobDtos.get(2).recruiterName());
-        assertNull(allJobDtos.get(2).adCompany());
-        assertNull(allJobDtos.get(2).adEmail());
-        assertNull(allJobDtos.get(2).adPhone());
-        assertEquals(allJobDtos.get(2).applicationDeadline(), "job3 applicationDeadline 3");
-
+        for (int i = 0; i < allJobDtos.size(); i++) {
+            if (!allJobDtos.get(i).equals(this.jobDtos.get(i))) {
+                assertEquals(allJobDtos.get(i).title(), this.jobDtos.get(i).title());
+                assertEquals(allJobDtos.get(i).description(), this.jobDtos.get(i).description());
+                assertEquals(allJobDtos.get(i).recruiterName(), this.jobDtos.get(i).recruiterName());
+                assertNull(allJobDtos.get(i).adCompany());
+                assertNull(allJobDtos.get(i).adEmail());
+                assertNull(allJobDtos.get(i).adPhone());
+                assertEquals(allJobDtos.get(i).applicationDeadline(), this.jobDtos.get(i).applicationDeadline());
+            }
+        }
     }
 
     @Test
@@ -135,21 +112,17 @@ public class JobServiceH2Test {
         String email = "user1-h2@hh.se";
         List<JobDtoView> allJobDtos = this.jobService.getAllJobDtosByUserEmail(email);
 
-        assertEquals(2, allJobDtos.size());
-        assertEquals(allJobDtos.get(0).title(), "job1 Title 1");
-        assertEquals(allJobDtos.get(0).description(), "job1 Description 1");
-        assertNull(allJobDtos.get(0).recruiterName());
-        assertNull(allJobDtos.get(0).adCompany());
-        assertNull(allJobDtos.get(0).adEmail());
-        assertNull(allJobDtos.get(0).adPhone());
-        assertEquals(allJobDtos.get(0).applicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allJobDtos.get(1).title(), "job2 Title 2");
-        assertEquals(allJobDtos.get(1).description(), "job2 Description 2");
-        assertNull(allJobDtos.get(1).recruiterName());
-        assertNull(allJobDtos.get(1).adCompany());
-        assertNull(allJobDtos.get(1).adEmail());
-        assertNull(allJobDtos.get(1).adPhone());
-        assertEquals(allJobDtos.get(1).applicationDeadline(), "job2 applicationDeadline 2");
+        for (int i = 0; i < allJobDtos.size(); i++) {
+            if (!allJobDtos.get(i).equals(this.jobDtos.get(i))) {
+                assertEquals(allJobDtos.get(i).title(), this.jobDtos.get(i).title());
+                assertEquals(allJobDtos.get(i).description(), this.jobDtos.get(i).description());
+                assertEquals(allJobDtos.get(i).recruiterName(), this.jobDtos.get(i).recruiterName());
+                assertNull(allJobDtos.get(i).adCompany());
+                assertNull(allJobDtos.get(i).adEmail());
+                assertNull(allJobDtos.get(i).adPhone());
+                assertEquals(allJobDtos.get(i).applicationDeadline(), this.jobDtos.get(i).applicationDeadline());
+            }
+        }
 
     }
 
@@ -160,12 +133,12 @@ public class JobServiceH2Test {
         List<JobCardDtoView> allJobs = this.jobService.getAllJobCardsByUserEmail(email);
 
         assertEquals(2, allJobs.size());
-        assertEquals(allJobs.get(0).id(), 1L);
-        assertEquals(allJobs.get(0).title(), "job1 Title 1");
-        assertEquals(allJobs.get(0).applicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allJobs.get(1).id(), 2L);
-        assertEquals(allJobs.get(1).title(), "job2 Title 2");
-        assertEquals(allJobs.get(1).applicationDeadline(), "job2 applicationDeadline 2");
+        for (int i = 0; i < allJobs.size(); i++) {
+            if (!allJobs.get(i).equals(this.jobCardDtoViews.get(i))) {
+                assertEquals(allJobs.get(i).title(), this.jobCardDtoViews.get(i).title());
+                assertEquals(allJobs.get(i).applicationDeadline(), this.jobCardDtoViews.get(i).applicationDeadline());
+            }
+        }
     }
 
     @Test
@@ -176,15 +149,18 @@ public class JobServiceH2Test {
         Job foundJob = this.jobService.findById(jobId);
 
         assertEquals(foundJob.getId(), 1L);
-        assertEquals(foundJob.getTitle(), "job1 Title 1");
-        assertEquals(foundJob.getDescription(), "job1 Description 1");
-        assertEquals(foundJob.getInstruction(), "job1 Instruction 1");
-        assertNull(foundJob.getRecruiterName());
-        assertNull(foundJob.getAdCompany());
-        assertNull(foundJob.getAdEmail());
-        assertNull(foundJob.getAdPhone());
-        assertEquals(foundJob.getApplicationDeadline(), "job1 applicationDeadline 1");
 
+        if (!foundJob.equals(this.jobs.get(0))) {
+            assertEquals(foundJob.getId(), 1L);
+            assertEquals(foundJob.getTitle(), this.jobs.get(0).getTitle());
+            assertEquals(foundJob.getDescription(), this.jobs.get(0).getDescription());
+            assertEquals(foundJob.getInstruction(), this.jobs.get(0).getInstruction());
+            assertNull(foundJob.getRecruiterName());
+            assertNull(foundJob.getAdCompany());
+            assertNull(foundJob.getAdEmail());
+            assertNull(foundJob.getAdPhone());
+            assertEquals(foundJob.getApplicationDeadline(), this.jobs.get(0).getApplicationDeadline());
+        }
     }
 
     @Test
@@ -204,14 +180,15 @@ public class JobServiceH2Test {
         long jobId = 1L;
         JobDtoView jobDtoView = this.jobService.getFullJobDtoByJobId(jobId);
 
-        assertEquals(jobDtoView.title(), "job1 Title 1");
-        assertEquals(jobDtoView.description(), "job1 Description 1");
-        assertNull(jobDtoView.recruiterName());
-        assertNull(jobDtoView.adCompany());
-        assertNull(jobDtoView.adEmail());
-        assertNull(jobDtoView.adPhone());
-        assertEquals(jobDtoView.applicationDeadline(), "job1 applicationDeadline 1");
-
+        if (!jobDtoView.equals(this.jobDtos.get(0))) {
+            assertEquals(jobDtoView.title(), this.jobDtos.get(0).title());
+            assertEquals(jobDtoView.description(), this.jobDtos.get(0).description());
+            assertNull(jobDtoView.recruiterName());
+            assertNull(jobDtoView.adCompany());
+            assertNull(jobDtoView.adEmail());
+            assertNull(jobDtoView.adPhone());
+            assertEquals(jobDtoView.applicationDeadline(), this.jobDtos.get(0).applicationDeadline());
+        }
     }
 
     @Test

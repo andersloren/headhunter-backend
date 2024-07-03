@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.job;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public class JobServiceComplementaryH2Test {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.dbInit.initializeDatabase();
+        this.dbInit.initializeH2Database();
     }
 
     @Test
