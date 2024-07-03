@@ -148,15 +148,15 @@ public class H2DatabaseInitializer {
         this.accountRepository.deleteAccountTable();
     }
 
-    public static List<Account> getAccounts() {
+    public List<Account> getAccounts() {
         return accounts;
     }
 
-    public static List<Job> getJobs() {
+    public List<Job> getJobs() {
         return jobs;
     }
 
-    public static List<Ad> getAds() {
+    public List<Ad> getAds() {
         return ads;
     }
 }

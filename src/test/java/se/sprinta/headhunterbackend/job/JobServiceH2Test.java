@@ -67,7 +67,7 @@ public class JobServiceH2Test {
         assertNull(allJobs.get(0).getAdCompany());
         assertNull(allJobs.get(0).getAdEmail());
         assertNull(allJobs.get(0).getAdPhone());
-        assertNull(allJobs.get(0).getApplicationDeadline());
+        assertEquals(allJobs.get(0).getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allJobs.get(1).getId(), 2L);
         assertEquals(allJobs.get(1).getTitle(), "job2 Title 2");
         assertEquals(allJobs.get(1).getDescription(), "job2 Description 2");
@@ -76,7 +76,7 @@ public class JobServiceH2Test {
         assertNull(allJobs.get(1).getAdCompany());
         assertNull(allJobs.get(1).getAdEmail());
         assertNull(allJobs.get(1).getAdPhone());
-        assertNull(allJobs.get(1).getApplicationDeadline());
+        assertEquals(allJobs.get(1).getApplicationDeadline(), "job2 applicationDeadline 2");
         assertEquals(allJobs.get(2).getId(), 3L);
         assertEquals(allJobs.get(2).getTitle(), "job3 Title 3");
         assertEquals(allJobs.get(2).getDescription(), "job3 Description 3");
@@ -85,7 +85,7 @@ public class JobServiceH2Test {
         assertNull(allJobs.get(2).getAdCompany());
         assertNull(allJobs.get(2).getAdEmail());
         assertNull(allJobs.get(2).getAdPhone());
-        assertNull(allJobs.get(2).getApplicationDeadline());
+        assertEquals(allJobs.get(2).getApplicationDeadline(), "job3 applicationDeadline 3");
         assertEquals(allJobs.get(3).getId(), 4L);
         assertEquals(allJobs.get(3).getTitle(), "Fullstack Utvecklare");
         assertEquals(allJobs.get(3).getDescription(), "Tjänsten omfattar en utvecklare som behärskar frontend, backend och databashantering. I frontend används React för att skapa en interaktiv web applikation. Användaren lotsas runt med hjälp av React Router. Även DOMPurify, Bootstrap 5, CSS och Styled Components används för att lösa olika utmaningar. I backend används Java, Spring Boot, Spring Security och en koppling mot ett AI API. Databasen hanteras av MySQL. Azure används som molnplattform för projektet. Utvecklaren arbetar både indivuduellt och i tillsammans med teamet. Nya libraries och frameworks kan komma att introduceras. Projektet beräknas ha passerat utvecklingsfasen om 2 år.");
@@ -94,7 +94,8 @@ public class JobServiceH2Test {
         assertNull(allJobs.get(3).getAdCompany());
         assertNull(allJobs.get(3).getAdEmail());
         assertNull(allJobs.get(3).getAdPhone());
-        assertNull(allJobs.get(3).getApplicationDeadline());
+        assertEquals(allJobs.get(3).getApplicationDeadline(), "job4 applicationDeadline 4");
+
     }
 
     @Test
@@ -110,21 +111,22 @@ public class JobServiceH2Test {
         assertNull(allJobDtos.get(0).adCompany());
         assertNull(allJobDtos.get(0).adEmail());
         assertNull(allJobDtos.get(0).adPhone());
-        assertNull(allJobDtos.get(0).applicationDeadline());
+        assertEquals(allJobDtos.get(0).applicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allJobDtos.get(1).title(), "job2 Title 2");
         assertEquals(allJobDtos.get(1).description(), "job2 Description 2");
         assertNull(allJobDtos.get(1).recruiterName());
         assertNull(allJobDtos.get(1).adCompany());
         assertNull(allJobDtos.get(1).adEmail());
         assertNull(allJobDtos.get(1).adPhone());
-        assertNull(allJobDtos.get(1).applicationDeadline());
+        assertEquals(allJobDtos.get(1).applicationDeadline(), "job2 applicationDeadline 2");
         assertEquals(allJobDtos.get(2).title(), "job3 Title 3");
         assertEquals(allJobDtos.get(2).description(), "job3 Description 3");
         assertNull(allJobDtos.get(2).recruiterName());
         assertNull(allJobDtos.get(2).adCompany());
         assertNull(allJobDtos.get(2).adEmail());
         assertNull(allJobDtos.get(2).adPhone());
-        assertNull(allJobDtos.get(2).applicationDeadline());
+        assertEquals(allJobDtos.get(2).applicationDeadline(), "job3 applicationDeadline 3");
+
     }
 
     @Test
@@ -140,14 +142,15 @@ public class JobServiceH2Test {
         assertNull(allJobDtos.get(0).adCompany());
         assertNull(allJobDtos.get(0).adEmail());
         assertNull(allJobDtos.get(0).adPhone());
-        assertNull(allJobDtos.get(0).applicationDeadline());
+        assertEquals(allJobDtos.get(0).applicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allJobDtos.get(1).title(), "job2 Title 2");
         assertEquals(allJobDtos.get(1).description(), "job2 Description 2");
         assertNull(allJobDtos.get(1).recruiterName());
         assertNull(allJobDtos.get(1).adCompany());
         assertNull(allJobDtos.get(1).adEmail());
         assertNull(allJobDtos.get(1).adPhone());
-        assertNull(allJobDtos.get(1).applicationDeadline());
+        assertEquals(allJobDtos.get(1).applicationDeadline(), "job2 applicationDeadline 2");
+
     }
 
     @Test
@@ -180,7 +183,8 @@ public class JobServiceH2Test {
         assertNull(foundJob.getAdCompany());
         assertNull(foundJob.getAdEmail());
         assertNull(foundJob.getAdPhone());
-        assertNull(foundJob.getApplicationDeadline());
+        assertEquals(foundJob.getApplicationDeadline(), "job1 applicationDeadline 1");
+
     }
 
     @Test
@@ -206,7 +210,8 @@ public class JobServiceH2Test {
         assertNull(jobDtoView.adCompany());
         assertNull(jobDtoView.adEmail());
         assertNull(jobDtoView.adPhone());
-        assertNull(jobDtoView.applicationDeadline());
+        assertEquals(jobDtoView.applicationDeadline(), "job1 applicationDeadline 1");
+
     }
 
     @Test

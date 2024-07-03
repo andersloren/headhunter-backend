@@ -7,6 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @ActiveProfiles("test-h2")
 @Transactional
@@ -29,11 +33,30 @@ class AdRepositoryH2Test {
     }
 
     @Test
+    @DisplayName("findAll - Success")
+    void test_FindAll_Success() {
+        List<Ad> allAds = this.adRepository.findAll();
+
+        for (Ad ad : allAds) {
+            System.out.println(ad.getId());
+            System.out.println(ad.getHtmlCode());
+            System.out.println(ad.getJob());
+            System.out.println(ad.getCreatedDateTime());
+        }
+
+        assertEquals(allAds.size(), 3);
+        assertEquals(allAds.get(0).getHtmlCode(), "htmlCode 1");
+        assertEquals(allAds.get(1).getHtmlCode(), "htmlCode 2");
+        assertEquals(allAds.get(2).getHtmlCode(), "htmlCode 3");
+
+        System.out.println("End of test_FindAll_Success");
+    }
+
+    @Test
     @DisplayName("getNumberOfAds - Success")
-    @Order(2)
     void test_getNumberOfAds_Success() {
         long numberOfAds = this.adRepository.getNumberOfAds(1L);
 
-        Assertions.assertEquals(numberOfAds, 2);
+        assertEquals(numberOfAds, 2);
     }
 }

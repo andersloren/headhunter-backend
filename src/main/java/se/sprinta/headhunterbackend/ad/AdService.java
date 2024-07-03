@@ -55,6 +55,9 @@ public class AdService {
     }
 
     public List<AdDtoView> getAdDtosByJobId(Long jobId) {
+        this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+
         return this.adRepository.getAdDtosByJobId(jobId);
     }
 
