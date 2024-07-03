@@ -16,7 +16,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @ActiveProfiles("test-h2")
@@ -31,7 +30,7 @@ public class AccountServiceH2Test {
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeDatabase();
+        this.dbInit.initializeH2Database();
     }
 
     @AfterEach
@@ -65,6 +64,7 @@ public class AccountServiceH2Test {
         assertEquals(actualAccounts.get(3).getRoles(), "user");
         assertEquals(actualAccounts.get(3).getNumber_of_jobs(), 1);
         assertNotNull(actualAccounts.get(3).getPassword());
+
     }
 
     @Test

@@ -6,11 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +26,15 @@ class JobRepositoryH2Test {
     private JobRepository jobRepository;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private H2DatabaseInitializer dbInit;
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeDatabase();
+        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
+        this.dbInit.initializeH2Database();
     }
 
     @AfterEach
@@ -56,14 +60,14 @@ class JobRepositoryH2Test {
         assertNull(foundJobDtoViews.get(0).adCompany());
         assertNull(foundJobDtoViews.get(0).adEmail());
         assertNull(foundJobDtoViews.get(0).adPhone());
-        assertNull(foundJobDtoViews.get(0).applicationDeadline());
+        assertEquals(foundJobDtoViews.get(0).applicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(foundJobDtoViews.get(1).title(), "job2 Title 2");
         assertEquals(foundJobDtoViews.get(1).description(), "job2 Description 2");
         assertNull(foundJobDtoViews.get(1).recruiterName());
         assertNull(foundJobDtoViews.get(1).adCompany());
         assertNull(foundJobDtoViews.get(1).adEmail());
         assertNull(foundJobDtoViews.get(1).adPhone());
-        assertNull(foundJobDtoViews.get(1).applicationDeadline());
+        assertEquals(foundJobDtoViews.get(1).applicationDeadline(), "job2 applicationDeadline 2");
     }
 
     @Test
@@ -86,21 +90,21 @@ class JobRepositoryH2Test {
         assertNull(foundJobDtoViews.get(0).adCompany());
         assertNull(foundJobDtoViews.get(0).adEmail());
         assertNull(foundJobDtoViews.get(0).adPhone());
-        assertNull(foundJobDtoViews.get(0).applicationDeadline());
+        assertEquals(foundJobDtoViews.get(0).applicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(foundJobDtoViews.get(1).title(), "job2 Title 2");
         assertEquals(foundJobDtoViews.get(1).description(), "job2 Description 2");
         assertNull(foundJobDtoViews.get(1).recruiterName());
         assertNull(foundJobDtoViews.get(1).adCompany());
         assertNull(foundJobDtoViews.get(1).adEmail());
         assertNull(foundJobDtoViews.get(1).adPhone());
-        assertNull(foundJobDtoViews.get(1).applicationDeadline());
+        assertEquals(foundJobDtoViews.get(1).applicationDeadline(), "job2 applicationDeadline 2");
         assertEquals(foundJobDtoViews.get(2).title(), "job3 Title 3");
         assertEquals(foundJobDtoViews.get(2).description(), "job3 Description 3");
         assertNull(foundJobDtoViews.get(2).recruiterName());
         assertNull(foundJobDtoViews.get(2).adCompany());
         assertNull(foundJobDtoViews.get(2).adEmail());
         assertNull(foundJobDtoViews.get(2).adPhone());
-        assertNull(foundJobDtoViews.get(2).applicationDeadline());
+        assertEquals(foundJobDtoViews.get(2).applicationDeadline(), "job3 applicationDeadline 3");
     }
 
     @Test
@@ -115,7 +119,8 @@ class JobRepositoryH2Test {
             assertNull(foundJobDtoView.get().adCompany());
             assertNull(foundJobDtoView.get().adEmail());
             assertNull(foundJobDtoView.get().adPhone());
-            assertNull(foundJobDtoView.get().applicationDeadline());
+            assertEquals(foundJobDtoView.get().applicationDeadline(), "job1 applicationDeadline 1");
+
         }
     }
 

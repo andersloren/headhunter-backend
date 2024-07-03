@@ -38,9 +38,9 @@ public class AccountController {
         return new Result(true, StatusCode.SUCCESS, "Find All Account Success", foundAccounts);
     }
 
-    @GetMapping("/getAllAccountDtoViews")
-    public Result getAllAccountDtoViews() {
-        List<AccountDtoView> foundAccountDtos = this.accountService.getAllAccountDtoViews();
+    @GetMapping("/getAllAccountDtos")
+    public Result getAllAccountDtos() {
+        List<AccountDtoView> foundAccountDtos = this.accountService.getAllAccountDtos();
         return new Result(true, StatusCode.SUCCESS, "Find All Success", foundAccountDtos);
     }
 

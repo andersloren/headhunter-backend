@@ -1,33 +1,65 @@
 package se.sprinta.headhunterbackend;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
+import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewConverter;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.AdRepository;
+import se.sprinta.headhunterbackend.ad.converter.AdToAdDtoView;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
+import se.sprinta.headhunterbackend.job.converter.JobToJobCardDtoViewConverter;
+import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
+import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
+import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Profile("test-h2")
 public class H2DatabaseInitializer {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
 
+    @Autowired
+    private JobToJobDtoViewConverter jobToJobDtoViewConverter;
+
+    @Autowired
+    private JobToJobCardDtoViewConverter jobToJobCardDtoViewConverter;
+
+    @Autowired
+    private AdToAdDtoView adToAdDtoView;
+
+    @Autowired
     private final AccountRepository accountRepository;
+
+    @Autowired
     private final JobRepository jobRepository;
+
+    @Autowired
     private final AdRepository adRepository;
 
-    protected static List<Account> accounts = new ArrayList<>();
-    protected static List<Job> jobs = new ArrayList<>();
-    protected static List<Ad> ads = new ArrayList<>();
+    @Getter
+    private static List<Account> accounts = new ArrayList<>();
+    @Getter
+    private static List<Job> jobs = new ArrayList<>();
+    @Getter
+    private static List<JobDtoView> jobDtos = new ArrayList<>();
+    @Getter
+    private static List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
+    @Getter
+    private static List<AccountDtoView> accountDtos = new ArrayList<>();
+    @Getter
+    private static List<Ad> ads = new ArrayList<>();
 
     public H2DatabaseInitializer(AccountRepository accountRepository, JobRepository jobRepository, AdRepository adRepository) {
         this.accountRepository = accountRepository;
@@ -35,7 +67,7 @@ public class H2DatabaseInitializer {
         this.adRepository = adRepository;
     }
 
-    public void initializeDatabase() {
+    public void initializeH2Database() {
 
         Account admin = new Account();
         admin.setEmail("admin-h2@hh.se");
@@ -141,22 +173,30 @@ public class H2DatabaseInitializer {
 
     }
 
+    public List<AccountDtoView> initializeAccountDtos() {
+        return getAccounts().stream()
+                .map(account -> this.accountToAccountDtoViewConverter.convert(account)).toList();
+    }
+
+    public List<JobDtoView> initializeJobDtos() {
+        return getJobs().stream()
+                .map(job -> this.jobToJobDtoViewConverter.convert(job)).toList();
+    }
+
+    public List<JobCardDtoView> initializeJobCardDtos() {
+        return getJobs().stream()
+                .map(job -> this.jobToJobCardDtoViewConverter.convert(job)).toList();
+    }
+
+    public List<AdDtoView> initializeAdDtos() {
+        return getAds().stream()
+                .map(ad -> this.adToAdDtoView.convert(ad)).toList();
+    }
+
     @Transactional
     public void clearDatabase() {
         this.adRepository.deleteAdTable();
         this.jobRepository.deleteJobTable();
         this.accountRepository.deleteAccountTable();
-    }
-
-    public static List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public static List<Job> getJobs() {
-        return jobs;
-    }
-
-    public static List<Ad> getAds() {
-        return ads;
     }
 }

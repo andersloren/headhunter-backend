@@ -12,6 +12,7 @@ import se.sprinta.headhunterbackend.job.Job;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Account is an entity that stores information that regards the user's account and the Job objects it holds.
@@ -119,5 +120,39 @@ public class Account implements Serializable {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) return true;
+//        if (this != obj || getClass() != obj.getClass()) return false;
+//
+//        Account account = (Account) obj;
+//        return email.equals(account.email) && (Objects.equals(email, account.email));
+//    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        // Password is left out !!!
+        return number_of_jobs == account.number_of_jobs &&
+                Objects.equals(email, account.email) &&
+                Objects.equals(roles, account.roles) &&
+                Objects.equals(accountInfo, account.accountInfo) &&
+                Objects.equals(jobs, account.jobs);
+    }
+
+    @Override
+    public int hashCode() {
+        // Password is left out !!!
+        return Objects.hash(
+                email,
+                roles,
+                number_of_jobs,
+                accountInfo,
+                jobs);
     }
 }
