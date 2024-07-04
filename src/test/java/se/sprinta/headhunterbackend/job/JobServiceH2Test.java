@@ -49,6 +49,8 @@ public class JobServiceH2Test {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
+
         this.h2DbInit.initializeH2Database();
         this.jobs = H2DatabaseInitializer.getJobs();
         this.jobDtos = this.h2DbInit.initializeH2JobDtos();

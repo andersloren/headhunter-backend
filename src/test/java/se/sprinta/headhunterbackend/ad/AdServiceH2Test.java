@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
@@ -47,7 +48,10 @@ public class AdServiceH2Test {
 
     @BeforeEach
     void setUp() {
-
+/*        jdbcTemplate.execute("DELETE TABLE ad");
+        jdbcTemplate.execute("DELETE TABLE job");
+        jdbcTemplate.execute("DELETE TABLE account");*/
+        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
         this.h2DbInit.initializeH2Database();
         this.jobs = H2DatabaseInitializer.getJobs();
         this.ads = H2DatabaseInitializer.getAds();
