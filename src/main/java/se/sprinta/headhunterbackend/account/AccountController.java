@@ -41,7 +41,7 @@ public class AccountController {
     @GetMapping("/getAllAccountDtos")
     public Result getAllAccountDtos() {
         List<AccountDtoView> foundAccountDtos = this.accountService.getAllAccountDtos();
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundAccountDtos);
+        return new Result(true, StatusCode.SUCCESS, "Find All Accounts Success", foundAccountDtos);
     }
 
     @GetMapping("/validateEmailAvailable/{email}")

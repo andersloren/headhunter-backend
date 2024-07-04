@@ -251,11 +251,12 @@ public class AccountControllerAuthorityIntegrationMySQLTest {
     @Test
     @DisplayName("(POST) register - User Permission - Success")
     void test_Register_UserPermission_Success() throws Exception {
-        Account account = new Account();
-        account.setEmail("user4-mysql@hh.se");
-        account.setPassword("a");
+        AccountDtoFormRegister newAccount = new AccountDtoFormRegister(
+                "user4-mysql@hh.se",
+                "a"
+        );
 
-        String json = this.objectMapper.writeValueAsString(account);
+        String json = this.objectMapper.writeValueAsString(newAccount);
 
         this.mockMvc.perform(post(this.baseUrlAccount + "/register")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,13 +1,13 @@
 package se.sprinta.headhunterbackend.ad;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import se.sprinta.headhunterbackend.job.Job;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -36,7 +36,8 @@ public class Ad implements Serializable {
      * Used for sorting ads chronologically.
      */
 
-    private ZonedDateTime createdDateTime = ZonedDateTime.now(ZoneId.of("Europe/Stockholm"));
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate createDate;
 
     /**
      * Every Ad is part of a Job
@@ -48,7 +49,7 @@ public class Ad implements Serializable {
     private Job job;
 
     public Ad() {
-        this.setCreatedDateTime();
+        this.createDate = LocalDate.now();
     }
 
     public Ad(String htmlCode) {
@@ -78,16 +79,8 @@ public class Ad implements Serializable {
         this.htmlCode = htmlCode;
     }
 
-    public ZonedDateTime getCreatedDateTime() {
-        return createdDateTime;
-    }
-
-    /**
-     * Timezone must be taken into consideration.
-     */
-
-    public void setCreatedDateTime() {
-        this.createdDateTime = ZonedDateTime.now();
+    public LocalDate getCreateDate() {
+        return createDate;
     }
 
     public Job getJob() {
@@ -103,21 +96,23 @@ public class Ad implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ad ad = (Ad) o;
-        return Objects.equals(id, ad.id) && Objects.equals(htmlCode, ad.htmlCode) && Objects.equals(createdDateTime, ad.createdDateTime) && Objects.equals(job, ad.job);
+        return Objects.equals(id, ad.id) && Objects.equals(htmlCode, ad.htmlCode) && Objects.equals(createDate, ad.createDate) && Objects.equals(job, ad.job);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, htmlCode, createdDateTime, job);
+        return Objects.hash(id, htmlCode, createDate, job);
     }
 
     // TODO: 04/07/2024 Remove when going into production?
+
     @Override
     public String toString() {
         return "Ad{" +
                 "id='" + id + '\'' +
                 ", htmlCode='" + htmlCode + '\'' +
-                ", createdDateTime=" + createdDateTime +
+                ", createdDateTime=" + createDate +
+                ", job=" + job +
                 '}';
     }
 }

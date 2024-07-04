@@ -1,35 +1,29 @@
 package se.sprinta.headhunterbackend.account;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoFormUpdate;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
+import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.account.dto.AccountDtoFormUpdate;
-import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -62,6 +56,19 @@ class AccountControllerMockTest {
     void setUp() {
         this.accounts = MockDatabaseInitializer.initializeMockAccounts();
         this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+    }
+
+    @Test
+    @DisplayName("Test Data Initializer")
+    void test_DataInitializer() {
+        System.out.println("AccountControllerMockTest, accounts size: " + this.accounts.size());
+        for (Account account : this.accounts) {
+            System.out.println(account.toString());
+        }
+        System.out.println("AccountControllerMockTest, accountDtos size: " + this.accountDtos.size());
+        for (AccountDtoView accountDto : this.accountDtos) {
+            System.out.println(accountDto.toString());
+        }
     }
 
     @Test

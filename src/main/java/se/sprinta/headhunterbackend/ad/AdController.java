@@ -34,11 +34,10 @@ public class AdController {
         this.adToAdDtoView = adToAdDtoView;
     }
 
-    @GetMapping("/findAllAds")
-    public Result findAllAds() {
+    @GetMapping("/findAll")
+    public Result findAll() {
         List<Ad> allAds = this.adService.findAll();
-        List<AdDtoView> allAdDtoViews = allAds.stream().map(this.adToAdDtoView::convert).toList();
-        return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAdDtoViews);
+        return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAds);
     }
 
     @GetMapping("/findById/{adId}")

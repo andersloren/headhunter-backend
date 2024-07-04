@@ -1,10 +1,14 @@
 package se.sprinta.headhunterbackend.job;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sprinta.headhunterbackend.MockDatabaseInitializer;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
@@ -46,11 +50,35 @@ class JobServiceMockTest {
     @InjectMocks
     private JobService jobService;
 
-    private final List<Job> jobs = new ArrayList<>();
-    private final List<JobDtoView> jobDtos = new ArrayList<>();
+    private List<Job> jobs = new ArrayList<>();
+    private List<JobDtoView> jobDtos = new ArrayList<>();
 
-    private final List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
+    private List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
 
+    @BeforeEach
+    void setUp() {
+        this.jobs = MockDatabaseInitializer.initializeMockJobs();
+        this.jobDtos = MockDatabaseInitializer.initializeMockJobDtos();
+        this.jobCardDtoViews = MockDatabaseInitializer.initializeMockJobCardDtos();
+    }
+
+    @Test
+    @DisplayName("Test Data Initializer")
+    void test_DataInitializer() {
+        System.out.println("JobServiceMockTest, jobs size: " + this.jobs.size());
+        for (Job job : this.jobs) {
+            System.out.println(job.toString());
+        }
+        System.out.println("JobServiceMockTest, jobDtos size: " + this.jobDtos.size());
+        for (JobDtoView jobDto : this.jobDtos) {
+            System.out.println(jobDto.toString());
+        }
+        System.out.println("JobServiceMockTest, jobCardDtoViews size: " + this.jobCardDtoViews.size());
+        for (JobCardDtoView jobCardDto : this.jobCardDtoViews) {
+            System.out.println(jobCardDto.toString());
+        }
+    }
+    
     @Test
     @DisplayName("findAllJobs - List<Job>")
     void testFindAllJobs() {

@@ -8,19 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
-import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.ad.Ad;
-import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -52,9 +45,17 @@ class AccountServiceMockTest {
         this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
     }
 
-    @AfterEach
-    void tearDown() {
-        this.accounts.clear();
+    @Test
+    @DisplayName("Test Data Initializer")
+    void test_DataInitializer() {
+        System.out.println("AccountServiceMockTest, accounts size: " + this.accounts.size());
+        for (Account account : this.accounts) {
+            System.out.println(account.toString());
+        }
+        System.out.println("AccountServiceMockTest, accountDtos size: " + this.accountDtos.size());
+        for (AccountDtoView accountDto : this.accountDtos) {
+            System.out.println(accountDto.toString());
+        }
     }
 
     @Test

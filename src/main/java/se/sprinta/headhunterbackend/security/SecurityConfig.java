@@ -47,9 +47,9 @@ public class SecurityConfig {
     @Value("${api.endpoint.base-url-account}")
     private String baseUrlAccount;
     @Value("${api.endpoint.base-url-job}")
-    private String baseUrlJobs;
+    private String baseUrlJob;
     @Value("${api.endpoint.base-url-ad}")
-    private String baseUrlAds;
+    private String baseUrlAd;
     @Value("${api.endpoint.base-url-accountInfo}")
     private String baseUrlAccountInfo;
 
@@ -90,36 +90,43 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        /**
-                         * Account requests
-                         */
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                                /**
+                                 * Account requests
+                                 */
 
-                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/validateEmailAvailable/{email}").permitAll()
-                        .requestMatchers(HttpMethod.POST, this.baseUrlAccount + "/register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/validateEmailAvailable/{email}").permitAll()
+                                .requestMatchers(HttpMethod.POST, this.baseUrlAccount + "/register").permitAll()
+                                .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
 
 
-                        /**
-                         * Job requests
-                         */
+                                /**
+                                 * Job requests
+                                 */
 
-                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findAll").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/findById/{id}").hasAuthority("ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/getAllJobDtosByUserEmail/{email}").hasAuthority("ROLE_user")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/getAllJobCardDtosByUserEmail/{email}").hasAuthority("ROLE_user")
-                        .requestMatchers(HttpMethod.POST, this.baseUrlJobs + "/addJob/{id}").hasAuthority("ROLE_user")
-                        .requestMatchers(HttpMethod.PUT, this.baseUrlJobs + "/update/{id}").hasAuthority("ROLE_user")
-                        .requestMatchers(HttpMethod.DELETE, this.baseUrlJobs + "/delete/{email}/{id}").hasAuthority("ROLE_user")
-                        .requestMatchers(HttpMethod.GET, this.baseUrlJobs + "/generate/{id}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findById/{id}").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobDtosByUserEmail/{email}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobCardDtosByUserEmail/{email}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.POST, this.baseUrlJob + "/addJob/{id}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.PUT, this.baseUrlJob + "/update/{id}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlJob + "/delete/{email}/{id}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/generate/{id}").hasAuthority("ROLE_user")
 
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAccount + "/**")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJobs + "/**")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAds + "/**")).permitAll()
+                                /**
+                                 * Ad requests
+                                 */
 
-                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.POST, this.baseUrlAd + "/saveAd/**").hasAuthority("ROLE_user")
+
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAccount + "/**")).permitAll()
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJob + "/**")).permitAll()
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAd + "/**")).permitAll()
+
+                                .anyRequest().authenticated()
                 )
 
                         .
