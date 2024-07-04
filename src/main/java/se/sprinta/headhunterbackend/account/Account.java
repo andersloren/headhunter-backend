@@ -155,4 +155,15 @@ public class Account implements Serializable {
                 accountInfo,
                 jobs);
     }
+
+    // TODO: 04/07/2024 Remove when going into production?
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "email='" + email + '\'' +
+                ", roles='" + roles + '\'' +
+                ", number_of_jobs=" + number_of_jobs +
+                '}';
+    }
 }
