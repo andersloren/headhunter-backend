@@ -38,13 +38,13 @@ public class JobController {
     @GetMapping("/findAll")
     public Result findAllJobs() {
         List<Job> foundJobs = this.jobService.findAll();
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundJobs);
+        return new Result(true, StatusCode.SUCCESS, "Find All Jobs Success", foundJobs);
     }
 
     @GetMapping("getAllJobDtos")
     public Result getAllJobDtos() {
         List<JobDtoView> foundJobDtos = this.jobService.getAllJobDtos();
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", foundJobDtos);
+        return new Result(true, StatusCode.SUCCESS, "Find All Jobs Success", foundJobDtos);
     }
 
     /**

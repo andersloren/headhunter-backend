@@ -25,7 +25,7 @@ public class AdToAdDtoView implements Converter<Ad, AdDtoView> {
     public AdDtoView convert(Ad source) {
         return new AdDtoView(
                 source.getId(),
-                source.getCreatedDateTime(),
+                source.getCreateDate(),
                 source.getHtmlCode());
     }
 }

@@ -30,6 +30,8 @@ public class MockDatabaseInitializer {
 
     public static List<Account> initializeMockAccounts() {
 
+        accounts.clear();
+
         Account admin = new Account();
         admin.setEmail("admin-mock@hh.se");
         admin.setPassword("a");
@@ -116,6 +118,7 @@ public class MockDatabaseInitializer {
 
     public static List<Job> initializeMockJobs() {
 
+        jobs.clear();
 
         Account admin = new Account();
         admin.setEmail("admin-mock@hh.se");
@@ -161,9 +164,9 @@ public class MockDatabaseInitializer {
         job4.setApplicationDeadline("job4 applicationDeadline 4");
         job4.setInstruction("Du ska skapa en jobbannons på svenska i HTML-format med en professionell CSS styling. För att omarbeta en arbetsbeskrivning till en jobbannons, börja med att läsa igenom arbetsbeskrivningen noggrant för att förstå de huvudsakliga arbetsuppgifterna, nödvändiga kompetenser och kvalifikationer. Sedan, översätt denna information till en mer engagerande och tilltalande form som lockar potentiella kandidater. Det är viktigt att framhäva företagets kultur och de unika fördelarna med att arbeta där. Börja annonsen med en kort introduktion till företaget, följt av en översikt av jobbrollen. Använd en positiv och inkluderande ton, och undvik jargong. Gör klart vilka huvudsakliga ansvarsområden rollen innefattar och vilka färdigheter och erfarenheter som är önskvärda. Inkludera även information om eventuella förmåner eller möjligheter till personlig och professionell utveckling. Avsluta med hur man ansöker till tjänsten, inklusive viktiga datum och kontaktinformation. Kom ihåg att vara tydlig och koncis för att hålla potentiella kandidaters uppmärksamhet. En välformulerad jobbannons ska inte bara informera utan också inspirera och locka rätt talanger till att söka.");
 
-        Ad ad1 = new Ad("htmlCode 1");
-        Ad ad2 = new Ad("htmlCode 2");
-        Ad ad3 = new Ad("htmlCode 3");
+        Ad ad1 = new Ad("id 1", "htmlCode 1");
+        Ad ad2 = new Ad("id 2", "htmlCode 2");
+        Ad ad3 = new Ad("id 3", "htmlCode 3");
 
         user1.addJob(job1);
         user1.addJob(job2);
@@ -202,6 +205,8 @@ public class MockDatabaseInitializer {
 
     public static List<Ad> initializeMockAds() {
 
+        ads.clear();
+
         Account admin = new Account();
         admin.setEmail("admin-mock@hh.se");
         admin.setPassword("a");
@@ -246,9 +251,9 @@ public class MockDatabaseInitializer {
         job4.setApplicationDeadline("job4 applicationDeadline 4");
         job4.setInstruction("Du ska skapa en jobbannons på svenska i HTML-format med en professionell CSS styling. För att omarbeta en arbetsbeskrivning till en jobbannons, börja med att läsa igenom arbetsbeskrivningen noggrant för att förstå de huvudsakliga arbetsuppgifterna, nödvändiga kompetenser och kvalifikationer. Sedan, översätt denna information till en mer engagerande och tilltalande form som lockar potentiella kandidater. Det är viktigt att framhäva företagets kultur och de unika fördelarna med att arbeta där. Börja annonsen med en kort introduktion till företaget, följt av en översikt av jobbrollen. Använd en positiv och inkluderande ton, och undvik jargong. Gör klart vilka huvudsakliga ansvarsområden rollen innefattar och vilka färdigheter och erfarenheter som är önskvärda. Inkludera även information om eventuella förmåner eller möjligheter till personlig och professionell utveckling. Avsluta med hur man ansöker till tjänsten, inklusive viktiga datum och kontaktinformation. Kom ihåg att vara tydlig och koncis för att hålla potentiella kandidaters uppmärksamhet. En välformulerad jobbannons ska inte bara informera utan också inspirera och locka rätt talanger till att söka.");
 
-        Ad ad1 = new Ad("htmlCode 1");
-        Ad ad2 = new Ad("htmlCode 2");
-        Ad ad3 = new Ad("htmlCode 3");
+        Ad ad1 = new Ad("id 1", "htmlCode 1");
+        Ad ad2 = new Ad("id 2", "htmlCode 2");
+        Ad ad3 = new Ad("id 3", "htmlCode 3");
 
         user1.addJob(job1);
         user1.addJob(job2);
@@ -286,6 +291,8 @@ public class MockDatabaseInitializer {
     }
 
     public static List<AccountDtoView> initializeMockAccountDtos() {
+        accountDtos.clear();
+        accounts.clear();
         accounts = initializeMockAccounts();
 
         AccountDtoView accountDto1 = new AccountDtoView(
@@ -321,6 +328,8 @@ public class MockDatabaseInitializer {
     }
 
     public static List<JobDtoView> initializeMockJobDtos() {
+        jobDtos.clear();
+        jobs.clear();
         jobs = initializeMockJobs();
 
         JobDtoView jobDto1 = new JobDtoView(
@@ -372,6 +381,8 @@ public class MockDatabaseInitializer {
     }
 
     public static List<JobCardDtoView> initializeMockJobCardDtos() {
+        jobCardDtos.clear();
+        jobs.clear();
         jobs = initializeMockJobs();
 
         JobCardDtoView jobDCardto1 = new JobCardDtoView(
@@ -407,23 +418,25 @@ public class MockDatabaseInitializer {
     }
 
     public static List<AdDtoView> initializeMockAdDtos() {
+        adDtos.clear();
+        ads.clear();
         ads = initializeMockAds();
 
         AdDtoView adDto1 = new AdDtoView(
                 ads.get(0).getId(),
-                ads.get(0).getCreatedDateTime(),
+                ads.get(0).getCreateDate(),
                 ads.get(0).getHtmlCode()
         );
 
         AdDtoView adDto2 = new AdDtoView(
                 ads.get(1).getId(),
-                ads.get(1).getCreatedDateTime(),
+                ads.get(1).getCreateDate(),
                 ads.get(1).getHtmlCode()
         );
 
         AdDtoView adDto3 = new AdDtoView(
                 ads.get(2).getId(),
-                ads.get(2).getCreatedDateTime(),
+                ads.get(2).getCreateDate(),
                 ads.get(2).getHtmlCode()
         );
 

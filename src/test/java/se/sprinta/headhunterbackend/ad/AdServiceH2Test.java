@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.ad;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,8 @@ import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test-h2")
+@Transactional
 public class AdServiceH2Test {
 
     @Autowired
@@ -38,16 +41,22 @@ public class AdServiceH2Test {
 
     List<Job> jobs = new ArrayList<>();
 
+    List<Ad> ads = new ArrayList<>();
+
+    List<AdDtoView> adDtos = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.jobs = this.h2DbInit.getJobs();
+
         this.h2DbInit.initializeH2Database();
+        this.jobs = H2DatabaseInitializer.getJobs();
+        this.ads = H2DatabaseInitializer.getAds();
+        this.adDtos = this.h2DbInit.initializeH2AdDtos();
     }
 
     @AfterEach
     void tearDown() {
-        this.h2DbInit.clearDatabase();
+        this.h2DbInit.clearH2Database();
     }
 
     @Test
@@ -59,13 +68,14 @@ public class AdServiceH2Test {
             System.out.println(ad.getId());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob());
-            System.out.println(ad.getCreatedDateTime());
+            System.out.println(ad.getCreateDate());
         }
 
         assertEquals(allAds.size(), 3);
 
         assertEquals(allAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertTrue(allAds.get(0).getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(allAds.get(0).getCreateDate().isAfter(LocalDate.now()));
+
         assertNotNull(allAds.get(0).getId());
         assertEquals(allAds.get(0).getJob().getTitle(), "job1 Title 1");
         assertEquals(allAds.get(0).getJob().getDescription(), "job1 Description 1");
@@ -76,7 +86,7 @@ public class AdServiceH2Test {
         assertNull(allAds.get(0).getJob().getAdPhone());
         assertEquals(allAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertTrue(allAds.get(1).getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(allAds.get(1).getCreateDate().isAfter(LocalDate.now()));
         assertNotNull(allAds.get(1).getId());
         assertEquals(allAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(allAds.get(1).getJob().getDescription(), "job1 Description 1");
@@ -87,7 +97,7 @@ public class AdServiceH2Test {
         assertNull(allAds.get(1).getJob().getAdPhone());
         assertEquals(allAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(2).getHtmlCode(), "htmlCode 3");
-        assertTrue(allAds.get(2).getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(allAds.get(2).getCreateDate().isAfter(LocalDate.now()));
         assertNotNull(allAds.get(2).getId());
         assertEquals(allAds.get(2).getJob().getTitle(), "job2 Title 2");
         assertEquals(allAds.get(2).getJob().getDescription(), "job2 Description 2");
@@ -112,13 +122,14 @@ public class AdServiceH2Test {
 
         assertNotNull(foundAdDtos.get(0).id());
         assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertTrue(foundAdDtos.get(0).createdDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAdDtos.get(0).createdDateTime().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(1).id());
         assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertTrue(foundAdDtos.get(1).createdDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAdDtos.get(1).createdDateTime().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(2).id());
         assertEquals(foundAdDtos.get(2).htmlCode(), "htmlCode 3");
-        assertTrue(foundAdDtos.get(2).createdDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAdDtos.get(2).createdDateTime().isAfter(LocalDate.now()));
+
     }
 
     @Test
@@ -130,10 +141,10 @@ public class AdServiceH2Test {
 
         System.out.println(foundAd.getId());
         System.out.println(foundAd.getHtmlCode());
-        System.out.println(foundAd.getCreatedDateTime());
+        System.out.println(foundAd.getCreateDate());
 
         assertEquals(foundAd.getHtmlCode(), "htmlCode 1");
-        assertTrue(foundAd.getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAd.getCreateDate().isAfter(LocalDate.now()));
         assertNotNull(foundAd.getId());
         assertEquals(foundAd.getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAd.getJob().getDescription(), "job1 Description 1");
@@ -165,11 +176,11 @@ public class AdServiceH2Test {
             System.out.println(ad.getId());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob());
-            System.out.println(ad.getCreatedDateTime());
+            System.out.println(ad.getCreateDate());
         }
 
         assertEquals(foundAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertTrue(foundAds.get(0).getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAds.get(0).getCreateDate().isAfter(LocalDate.now()));
         assertNotNull(foundAds.get(0).getId());
         assertEquals(foundAds.get(0).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(0).getJob().getDescription(), "job1 Description 1");
@@ -180,7 +191,7 @@ public class AdServiceH2Test {
         assertNull(foundAds.get(0).getJob().getAdPhone());
         assertEquals(foundAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(foundAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertTrue(foundAds.get(1).getCreatedDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAds.get(1).getCreateDate().isAfter(LocalDate.now()));
         assertNotNull(foundAds.get(1).getId());
         assertEquals(foundAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(1).getJob().getDescription(), "job1 Description 1");
@@ -216,10 +227,10 @@ public class AdServiceH2Test {
 
         assertNotNull(foundAdDtos.get(0).id());
         assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertTrue(foundAdDtos.get(0).createdDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAdDtos.get(0).createdDateTime().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(1).id());
         assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertTrue(foundAdDtos.get(1).createdDateTime().isBefore(ZonedDateTime.now()));
+        assertFalse(foundAdDtos.get(1).createdDateTime().isAfter(LocalDate.now()));
     }
 
     @Test

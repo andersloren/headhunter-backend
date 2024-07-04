@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.ad;
 
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,23 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test-h2")
-@Transactional
 class AdRepositoryH2Test {
 
     @Autowired
     private AdRepository adRepository;
 
     @Autowired
-    private H2DatabaseInitializer dbInit;
+    private H2DatabaseInitializer h2DbInit;
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeH2Database();
+        this.h2DbInit.initializeH2Database();
     }
 
     @AfterEach
     void tearDown() {
-        this.dbInit.clearDatabase();
+        this.h2DbInit.clearH2Database();
     }
 
     @Test
@@ -41,7 +39,7 @@ class AdRepositoryH2Test {
             System.out.println(ad.getId());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob());
-            System.out.println(ad.getCreatedDateTime());
+            System.out.println(ad.getCreateDate());
         }
 
         assertEquals(allAds.size(), 3);
@@ -55,6 +53,11 @@ class AdRepositoryH2Test {
     @Test
     @DisplayName("getNumberOfAds - Success")
     void test_getNumberOfAds_Success() {
+        List<Ad> all = this.adRepository.findAll();
+        for (Ad ad : all) {
+            System.out.println(ad.toString());
+        }
+
         long numberOfAds = this.adRepository.getNumberOfAds(1L);
 
         assertEquals(numberOfAds, 2);

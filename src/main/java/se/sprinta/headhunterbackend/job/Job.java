@@ -229,10 +229,12 @@ public class Job implements Serializable {
 
     // TODO: 04/07/2024 Remove when going into production?
 
+
     @Override
     public String toString() {
         return "Job{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", instruction='" + instruction + '\'' +
                 ", recruiterName='" + recruiterName + '\'' +
@@ -240,6 +242,8 @@ public class Job implements Serializable {
                 ", adEmail='" + adEmail + '\'' +
                 ", adPhone='" + adPhone + '\'' +
                 ", applicationDeadline='" + applicationDeadline + '\'' +
+                ", account=" + account +
+                ", numberOfAds=" + numberOfAds +
                 '}';
     }
 }

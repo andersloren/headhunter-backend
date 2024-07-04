@@ -124,7 +124,7 @@ class JobControllerMockTest {
         this.mockMvc.perform(get(this.baseUrl + "/findAll").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.message").value("Find All Jobs Success"))
                 .andExpect(jsonPath("$.data[0].id").value(1L))
                 .andExpect(jsonPath("$.data[0].title").value("Title job1 test-h2"))
                 .andExpect(jsonPath("$.data[0].description").value("Description job1 test-h2"))

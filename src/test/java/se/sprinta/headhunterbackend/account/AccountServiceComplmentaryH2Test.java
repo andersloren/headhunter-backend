@@ -1,30 +1,35 @@
 package se.sprinta.headhunterbackend.account;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@ActiveProfiles("test-h2")
 public class AccountServiceComplmentaryH2Test {
 
     @Autowired
     private AccountService accountService;
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private H2DatabaseInitializer dbInit;
+    private H2DatabaseInitializer h2DbInit;
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeH2Database();
+        this.h2DbInit.initializeH2Database();
+    }
+
+    @AfterEach
+    void tearDown() {
+        this.h2DbInit.clearH2Database();
     }
 
     @Test

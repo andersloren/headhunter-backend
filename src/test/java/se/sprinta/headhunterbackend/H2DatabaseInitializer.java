@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
@@ -48,6 +49,9 @@ public class H2DatabaseInitializer {
     @Autowired
     private final AdRepository adRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Getter
     private static List<Account> accounts = new ArrayList<>();
     @Getter
@@ -68,6 +72,8 @@ public class H2DatabaseInitializer {
     }
 
     public void initializeH2Database() {
+
+        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
 
         Account admin = new Account();
         admin.setEmail("admin-h2@hh.se");
@@ -173,28 +179,28 @@ public class H2DatabaseInitializer {
 
     }
 
-    public List<AccountDtoView> initializeAccountDtos() {
+    public List<AccountDtoView> initializeH2AccountDtos() {
         return getAccounts().stream()
                 .map(account -> this.accountToAccountDtoViewConverter.convert(account)).toList();
     }
 
-    public List<JobDtoView> initializeJobDtos() {
+    public List<JobDtoView> initializeH2JobDtos() {
         return getJobs().stream()
                 .map(job -> this.jobToJobDtoViewConverter.convert(job)).toList();
     }
 
-    public List<JobCardDtoView> initializeJobCardDtos() {
+    public List<JobCardDtoView> initializeH2JobCardDtos() {
         return getJobs().stream()
                 .map(job -> this.jobToJobCardDtoViewConverter.convert(job)).toList();
     }
 
-    public List<AdDtoView> initializeAdDtos() {
+    public List<AdDtoView> initializeH2AdDtos() {
         return getAds().stream()
                 .map(ad -> this.adToAdDtoView.convert(ad)).toList();
     }
 
     @Transactional
-    public void clearDatabase() {
+    public void clearH2Database() {
         this.adRepository.deleteAdTable();
         this.jobRepository.deleteJobTable();
         this.accountRepository.deleteAccountTable();

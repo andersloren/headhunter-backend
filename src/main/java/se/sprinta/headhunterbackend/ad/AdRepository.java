@@ -22,13 +22,13 @@ public interface AdRepository extends JpaRepository<Ad, String> {
      * Relationship: [Ad] *...1 [Job]
      */
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createdDateTime, ad.htmlCode) FROM Ad ad")
+    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createDate, ad.htmlCode) FROM Ad ad")
     List<AdDtoView> getAllAdDtos();
 
     @Query("SELECT ad FROM Ad ad WHERE ad.job.id = :jobId")
     List<Ad> getAdsByJobId(Long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createdDateTime, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
+    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createDate, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
     List<AdDtoView> getAdDtosByJobId(long jobId);
 
     @Query("SELECT a.job.account FROM Ad a where a.id = :adId")

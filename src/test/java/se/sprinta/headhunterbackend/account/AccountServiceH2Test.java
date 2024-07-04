@@ -26,16 +26,16 @@ public class AccountServiceH2Test {
     private AccountService accountService;
 
     @Autowired
-    private H2DatabaseInitializer dbInit;
+    private H2DatabaseInitializer h2DbInit;
 
     @BeforeEach
     void setUp() {
-        this.dbInit.initializeH2Database();
+        this.h2DbInit.initializeH2Database();
     }
 
     @AfterEach
     void tearDown() {
-        this.dbInit.clearDatabase();
+        this.h2DbInit.clearH2Database();
     }
 
     @Test

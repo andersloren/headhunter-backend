@@ -49,16 +49,15 @@ public class JobServiceH2Test {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
         this.h2DbInit.initializeH2Database();
         this.jobs = H2DatabaseInitializer.getJobs();
-        this.jobDtos = this.h2DbInit.initializeJobDtos();
-        this.jobCardDtoViews = this.h2DbInit.initializeJobCardDtos();
+        this.jobDtos = this.h2DbInit.initializeH2JobDtos();
+        this.jobCardDtoViews = this.h2DbInit.initializeH2JobCardDtos();
     }
 
     @AfterEach
     void tearDown() {
-        this.h2DbInit.clearDatabase();
+        this.h2DbInit.clearH2Database();
     }
 
     @Test
