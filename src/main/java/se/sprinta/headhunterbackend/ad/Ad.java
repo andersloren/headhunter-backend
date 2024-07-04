@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 /**
  * Ad is an entity that stores AI-generated data based on field values from a job.
@@ -95,5 +96,28 @@ public class Ad implements Serializable {
 
     public void setJob(Job job) {
         this.job = job;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ad ad = (Ad) o;
+        return Objects.equals(id, ad.id) && Objects.equals(htmlCode, ad.htmlCode) && Objects.equals(createdDateTime, ad.createdDateTime) && Objects.equals(job, ad.job);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, htmlCode, createdDateTime, job);
+    }
+
+    // TODO: 04/07/2024 Remove when going into production?
+    @Override
+    public String toString() {
+        return "Ad{" +
+                "id='" + id + '\'' +
+                ", htmlCode='" + htmlCode + '\'' +
+                ", createdDateTime=" + createdDateTime +
+                '}';
     }
 }
