@@ -73,7 +73,10 @@ public class H2DatabaseInitializer {
 
     public void initializeH2Database() {
 
-        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
+//        jdbcTemplate.execute("TRUNCATE TABLE ad");
+//        jdbcTemplate.execute("TRUNCATE TABLE job");
+//        jdbcTemplate.execute("TRUNCATE TABLE account");
+//        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
 
         Account admin = new Account();
         admin.setEmail("admin-h2@hh.se");

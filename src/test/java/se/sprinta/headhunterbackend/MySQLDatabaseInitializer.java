@@ -2,6 +2,7 @@
 package se.sprinta.headhunterbackend;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Disabled;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,9 @@ import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountService;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * * Database entries (User objects, Job objects, and Ad objects) for testing.
  */
@@ -19,6 +23,7 @@ import se.sprinta.headhunterbackend.account.AccountService;
 @Component
 @Profile("test-mysql")
 @Transactional
+@Disabled
 public class MySQLDatabaseInitializer implements CommandLineRunner {
 
     private final AccountService accountService;

@@ -28,6 +28,8 @@ public class JobServiceComplementaryH2Test {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
+
         this.dbInit.initializeH2Database();
     }
 

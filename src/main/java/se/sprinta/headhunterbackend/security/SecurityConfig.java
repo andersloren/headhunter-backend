@@ -120,7 +120,13 @@ public class SecurityConfig {
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/findAll").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.POST, this.baseUrlAd + "/saveAd/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/findById/**").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/getAdsByJobId/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/getAdDtosByJobId/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/getNumberOfAdsByJobId/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/getAccountDtoByAdId/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.POST, this.baseUrlAd + "/addAd/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlAd + "/delete/**").hasAuthority("ROLE_user")
 
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAccount + "/**")).permitAll()
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJob + "/**")).permitAll()

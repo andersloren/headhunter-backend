@@ -12,6 +12,7 @@ import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewCon
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Backend API endpoints for Ad.
@@ -43,8 +44,7 @@ public class AdController {
     @GetMapping("/findById/{adId}")
     public Result findById(@PathVariable String adId) {
         Ad foundAd = this.adService.findById(adId);
-        AdDtoView foundAdDtoView = this.adToAdDtoView.convert(foundAd);
-        return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAdDtoView);
+        return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAd);
     }
 
     /**
@@ -54,17 +54,22 @@ public class AdController {
      * @param jobId The id of the Job object that holds all the ads the user are looking for.
      */
 
-    @GetMapping("/findAllAdsByJobId/{jobId}")
+    @GetMapping("/getAdsByJobId/{jobId}")
     public Result findAllAdsByJobId(@PathVariable Long jobId) {
         List<Ad> foundAds = this.adService.getAdsByJobId(jobId);
-        List<AdDtoView> foundAdDtoViews = foundAds.stream().map(this.adToAdDtoView::convert).toList();
-        return new Result(true, StatusCode.SUCCESS, "Find All Ads By Job Id Success", foundAdDtoViews);
+        return new Result(true, StatusCode.SUCCESS, "Get Ads by Job Id Success", foundAds);
     }
 
-    @GetMapping("/getNumberOfAds/{jobId}")
+    @GetMapping("/getAdDtosByJobId/{jobId}")
+    public Result getAdDtosByJobId(@PathVariable long jobId) {
+        List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(jobId);
+        return new Result(true, StatusCode.SUCCESS, "Get Ad Dtos by Job Id Success", foundAdDtos);
+    }
+
+    @GetMapping("/getNumberOfAdsByJobId/{jobId}")
     public Result getNumberOfAds(@PathVariable Long jobId) {
-        Long numberOfAds = this.adService.getNumberOfAds(jobId);
-        return new Result(true, StatusCode.SUCCESS, "Get Number of Ads Success", numberOfAds);
+        Long numberOfAds = this.adService.getNumberOfAdsByJobId(jobId);
+        return new Result(true, StatusCode.SUCCESS, "Get Number Of Ads by Job Id Success", numberOfAds);
     }
 
     /**
@@ -72,23 +77,22 @@ public class AdController {
      * Relationship: [Ad] *...1 [Job] *...1 [User]
      */
 
-    @GetMapping("/findUserByAdId/{adId}")
+    @GetMapping("/getAccountDtoByAdId/{adId}")
     public Result findUserByAdId(@PathVariable String adId) {
-        Account foundAccount = this.adService.getAccountByAdId(adId);
-        AccountDtoView foundAccountDtoView = this.accountToAccountDtoViewConverter.convert(foundAccount);
-        return new Result(true, StatusCode.SUCCESS, "Find User By Ad Id Success", foundAccountDtoView);
+        AccountDtoView foundAccountDto = this.adService.getAccountDtoByAdId(adId);
+        return new Result(true, StatusCode.SUCCESS, "Get Account Dto By Ad Id Success", foundAccountDto);
     }
 
-    @PostMapping("/saveAd/{jobId}")
+    @PostMapping("/addAd/{jobId}")
     public Result saveAd(@PathVariable Long jobId, @RequestBody AdDtoForm adDtoForm) {
         Ad savedAd = this.adService.addAd(jobId, adDtoForm);
         AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
         return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
     }
 
-    @DeleteMapping("/deleteAd/{adId}")
+    @DeleteMapping("/delete/{adId}")
     public Result deleteAd(@PathVariable String adId) {
         this.adService.delete(adId);
-        return new Result(true, StatusCode.SUCCESS, "Ad Delete Success");
+        return new Result(true, StatusCode.SUCCESS, "Delete Ad Success");
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 
 import java.util.List;
@@ -22,20 +23,20 @@ public interface AdRepository extends JpaRepository<Ad, String> {
      * Relationship: [Ad] *...1 [Job]
      */
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createDate, ad.htmlCode) FROM Ad ad")
+    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad")
     List<AdDtoView> getAllAdDtos();
 
     @Query("SELECT ad FROM Ad ad WHERE ad.job.id = :jobId")
     List<Ad> getAdsByJobId(Long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.createDate, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
+    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
     List<AdDtoView> getAdDtosByJobId(long jobId);
 
-    @Query("SELECT a.job.account FROM Ad a where a.id = :adId")
-    Account getAccountByAdId(String adId);
+    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ad.job.account.email, ad.job.account.roles, ad.job.account.number_of_jobs) FROM Ad ad where ad.id = :adId")
+    AccountDtoView getAccountDtoByAdId(String adId);
 
     @Query("SELECT COUNT(ad) FROM Ad ad WHERE ad.job.id = :jobId")
-    long getNumberOfAds(long jobId);
+    long getNumberOfAdsByJobId(long jobId);
 
     @Modifying
     @Transactional
