@@ -11,12 +11,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,7 @@ public class AdServiceMockTest {
     @InjectMocks
     private AdService adService;
 
+    private List<AccountDtoView> accountDtos = new ArrayList<>();
     private List<Ad> ads = new ArrayList<>();
     private List<AdDtoView> adDtos = new ArrayList<>();
     private List<Job> jobs = new ArrayList<>();
@@ -50,6 +53,7 @@ public class AdServiceMockTest {
         this.ads = MockDatabaseInitializer.initializeMockAds();
         this.adDtos = MockDatabaseInitializer.initializeMockAdDtos();
         this.jobs = MockDatabaseInitializer.initializeMockJobs();
+        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
     }
 
     @Test
@@ -84,7 +88,7 @@ public class AdServiceMockTest {
         List<Ad> foundAds = this.adService.findAll();
         for (Ad ad : foundAds) {
             System.out.println(ad.getId());
-            System.out.println(ad.getCreateDate());
+            System.out.println(ad.getDateCreated());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob().getId());
         }
@@ -92,13 +96,13 @@ public class AdServiceMockTest {
         // Then
         assertEquals(foundAds.size(), this.ads.size());
         assertEquals(foundAds.get(0).getId(), this.ads.get(0).getId());
-        assertEquals(foundAds.get(0).getCreateDate(), this.ads.get(0).getCreateDate());
+        assertEquals(foundAds.get(0).getDateCreated(), this.ads.get(0).getDateCreated());
         assertEquals(foundAds.get(0).getHtmlCode(), this.ads.get(0).getHtmlCode());
         assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getCreateDate(), this.ads.get(1).getCreateDate());
+        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
         assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
         assertEquals(foundAds.get(2).getId(), this.ads.get(2).getId());
-        assertEquals(foundAds.get(2).getCreateDate(), this.ads.get(2).getCreateDate());
+        assertEquals(foundAds.get(2).getDateCreated(), this.ads.get(2).getDateCreated());
         assertEquals(foundAds.get(2).getHtmlCode(), this.ads.get(2).getHtmlCode());
 
         System.out.print("assertEquals: " + foundAds.get(0).getId() + " - ");
@@ -118,17 +122,17 @@ public class AdServiceMockTest {
         List<AdDtoView> foundAdDtos = this.adService.getAllAdDtos();
         for (AdDtoView adDto : foundAdDtos) {
             System.out.println(adDto.id());
-            System.out.println(adDto.createdDateTime());
+            System.out.println(adDto.dateCreated());
             System.out.println(adDto.htmlCode());
         }
 
         // Then
         assertEquals(foundAdDtos.size(), this.adDtos.size());
         assertEquals(foundAdDtos.get(0).id(), this.adDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).createdDateTime(), this.adDtos.get(0).createdDateTime());
+        assertEquals(foundAdDtos.get(0).dateCreated(), this.adDtos.get(0).dateCreated());
         assertEquals(foundAdDtos.get(0).htmlCode(), this.adDtos.get(0).htmlCode());
         assertEquals(foundAdDtos.get(1).id(), this.adDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).createdDateTime(), this.adDtos.get(1).createdDateTime());
+        assertEquals(foundAdDtos.get(1).dateCreated(), this.adDtos.get(1).dateCreated());
         assertEquals(foundAdDtos.get(1).htmlCode(), this.adDtos.get(1).htmlCode());
 
         // Then
@@ -146,7 +150,7 @@ public class AdServiceMockTest {
 
         // Then
         assertEquals(foundAd.getId(), this.ads.get(0).getId());
-        assertEquals(foundAd.getCreateDate(), this.ads.get(0).getCreateDate());
+        assertEquals(foundAd.getDateCreated(), this.ads.get(0).getDateCreated());
         assertEquals(foundAd.getHtmlCode(), this.ads.get(0).getHtmlCode());
         assertEquals(foundAd.getJob().getId(), this.ads.get(0).getJob().getId());
 
@@ -198,7 +202,7 @@ public class AdServiceMockTest {
         List<Ad> foundAds = this.adService.getAdsByJobId(1L);
         for (Ad ad : foundAds) {
             System.out.println(ad.getId());
-            System.out.println(ad.getCreateDate());
+            System.out.println(ad.getDateCreated());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob().getId());
         }
@@ -206,13 +210,13 @@ public class AdServiceMockTest {
         // Then
         assertEquals(foundAds.size(), this.ads.size());
         assertEquals(foundAds.get(0).getId(), this.ads.get(0).getId());
-        assertEquals(foundAds.get(0).getCreateDate(), this.ads.get(0).getCreateDate());
+        assertEquals(foundAds.get(0).getDateCreated(), this.ads.get(0).getDateCreated());
         assertEquals(foundAds.get(0).getHtmlCode(), this.ads.get(0).getHtmlCode());
         assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getCreateDate(), this.ads.get(1).getCreateDate());
+        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
         assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
         assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getCreateDate(), this.ads.get(1).getCreateDate());
+        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
         assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
 
         // Verify
@@ -246,17 +250,17 @@ public class AdServiceMockTest {
         List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(1L);
         for (AdDtoView adDto : foundAdDtos) {
             System.out.println(adDto.id());
-            System.out.println(adDto.createdDateTime());
+            System.out.println(adDto.dateCreated());
             System.out.println(adDto.htmlCode());
         }
 
         // Then
         assertEquals(foundAdDtos.size(), this.adDtos.size());
         assertEquals(foundAdDtos.get(0).id(), this.adDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).createdDateTime(), this.adDtos.get(0).createdDateTime());
+        assertEquals(foundAdDtos.get(0).dateCreated(), this.adDtos.get(0).dateCreated());
         assertEquals(foundAdDtos.get(0).htmlCode(), this.adDtos.get(0).htmlCode());
         assertEquals(foundAdDtos.get(1).id(), this.adDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).createdDateTime(), this.adDtos.get(1).createdDateTime());
+        assertEquals(foundAdDtos.get(1).dateCreated(), this.adDtos.get(1).dateCreated());
         assertEquals(foundAdDtos.get(1).htmlCode(), this.adDtos.get(1).htmlCode());
 
         // Verify
@@ -277,38 +281,24 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAccountByAdId - Success")
-    void test_GetAccountByAdId() {
-        Ad ad = new Ad();
-        ad.setId("id 1");
-        ad.setHtmlCode("html 1");
-
-        Job job = new Job();
-        job.setId(1L);
-
-        ad.setJob(job);
-
-        Account account = new Account();
-        account.setEmail("user1@hh.se");
-
-        job.setAccount(account);
-
+    @DisplayName("getAccountDtoByAdId - Success")
+    void test_GetAccountDtoByAdId_Success() {
         // Given
-        given(this.adRepository.getAccountByAdId("id 1")).willReturn(account);
+        given(this.adRepository.getAccountDtoByAdId("id 1")).willReturn(this.accountDtos.get(0));
 
         // When
-        Account foundAccount = this.adRepository.getAccountByAdId("id 1");
+        AccountDtoView foundAccountDto = this.adRepository.getAccountDtoByAdId("id 1");
 
         // Then
-        assertEquals(foundAccount.getEmail(), account.getEmail());
+        assertEquals(foundAccountDto.email(), this.accountDtos.get(0).email());
 
         // Verify
-        then(this.adRepository).should().getAccountByAdId("id 1");
+        then(this.adRepository).should().getAccountDtoByAdId("id 1");
     }
 
     @Test
-    @DisplayName("getAccountByAdId - Invalid Ad Id - Exception")
-    void test_GetAccountByAdId_InvalidAdId_Exception() {
+    @DisplayName("getAccountDtoByAdId - Invalid Ad Id - Exception")
+    void test_GetAccountDtoByAdId_InvalidAdId_Exception() {
         Account account = new Account();
         account.setEmail("user1@hh.se");
 
@@ -317,7 +307,7 @@ public class AdServiceMockTest {
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.getAccountByAdId("invalid id"));
+                () -> this.adService.getAccountDtoByAdId("invalid id"));
 
         // Then
         assertThat(thrown)
@@ -342,13 +332,13 @@ public class AdServiceMockTest {
         // When
         Ad savedAd = this.adService.addAd(1L, adDtoForm);
         System.out.println(savedAd.getHtmlCode());
-        System.out.println(savedAd.getCreateDate());
+        System.out.println(savedAd.getDateCreated());
 
         // Then
         Ad capturedAd = adArgumentCaptor.getValue();
 
         assertEquals(savedAd.getHtmlCode(), capturedAd.getHtmlCode());
-        assertEquals(savedAd.getCreateDate(), capturedAd.getCreateDate());
+        assertEquals(savedAd.getDateCreated(), capturedAd.getDateCreated());
 
         // Then
         then(this.jobRepository).should().findById(1L);

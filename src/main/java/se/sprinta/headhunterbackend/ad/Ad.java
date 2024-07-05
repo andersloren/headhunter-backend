@@ -32,12 +32,12 @@ public class Ad implements Serializable {
     private String htmlCode;
 
     /**
-     * createdDateTime is a timestamp for when the entity was originally created.
+     * dateCreated is a timestamp for when the entity was originally created.
      * Used for sorting ads chronologically.
      */
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate createDate;
+    private LocalDate dateCreated;
 
     /**
      * Every Ad is part of a Job
@@ -49,7 +49,7 @@ public class Ad implements Serializable {
     private Job job;
 
     public Ad() {
-        this.createDate = LocalDate.now();
+        this.dateCreated = LocalDate.now();
     }
 
     public Ad(String htmlCode) {
@@ -79,8 +79,8 @@ public class Ad implements Serializable {
         this.htmlCode = htmlCode;
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getDateCreated() {
+        return dateCreated;
     }
 
     public Job getJob() {
@@ -96,12 +96,12 @@ public class Ad implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ad ad = (Ad) o;
-        return Objects.equals(id, ad.id) && Objects.equals(htmlCode, ad.htmlCode) && Objects.equals(createDate, ad.createDate) && Objects.equals(job, ad.job);
+        return Objects.equals(id, ad.id) && Objects.equals(htmlCode, ad.htmlCode) && Objects.equals(dateCreated, ad.dateCreated) && Objects.equals(job, ad.job);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, htmlCode, createDate, job);
+        return Objects.hash(id, htmlCode, dateCreated, job);
     }
 
     // TODO: 04/07/2024 Remove when going into production?
@@ -111,7 +111,7 @@ public class Ad implements Serializable {
         return "Ad{" +
                 "id='" + id + '\'' +
                 ", htmlCode='" + htmlCode + '\'' +
-                ", createdDateTime=" + createDate +
+                ", dateCreated=" + dateCreated +
                 ", job=" + job +
                 '}';
     }

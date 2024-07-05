@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
  * Output Ad data format.
  *
  * @param id              The unique identifier of the Ad object.
- * @param createdDateTime The timestamp for when the database entry was originally created.
+ * @param dateCreated The timestamp for when the database entry was originally created.
  * @param htmlCode        The Ad content in HTML format.
  */
 
 public record AdDtoView(
         String id,
-        LocalDate createdDateTime,
+        LocalDate dateCreated,
         String htmlCode
 ) {
 

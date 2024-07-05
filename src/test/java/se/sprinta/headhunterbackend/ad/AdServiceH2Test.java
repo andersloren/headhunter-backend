@@ -72,13 +72,13 @@ public class AdServiceH2Test {
             System.out.println(ad.getId());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob());
-            System.out.println(ad.getCreateDate());
+            System.out.println(ad.getDateCreated());
         }
 
         assertEquals(allAds.size(), 3);
 
         assertEquals(allAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertFalse(allAds.get(0).getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(allAds.get(0).getDateCreated().isAfter(LocalDate.now()));
 
         assertNotNull(allAds.get(0).getId());
         assertEquals(allAds.get(0).getJob().getTitle(), "job1 Title 1");
@@ -90,7 +90,7 @@ public class AdServiceH2Test {
         assertNull(allAds.get(0).getJob().getAdPhone());
         assertEquals(allAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertFalse(allAds.get(1).getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(allAds.get(1).getDateCreated().isAfter(LocalDate.now()));
         assertNotNull(allAds.get(1).getId());
         assertEquals(allAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(allAds.get(1).getJob().getDescription(), "job1 Description 1");
@@ -101,7 +101,7 @@ public class AdServiceH2Test {
         assertNull(allAds.get(1).getJob().getAdPhone());
         assertEquals(allAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(2).getHtmlCode(), "htmlCode 3");
-        assertFalse(allAds.get(2).getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(allAds.get(2).getDateCreated().isAfter(LocalDate.now()));
         assertNotNull(allAds.get(2).getId());
         assertEquals(allAds.get(2).getJob().getTitle(), "job2 Title 2");
         assertEquals(allAds.get(2).getJob().getDescription(), "job2 Description 2");
@@ -121,18 +121,18 @@ public class AdServiceH2Test {
         for (AdDtoView adDti : foundAdDtos) {
             System.out.println(adDti.id());
             System.out.println(adDti.htmlCode());
-            System.out.println(adDti.createdDateTime());
+            System.out.println(adDti.dateCreated());
         }
 
         assertNotNull(foundAdDtos.get(0).id());
         assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertFalse(foundAdDtos.get(0).createdDateTime().isAfter(LocalDate.now()));
+        assertFalse(foundAdDtos.get(0).dateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(1).id());
         assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertFalse(foundAdDtos.get(1).createdDateTime().isAfter(LocalDate.now()));
+        assertFalse(foundAdDtos.get(1).dateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(2).id());
         assertEquals(foundAdDtos.get(2).htmlCode(), "htmlCode 3");
-        assertFalse(foundAdDtos.get(2).createdDateTime().isAfter(LocalDate.now()));
+        assertFalse(foundAdDtos.get(2).dateCreated().isAfter(LocalDate.now()));
 
     }
 
@@ -145,10 +145,10 @@ public class AdServiceH2Test {
 
         System.out.println(foundAd.getId());
         System.out.println(foundAd.getHtmlCode());
-        System.out.println(foundAd.getCreateDate());
+        System.out.println(foundAd.getDateCreated());
 
         assertEquals(foundAd.getHtmlCode(), "htmlCode 1");
-        assertFalse(foundAd.getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(foundAd.getDateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAd.getId());
         assertEquals(foundAd.getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAd.getJob().getDescription(), "job1 Description 1");
@@ -180,11 +180,11 @@ public class AdServiceH2Test {
             System.out.println(ad.getId());
             System.out.println(ad.getHtmlCode());
             System.out.println(ad.getJob());
-            System.out.println(ad.getCreateDate());
+            System.out.println(ad.getDateCreated());
         }
 
         assertEquals(foundAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertFalse(foundAds.get(0).getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(foundAds.get(0).getDateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAds.get(0).getId());
         assertEquals(foundAds.get(0).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(0).getJob().getDescription(), "job1 Description 1");
@@ -195,7 +195,7 @@ public class AdServiceH2Test {
         assertNull(foundAds.get(0).getJob().getAdPhone());
         assertEquals(foundAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(foundAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertFalse(foundAds.get(1).getCreateDate().isAfter(LocalDate.now()));
+        assertFalse(foundAds.get(1).getDateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAds.get(1).getId());
         assertEquals(foundAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(1).getJob().getDescription(), "job1 Description 1");
@@ -215,7 +215,7 @@ public class AdServiceH2Test {
 
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find ad with Id " + Long.MAX_VALUE);
+                .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
     }
 
     @Test
@@ -226,15 +226,15 @@ public class AdServiceH2Test {
         for (AdDtoView adDti : foundAdDtos) {
             System.out.println(adDti.id());
             System.out.println(adDti.htmlCode());
-            System.out.println(adDti.createdDateTime());
+            System.out.println(adDti.dateCreated());
         }
 
         assertNotNull(foundAdDtos.get(0).id());
         assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertFalse(foundAdDtos.get(0).createdDateTime().isAfter(LocalDate.now()));
+        assertFalse(foundAdDtos.get(0).dateCreated().isAfter(LocalDate.now()));
         assertNotNull(foundAdDtos.get(1).id());
         assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertFalse(foundAdDtos.get(1).createdDateTime().isAfter(LocalDate.now()));
+        assertFalse(foundAdDtos.get(1).dateCreated().isAfter(LocalDate.now()));
     }
 
     @Test

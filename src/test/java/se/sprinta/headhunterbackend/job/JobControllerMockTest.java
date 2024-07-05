@@ -322,9 +322,8 @@ class JobControllerMockTest {
         // Given
         doNothing().when(this.jobService).delete("user@hh.se", 1L);
 
-        // When and then
+        // When and Then
         this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/user@hh.se" + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -338,7 +337,6 @@ class JobControllerMockTest {
         doThrow(new ObjectNotFoundException("job", Long.MAX_VALUE)).when(this.jobService).delete("user1@hh.se", Long.MAX_VALUE);
 
         this.mockMvc.perform(delete(this.baseUrl + "/delete" + "/user1@hh.se/" + Long.MAX_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))

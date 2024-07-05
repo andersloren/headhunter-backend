@@ -424,19 +424,19 @@ public class MockDatabaseInitializer {
 
         AdDtoView adDto1 = new AdDtoView(
                 ads.get(0).getId(),
-                ads.get(0).getCreateDate(),
+                ads.get(0).getDateCreated(),
                 ads.get(0).getHtmlCode()
         );
 
         AdDtoView adDto2 = new AdDtoView(
                 ads.get(1).getId(),
-                ads.get(1).getCreateDate(),
+                ads.get(1).getDateCreated(),
                 ads.get(1).getHtmlCode()
         );
 
         AdDtoView adDto3 = new AdDtoView(
                 ads.get(2).getId(),
-                ads.get(2).getCreateDate(),
+                ads.get(2).getDateCreated(),
                 ads.get(2).getHtmlCode()
         );
 

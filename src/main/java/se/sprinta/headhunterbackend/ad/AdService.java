@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.ad;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
@@ -49,7 +50,7 @@ public class AdService {
 
     public List<Ad> getAdsByJobId(long jobId) {
         this.jobRepository.findById(jobId)
-                .orElseThrow(() -> new ObjectNotFoundException("ad", jobId));
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
         return this.adRepository.getAdsByJobId(jobId);
     }
@@ -69,15 +70,18 @@ public class AdService {
      * @return Account The object that is the ultimate owner of the ad.
      */
 
-    public Account getAccountByAdId(String adId) {
+    public AccountDtoView getAccountDtoByAdId(String adId) {
         this.adRepository.findById(adId)
                 .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
 
-        return this.adRepository.getAccountByAdId(adId);
+        return this.adRepository.getAccountDtoByAdId(adId);
     }
 
-    public long getNumberOfAds(long jobId) {
-        return this.adRepository.getNumberOfAds(jobId);
+    public long getNumberOfAdsByJobId(long jobId) {
+        this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+
+        return this.adRepository.getNumberOfAdsByJobId(jobId);
     }
 
     public Ad save(Ad ad) {
