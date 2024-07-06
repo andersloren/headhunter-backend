@@ -31,7 +31,7 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     Optional<AccountDtoView> getAccountDtoByEmail(String email);
 
     @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ac.email, ac.roles, ac.number_of_jobs) FROM Account ac")
-    List<AccountDtoView> getAllAccountDtos();
+    List<AccountDtoView> getAccountDtos();
 
     @Modifying
     @Transactional

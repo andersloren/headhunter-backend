@@ -41,30 +41,22 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Find All Jobs Success", foundJobs);
     }
 
-    @GetMapping("getAllJobDtos")
+    @GetMapping("getJobDtos")
     public Result getAllJobDtos() {
-        List<JobDtoView> foundJobDtos = this.jobService.getAllJobDtos();
-        return new Result(true, StatusCode.SUCCESS, "Find All Jobs Success", foundJobDtos);
+        List<JobDtoView> foundJobDtos = this.jobService.getJobDtos();
+        return new Result(true, StatusCode.SUCCESS, "Find Job Dtos Success", foundJobDtos);
     }
 
-    /**
-     * The user can ask for all Job objects that belong to a User object.
-     * All returned Job objects from jobService are being converted to JobDtoView objects by a stream().
-     *
-     * @param email The id of the User object that holds the Job object that the user is looking for.
-     * @return Result Successful Result object.
-     */
-
-    @GetMapping("/getAllJobCardsByUserEmail/{email}")
+    @GetMapping("/getJobCardsByUserEmail/{email}")
     public Result getAllJobCardDtosByUserEmail(@PathVariable String email) {
-        List<JobCardDtoView> userJobs = this.jobService.getAllJobCardsByUserEmail(email);
-        return new Result(true, StatusCode.SUCCESS, "Find All Job Id and Titles Dtos Successful", userJobs);
+        List<JobCardDtoView> userJobs = this.jobService.getJobCardsByUserEmail(email);
+        return new Result(true, StatusCode.SUCCESS, "Find Job Cards By User Email Successful", userJobs);
     }
 
-    @GetMapping("/getAllJobDtosByUserEmail/{email}")
-    public Result getAllJobsByUserEmail(@PathVariable String email) {
-        List<JobDtoView> userJobs = this.jobService.getAllJobDtosByUserEmail(email);
-        return new Result(true, StatusCode.SUCCESS, "Find All User Jobs Success", userJobs);
+    @GetMapping("/getJobDtosByUserEmail/{email}")
+    public Result getJobsByUserEmail(@PathVariable String email) {
+        List<JobDtoView> userJobs = this.jobService.getJobDtosByUserEmail(email);
+        return new Result(true, StatusCode.SUCCESS, "Find User Job Dtos Success", userJobs);
     }
 
     @GetMapping("/findById/{id}")
@@ -119,9 +111,9 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Generate Ad Success", generatedJobAd);
     }
 
-    @GetMapping("/getAllJobCardDtosByUserEmail/{email}")
+    @GetMapping("/getJobCardDtosByUserEmail/{email}")
     public Result getJobTitles(@PathVariable String email) {
-        List<JobCardDtoView> userJobs = this.jobService.getAllJobCardsByUserEmail(email);
-        return new Result(true, StatusCode.SUCCESS, "Find All Job Titles Success", userJobs);
+        List<JobCardDtoView> userJobs = this.jobService.getJobCardsByUserEmail(email);
+        return new Result(true, StatusCode.SUCCESS, "Find Job Cards Success", userJobs);
     }
 }

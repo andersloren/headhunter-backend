@@ -27,16 +27,16 @@ public interface JobRepository extends JpaRepository<Job, Long> {
      */
 
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j WHERE j.account.email = :userEmail")
-    List<JobDtoView> getAllJobDtosByUserEmail(String userEmail);
+    List<JobDtoView> getJobDtosByUserEmail(String userEmail);
 
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j")
-    List<JobDtoView> getAllJobDtos();
+    List<JobDtoView> getJobDtos();
 
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobDtoView(j.title, j.description, j.recruiterName, j.adCompany, j.adEmail, j.adPhone, j.applicationDeadline) FROM Job j WHERE j.id = :jobId")
     Optional<JobDtoView> getFullJobDtoByJobId(Long jobId);
 
     @Query("SELECT new se.sprinta.headhunterbackend.job.dto.JobCardDtoView(j.id, j.title, j.applicationDeadline) FROM Job j WHERE j.account.email =:email")
-    List<JobCardDtoView> getAllJobCardsByUserEmail(String email);
+    List<JobCardDtoView> getJobCardsByUserEmail(String email);
 
     @Modifying
     @Transactional

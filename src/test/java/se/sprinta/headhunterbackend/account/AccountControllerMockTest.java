@@ -81,7 +81,7 @@ class AccountControllerMockTest {
         this.mockMvc.perform(get(this.baseUrlAccount + "/findAll").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Account Success"))
+                .andExpect(jsonPath("$.message").value("Find All Accounts Success"))
                 .andExpect(jsonPath("$.data[0].email").value("admin-mock@hh.se"))
                 .andExpect(jsonPath("$.data[0].password").isNotEmpty())
                 .andExpect(jsonPath("$.data[0].roles").value("admin"))

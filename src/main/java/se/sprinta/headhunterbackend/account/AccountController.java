@@ -35,13 +35,13 @@ public class AccountController {
     @GetMapping("/findAll")
     public Result findAll() {
         List<Account> foundAccounts = this.accountService.findAll();
-        return new Result(true, StatusCode.SUCCESS, "Find All Account Success", foundAccounts);
+        return new Result(true, StatusCode.SUCCESS, "Find All Accounts Success", foundAccounts);
     }
 
-    @GetMapping("/getAllAccountDtos")
+    @GetMapping("/getAccountDtos")
     public Result getAllAccountDtos() {
-        List<AccountDtoView> foundAccountDtos = this.accountService.getAllAccountDtos();
-        return new Result(true, StatusCode.SUCCESS, "Find All Accounts Success", foundAccountDtos);
+        List<AccountDtoView> foundAccountDtos = this.accountService.getAccountDtos();
+        return new Result(true, StatusCode.SUCCESS, "Find Accounts Dtos Success", foundAccountDtos);
     }
 
     @GetMapping("/validateEmailAvailable/{email}")

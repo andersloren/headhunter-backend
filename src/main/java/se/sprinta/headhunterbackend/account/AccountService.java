@@ -50,8 +50,8 @@ public class AccountService implements UserDetailsService {
     }
 
 
-    public List<AccountDtoView> getAllAccountDtos() {
-        return this.accountRepository.getAllAccountDtos();
+    public List<AccountDtoView> getAccountDtos() {
+        return this.accountRepository.getAccountDtos();
     }
 
     public AccountDtoView getAccountDtoByEmail(String accountEmail) {

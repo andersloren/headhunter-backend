@@ -128,14 +128,14 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtos - Admin Permission - Success")
-    void test_GetAllJobDtos_AdminPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtos")
+    @DisplayName("(GET) getJobDtos - Admin Permission - Success")
+    void test_GetJobDtos_AdminPermission_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtos")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Jobs Success"))
+                .andExpect(jsonPath("$.message").value("Find Job Dtos Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(4)))
                 .andExpect(jsonPath("$.data[0].title").value("job1 Title 1"))
                 .andExpect(jsonPath("$.data[0].description").value("job1 Description 1"))
@@ -168,14 +168,14 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtos - User Permission - Success")
-    void test_GetAllJobDtos_UserPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtos")
+    @DisplayName("(GET) getJobDtos - User Permission - Success")
+    void test_GetJobDtos_UserPermission_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtos")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Jobs Success"))
+                .andExpect(jsonPath("$.message").value("Find Job Dtos Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(4)))
                 .andExpect(jsonPath("$.data[0].title").value("job1 Title 1"))
                 .andExpect(jsonPath("$.data[0].description").value("job1 Description 1"))
@@ -219,15 +219,15 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtosByUserEmail - User Permission - Success")
-    void test_getAllJobDtosByUserEmail_UserPermission_Success() throws Exception {
+    @DisplayName("(GET) getJobDtosByUserEmail - User Permission - Success")
+    void test_getJobDtosByUserEmail_UserPermission_Success() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/user1-mysql@hh.se")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByUserEmail" + "/user1-mysql@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All User Jobs Success"))
+                .andExpect(jsonPath("$.message").value("Find User Job Dtos Success"))
                 .andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].title").value("job1 Title 1"))
                 .andExpect(jsonPath("$.data[0].description").value("job1 Description 1"))
@@ -249,7 +249,7 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     @DisplayName("(GET) getAllJobDtosByUserEmail - User Permission - Invalid Email - Exception")
     void test_getAllJobDtosByUserEmail_UserPermission_InvalidEmail_Exception() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/Invalid Email")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByUserEmail" + "/Invalid Email")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
