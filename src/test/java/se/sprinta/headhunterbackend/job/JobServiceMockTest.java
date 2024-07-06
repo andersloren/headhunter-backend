@@ -99,16 +99,16 @@ class JobServiceMockTest {
     @DisplayName("getAllJobDtos - List<JobDtoView>")
     void testGetAllJobDtos() {
         // Given
-        given(this.jobRepository.getAllJobDtos()).willReturn(this.jobDtos);
+        given(this.jobRepository.getJobDtos()).willReturn(this.jobDtos);
 
         // When
-        List<JobDtoView> actualJobDtos = this.jobService.getAllJobDtos();
+        List<JobDtoView> actualJobDtos = this.jobService.getJobDtos();
 
         // Then
         assertThat(actualJobDtos.size()).isEqualTo(this.jobDtos.size());
 
         // Verify
-        then(this.jobRepository).should().getAllJobDtos();
+        then(this.jobRepository).should().getJobDtos();
     }
 
     @Test
@@ -121,16 +121,16 @@ class JobServiceMockTest {
 
         // Given
         given(this.accountRepository.findById("user@hh.se")).willReturn(Optional.of(account));
-        given(this.jobRepository.getAllJobDtosByUserEmail("user@hh.se")).willReturn(this.jobDtos);
+        given(this.jobRepository.getJobDtosByUserEmail("user@hh.se")).willReturn(this.jobDtos);
 
         // When
-        List<JobDtoView> foundJobs = this.jobService.getAllJobDtosByUserEmail("user@hh.se");
+        List<JobDtoView> foundJobs = this.jobService.getJobDtosByUserEmail("user@hh.se");
 
         // Then
         assertEquals(foundJobs.size(), this.jobs.size());
 
         // Verify
-        then(this.jobRepository).should().getAllJobDtosByUserEmail("user@hh.se");
+        then(this.jobRepository).should().getJobDtosByUserEmail("user@hh.se");
     }
 
 
@@ -139,16 +139,16 @@ class JobServiceMockTest {
     void test_GetAllJobCardsByUserEmail_Success() {
 
         // Given
-        given(this.jobRepository.getAllJobCardsByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
+        given(this.jobRepository.getJobCardsByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
 
         // When
-        List<JobCardDtoView> jobDtos = this.jobService.getAllJobCardsByUserEmail("user@hh.se");
+        List<JobCardDtoView> jobDtos = this.jobService.getJobCardsByUserEmail("user@hh.se");
 
         // Then
         assertEquals(this.jobCardDtoViews.size(), jobDtos.size());
 
         // Verify
-        then(this.jobRepository).should().getAllJobCardsByUserEmail("user@hh.se");
+        then(this.jobRepository).should().getJobCardsByUserEmail("user@hh.se");
     }
 
     @Test

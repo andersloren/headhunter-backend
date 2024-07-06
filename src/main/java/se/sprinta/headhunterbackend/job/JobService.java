@@ -45,19 +45,19 @@ public class JobService {
         return this.jobRepository.findAll();
     }
 
-    public List<JobDtoView> getAllJobDtos() {
-        return this.jobRepository.getAllJobDtos();
+    public List<JobDtoView> getJobDtos() {
+        return this.jobRepository.getJobDtos();
     }
 
-    public List<JobDtoView> getAllJobDtosByUserEmail(String email) {
+    public List<JobDtoView> getJobDtosByUserEmail(String email) {
         this.accountRepository.findById(email)
                 .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
-        return this.jobRepository.getAllJobDtosByUserEmail(email);
+        return this.jobRepository.getJobDtosByUserEmail(email);
     }
 
-    public List<JobCardDtoView> getAllJobCardsByUserEmail(String email) {
-        return this.jobRepository.getAllJobCardsByUserEmail(email);
+    public List<JobCardDtoView> getJobCardsByUserEmail(String email) {
+        return this.jobRepository.getJobCardsByUserEmail(email);
     }
 
     public Job findById(long jobId) {

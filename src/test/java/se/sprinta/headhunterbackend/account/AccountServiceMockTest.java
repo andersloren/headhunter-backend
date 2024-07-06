@@ -112,10 +112,10 @@ class AccountServiceMockTest {
     @DisplayName("getAllAccountDtoViews - Success")
     void test_GetAllAccountDtos_Success() {
         // Given
-        given(this.accountRepository.getAllAccountDtos()).willReturn(this.accountDtos);
+        given(this.accountRepository.getAccountDtos()).willReturn(this.accountDtos);
 
         // When
-        List<AccountDtoView> allAccountDtos = this.accountService.getAllAccountDtos();
+        List<AccountDtoView> allAccountDtos = this.accountService.getAccountDtos();
 
         // Then
         assertThat(allAccountDtos.size()).isEqualTo(this.accountDtos.size());

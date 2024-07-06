@@ -87,7 +87,7 @@ public class JobServiceH2Test {
     @Test
     @DisplayName("getAllJobDtos - Success")
     void test_GetAllJobDtos_Success() {
-        List<JobDtoView> allJobDtos = this.jobService.getAllJobDtos();
+        List<JobDtoView> allJobDtos = this.jobService.getJobDtos();
 
         System.out.println(allJobDtos.size());
         System.out.println(allJobDtos.get(0).title());
@@ -111,7 +111,7 @@ public class JobServiceH2Test {
     @DisplayName("getAllJobDtosByUserEmail - Success")
     void test_GetAllJobsByUserEmail_Success() {
         String email = "user1-h2@hh.se";
-        List<JobDtoView> allJobDtos = this.jobService.getAllJobDtosByUserEmail(email);
+        List<JobDtoView> allJobDtos = this.jobService.getJobDtosByUserEmail(email);
 
         for (int i = 0; i < allJobDtos.size(); i++) {
             if (!allJobDtos.get(i).equals(this.jobDtos.get(i))) {
@@ -131,7 +131,7 @@ public class JobServiceH2Test {
     @DisplayName("getAllJobCardsByUserEmail - Success")
     void test_GetAllJobCardsByUserEmail_Success() {
         String email = "user1-h2@hh.se";
-        List<JobCardDtoView> allJobs = this.jobService.getAllJobCardsByUserEmail(email);
+        List<JobCardDtoView> allJobs = this.jobService.getJobCardsByUserEmail(email);
 
         assertEquals(2, allJobs.size());
         for (int i = 0; i < allJobs.size(); i++) {
