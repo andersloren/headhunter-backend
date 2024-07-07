@@ -47,9 +47,9 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Find Job Dtos Success", foundJobDtos);
     }
 
-    @GetMapping("/getJobCardsByUserEmail/{email}")
+    @GetMapping("/getJobCardDtosByUserEmail/{email}")
     public Result getAllJobCardDtosByUserEmail(@PathVariable String email) {
-        List<JobCardDtoView> userJobs = this.jobService.getJobCardsByUserEmail(email);
+        List<JobCardDtoView> userJobs = this.jobService.getJobCardDtosByUserEmail(email);
         return new Result(true, StatusCode.SUCCESS, "Find Job Cards By User Email Successful", userJobs);
     }
 
@@ -59,13 +59,13 @@ public class JobController {
         return new Result(true, StatusCode.SUCCESS, "Find User Job Dtos Success", userJobs);
     }
 
-    @GetMapping("/findById/{id}")
-    public Result findById(@PathVariable Long id) {
-        Job foundJob = this.jobService.findById(id);
+    @GetMapping("/findById/{jobId}")
+    public Result findById(@PathVariable Long jobId) {
+        Job foundJob = this.jobService.findById(jobId);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", foundJob);
     }
 
-    @GetMapping("/getJobById/{id}")
+    @GetMapping("/getJobDtoById/{id}")
     public Result getJobById(@PathVariable Long id) {
         JobDtoView JobDtoView = this.jobService.getFullJobDtoByJobId(id);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", JobDtoView);
@@ -109,11 +109,5 @@ public class JobController {
     public Result generateAd(@PathVariable Long jobId) {
         String generatedJobAd = this.jobService.generate(jobId);
         return new Result(true, StatusCode.SUCCESS, "Generate Ad Success", generatedJobAd);
-    }
-
-    @GetMapping("/getJobCardDtosByUserEmail/{email}")
-    public Result getJobTitles(@PathVariable String email) {
-        List<JobCardDtoView> userJobs = this.jobService.getJobCardsByUserEmail(email);
-        return new Result(true, StatusCode.SUCCESS, "Find Job Cards Success", userJobs);
     }
 }

@@ -131,7 +131,7 @@ public class JobServiceH2Test {
     @DisplayName("getAllJobCardsByUserEmail - Success")
     void test_GetAllJobCardsByUserEmail_Success() {
         String email = "user1-h2@hh.se";
-        List<JobCardDtoView> allJobs = this.jobService.getJobCardsByUserEmail(email);
+        List<JobCardDtoView> allJobs = this.jobService.getJobCardDtosByUserEmail(email);
 
         assertEquals(2, allJobs.size());
         for (int i = 0; i < allJobs.size(); i++) {

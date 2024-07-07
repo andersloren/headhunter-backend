@@ -56,8 +56,8 @@ public class JobService {
         return this.jobRepository.getJobDtosByUserEmail(email);
     }
 
-    public List<JobCardDtoView> getJobCardsByUserEmail(String email) {
-        return this.jobRepository.getJobCardsByUserEmail(email);
+    public List<JobCardDtoView> getJobCardDtosByUserEmail(String email) {
+        return this.jobRepository.getJobCardDtosByUserEmail(email);
     }
 
     public Job findById(long jobId) {
