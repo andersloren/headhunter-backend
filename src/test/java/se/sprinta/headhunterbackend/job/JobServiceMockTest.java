@@ -139,16 +139,16 @@ class JobServiceMockTest {
     void test_GetAllJobCardsByUserEmail_Success() {
 
         // Given
-        given(this.jobRepository.getJobCardsByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
+        given(this.jobRepository.getJobCardDtosByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
 
         // When
-        List<JobCardDtoView> jobDtos = this.jobService.getJobCardsByUserEmail("user@hh.se");
+        List<JobCardDtoView> jobDtos = this.jobService.getJobCardDtosByUserEmail("user@hh.se");
 
         // Then
         assertEquals(this.jobCardDtoViews.size(), jobDtos.size());
 
         // Verify
-        then(this.jobRepository).should().getJobCardsByUserEmail("user@hh.se");
+        then(this.jobRepository).should().getJobCardDtosByUserEmail("user@hh.se");
     }
 
     @Test
