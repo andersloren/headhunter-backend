@@ -3,6 +3,7 @@ package se.sprinta.headhunterbackend.job;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.ad.Ad;
+import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
@@ -28,13 +29,15 @@ import java.util.List;
 @Transactional
 public class JobService {
     private final JobRepository jobRepository;
+    private final AdRepository adRepository;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final ChatClient chatClient;
     private final HtmlUtilities htmlUtilities;
 
-    public JobService(JobRepository jobRepository, AccountRepository accountRepository, AccountService accountService, ChatClient chatClient, HtmlUtilities htmlUtilities) {
+    public JobService(JobRepository jobRepository, AdRepository adRepository, AccountRepository accountRepository, AccountService accountService, ChatClient chatClient, HtmlUtilities htmlUtilities) {
         this.jobRepository = jobRepository;
+        this.adRepository = adRepository;
         this.accountRepository = accountRepository;
         this.accountService = accountService;
         this.chatClient = chatClient;
@@ -144,7 +147,7 @@ public class JobService {
         foundJob.addAd(newHtmlAd);
         newHtmlAd.setJob(foundJob);
 
-        this.jobRepository.save(foundJob);
+        this.adRepository.save(newHtmlAd);
         return substringResponse;
     }
 }

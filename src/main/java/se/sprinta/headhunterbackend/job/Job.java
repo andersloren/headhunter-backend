@@ -56,15 +56,15 @@ public class Job implements Serializable {
      * Contact information
      */
 
-    private String recruiterName;
+    private String recruiterName = "";
 
-    private String adCompany;
+    private String adCompany = "";
 
-    private String adEmail;
+    private String adEmail = "";
 
-    private String adPhone;
+    private String adPhone = "";
 
-    private String applicationDeadline;
+    private String applicationDeadline = "";
 
     /**
      * The job belongs to an account.
