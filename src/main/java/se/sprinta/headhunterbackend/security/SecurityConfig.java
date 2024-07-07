@@ -107,13 +107,14 @@ public class SecurityConfig {
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findAll").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findById/{id}").hasAuthority("ROLE_admin")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobDtosByUserEmail/{email}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobCardDtosByUserEmail/{email}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.POST, this.baseUrlJob + "/addJob/{id}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.PUT, this.baseUrlJob + "/update/{id}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.DELETE, this.baseUrlJob + "/delete/{email}/{id}").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/generate/{id}").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findById/**").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobDtosByUserEmail/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getAllJobCardDtosByUserEmail/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/getJobDtoById/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.POST, this.baseUrlJob + "/addJob/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.PUT, this.baseUrlJob + "/update/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlJob + "/delete/{email}/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/generate/**").hasAuthority("ROLE_user")
 
                                 /**
                                  * Ad requests
