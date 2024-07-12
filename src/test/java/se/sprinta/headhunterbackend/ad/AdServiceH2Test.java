@@ -218,6 +218,8 @@ public class AdServiceH2Test {
     void test_GetAdDtosByJobId_Success() {
         List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(1L);
 
+        System.out.println("Initialize array print outs");
+        System.out.println("foundAdDtos size: " + foundAdDtos.size());
         for (AdDtoView adDti : foundAdDtos) {
             System.out.println(adDti.id());
             System.out.println(adDti.htmlCode());

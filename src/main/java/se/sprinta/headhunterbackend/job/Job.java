@@ -20,7 +20,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+    @Entity
 @Table(name = "job")
 public class Job implements Serializable {
 

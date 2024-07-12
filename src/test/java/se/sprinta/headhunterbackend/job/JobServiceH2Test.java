@@ -50,7 +50,6 @@ public class JobServiceH2Test {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-
         this.h2DbInit.initializeH2Database();
         this.jobs = H2DatabaseInitializer.getJobs();
         this.jobDtos = this.h2DbInit.initializeH2JobDtos();
@@ -66,6 +65,18 @@ public class JobServiceH2Test {
     @DisplayName("findAll - Success")
     void test_FindAllSuccess_Success() {
         List<Job> allJobs = this.jobService.findAll();
+
+        System.out.println("allJobs size: " + allJobs.size());
+        for (Job job : allJobs) {
+            System.out.println(job.getId());
+            System.out.println(job.getTitle());
+            System.out.println(job.getDescription());
+            System.out.println(job.getInstruction());
+            System.out.println(job.getAdCompany());
+            System.out.println(job.getAdEmail());
+            System.out.println(job.getAdPhone());
+            System.out.println(job.getApplicationDeadline());
+        }
 
         assertEquals(allJobs.size(), 4);
 
