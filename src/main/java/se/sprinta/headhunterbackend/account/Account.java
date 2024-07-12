@@ -53,8 +53,7 @@ public class Account implements Serializable {
      * Relationship: [Account] 1...* [Job]
      */
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER
-            , cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
 

@@ -4,7 +4,6 @@ spring:
   datasource:
     profiles:
       active: test-h2
-    #    url: jdbc:h2:mem:${Headhunter_H2_Test_Env}
     url: jdbc:h2:mem:headhunter-test-h2
     driverClassName: org.h2.Driver
     username: ${H2_Test_Username}

@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.Ad;
+import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
@@ -38,10 +39,10 @@ class JobServiceMockTest {
 
     @Mock
     private JobRepository jobRepository;
-
+    @Mock
+    private AdRepository adRepository;
     @Mock
     private AccountRepository accountRepository;
-
     @Mock
     private ChatClient chatClient;
     @Mock
@@ -78,7 +79,7 @@ class JobServiceMockTest {
             System.out.println(jobCardDto.toString());
         }
     }
-    
+
     @Test
     @DisplayName("findAllJobs - List<Job>")
     void testFindAllJobs() {
@@ -427,23 +428,28 @@ class JobServiceMockTest {
         List<Choice> choices = List.of(choice);
         ChatResponse chatResponse = new ChatResponse(choices);
 
+        Ad ad = new Ad();
+        ad.setHtmlCode("<!DOCTYPE html><html><body>generate content</body></html>");
+
+        job.addAd(ad);
+
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(job));
-        given(this.jobRepository.save(job)).willReturn(job);
         given(this.chatClient.generate(chatRequest)).willReturn(chatResponse);
         given(this.htmlUtilities.makeHtmlResponseSubstring(response)).willReturn(response);
+        given(this.adRepository.save(ad)).willReturn(ad);
 
         // When
         String substringResponse = this.jobService.generate(job.getId());
 
         // Then
         ArgumentCaptor<ChatRequest> chatRequestArgumentCaptor = ArgumentCaptor.forClass(ChatRequest.class);
-        ArgumentCaptor<Job> jobArgumentCaptor = ArgumentCaptor.forClass(Job.class);
+        ArgumentCaptor<Ad> adArgumentCaptor = ArgumentCaptor.forClass(Ad.class);
 
         // Verify
         then(this.jobRepository).should().findById(job.getId());
         verify(this.chatClient).generate(chatRequestArgumentCaptor.capture());
-        then(this.jobRepository).should().save(jobArgumentCaptor.capture());
+        then(this.adRepository).should().save(adArgumentCaptor.capture());
 
         // Assert
         ChatRequest capturedChatRequest = chatRequestArgumentCaptor.getValue();
@@ -452,13 +458,8 @@ class JobServiceMockTest {
         assertEquals("system", capturedMessages.get(0).role());
         assertEquals("instruction", capturedMessages.get(0).content());
         assertEquals("user", capturedMessages.get(1).role());
-        assertEquals("description", capturedMessages.get(1).content());
 
-        Job capturedJob = jobArgumentCaptor.getValue();
-        assertNotNull(capturedJob);
-        assertEquals(1, capturedJob.getAds().size());
-
-        Ad capturedAd = capturedJob.getAds().get(0);
+        Ad capturedAd = adArgumentCaptor.getValue();
         assertEquals("<!DOCTYPE html><html><body>generate content</body></html>", capturedAd.getHtmlCode());
         assertEquals("<!DOCTYPE html><html><body>generate content</body></html>", substringResponse);
     }
