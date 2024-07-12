@@ -303,40 +303,22 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobById - Admin Permission - Success")
-    void test_GetJobById_AdminPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobById" + "/1")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.title").value("job1 Title 1"))
-                .andExpect(jsonPath("$.data.description").value("job1 Description 1"))
-                .andExpect(jsonPath("$.data.recruiterName").isEmpty())
-                .andExpect(jsonPath("$.data.adCompany").isEmpty())
-                .andExpect(jsonPath("$.data.adEmail").isEmpty())
-                .andExpect(jsonPath("$.data.adPhone").isEmpty())
-                .andExpect(jsonPath("$.data.applicationDeadline").isEmpty());
-    }
-
-    @Test
-    @DisplayName("(GET) getJobById - Admin Permission - Invalid Id - Exception")
-    void test_GetJobById_AdminPermission_InvalidId_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobById" + "/" + Long.MAX_VALUE)
+    @DisplayName("(GET) getJobDtoById - Admin No Permission - Success")
+    void test_GetJobDtoById_AdminNoPermission_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find job with Id " + +Long.MAX_VALUE))
-                .andExpect(jsonPath("$.data").isEmpty());
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
     @Test
-    @DisplayName("(GET) getJobById - User Permission - Success")
-    void test_GetJobById_UserPermission_Success() throws Exception {
+    @DisplayName("(GET) getJobDtoById - User Permission - Success")
+    void test_GetJobDtoById_UserPermission_Success() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobById" + "/1")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -352,10 +334,10 @@ public class JobControllerAuthorityIntegrationMySQLTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobById - User Permission - Invalid Id - Exception")
-    void test_GetJobById_UserPermission_InvalidId_Exception() throws Exception {
+    @DisplayName("(GET) getJobDtoById - User Permission - Invalid Id - Exception")
+    void test_GetJobDtoById_UserPermission_InvalidId_Exception() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobById" + "/" + Long.MAX_VALUE)
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))

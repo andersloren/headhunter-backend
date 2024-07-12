@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.H2DatabaseInitializer;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
@@ -16,7 +15,6 @@ import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +46,6 @@ public class AdServiceH2Test {
 
     @BeforeEach
     void setUp() {
-/*        jdbcTemplate.execute("DELETE TABLE ad");
-        jdbcTemplate.execute("DELETE TABLE job");
-        jdbcTemplate.execute("DELETE TABLE account");*/
         jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
         this.h2DbInit.initializeH2Database();
         this.jobs = H2DatabaseInitializer.getJobs();
@@ -84,10 +79,10 @@ public class AdServiceH2Test {
         assertEquals(allAds.get(0).getJob().getTitle(), "job1 Title 1");
         assertEquals(allAds.get(0).getJob().getDescription(), "job1 Description 1");
         assertEquals(allAds.get(0).getJob().getInstruction(), "job1 Instruction 1");
-        assertNull(allAds.get(0).getJob().getRecruiterName());
-        assertNull(allAds.get(0).getJob().getAdCompany());
-        assertNull(allAds.get(0).getJob().getAdEmail());
-        assertNull(allAds.get(0).getJob().getAdPhone());
+        assertEquals(allAds.get(0).getJob().getRecruiterName(), "");
+        assertEquals(allAds.get(0).getJob().getAdCompany(), "");
+        assertEquals(allAds.get(0).getJob().getAdEmail(), "");
+        assertEquals(allAds.get(0).getJob().getAdPhone(), "");
         assertEquals(allAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(1).getHtmlCode(), "htmlCode 2");
         assertFalse(allAds.get(1).getDateCreated().isAfter(LocalDate.now()));
@@ -95,10 +90,10 @@ public class AdServiceH2Test {
         assertEquals(allAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(allAds.get(1).getJob().getDescription(), "job1 Description 1");
         assertEquals(allAds.get(1).getJob().getInstruction(), "job1 Instruction 1");
-        assertNull(allAds.get(1).getJob().getRecruiterName());
-        assertNull(allAds.get(1).getJob().getAdCompany());
-        assertNull(allAds.get(1).getJob().getAdEmail());
-        assertNull(allAds.get(1).getJob().getAdPhone());
+        assertEquals(allAds.get(1).getJob().getRecruiterName(), "");
+        assertEquals(allAds.get(1).getJob().getAdCompany(), "");
+        assertEquals(allAds.get(1).getJob().getAdEmail(), "");
+        assertEquals(allAds.get(1).getJob().getAdPhone(), "");
         assertEquals(allAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(allAds.get(2).getHtmlCode(), "htmlCode 3");
         assertFalse(allAds.get(2).getDateCreated().isAfter(LocalDate.now()));
@@ -106,10 +101,10 @@ public class AdServiceH2Test {
         assertEquals(allAds.get(2).getJob().getTitle(), "job2 Title 2");
         assertEquals(allAds.get(2).getJob().getDescription(), "job2 Description 2");
         assertEquals(allAds.get(2).getJob().getInstruction(), "job2 Instruction 2");
-        assertNull(allAds.get(2).getJob().getRecruiterName());
-        assertNull(allAds.get(2).getJob().getAdCompany());
-        assertNull(allAds.get(2).getJob().getAdEmail());
-        assertNull(allAds.get(2).getJob().getAdPhone());
+        assertEquals(allAds.get(2).getJob().getRecruiterName(), "");
+        assertEquals(allAds.get(2).getJob().getAdCompany(), "");
+        assertEquals(allAds.get(2).getJob().getAdEmail(), "");
+        assertEquals(allAds.get(2).getJob().getAdPhone(), "");
         assertEquals(allAds.get(2).getJob().getApplicationDeadline(), "job2 applicationDeadline 2");
     }
 
@@ -153,10 +148,10 @@ public class AdServiceH2Test {
         assertEquals(foundAd.getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAd.getJob().getDescription(), "job1 Description 1");
         assertEquals(foundAd.getJob().getInstruction(), "job1 Instruction 1");
-        assertNull(foundAd.getJob().getRecruiterName());
-        assertNull(foundAd.getJob().getAdCompany());
-        assertNull(foundAd.getJob().getAdEmail());
-        assertNull(foundAd.getJob().getAdPhone());
+        assertEquals(foundAd.getJob().getRecruiterName(), "");
+        assertEquals(foundAd.getJob().getAdCompany(), "");
+        assertEquals(foundAd.getJob().getAdEmail(), "");
+        assertEquals(foundAd.getJob().getAdPhone(), "");
         assertEquals(foundAd.getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
     }
 
@@ -189,10 +184,10 @@ public class AdServiceH2Test {
         assertEquals(foundAds.get(0).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(0).getJob().getDescription(), "job1 Description 1");
         assertEquals(foundAds.get(0).getJob().getInstruction(), "job1 Instruction 1");
-        assertNull(foundAds.get(0).getJob().getRecruiterName());
-        assertNull(foundAds.get(0).getJob().getAdCompany());
-        assertNull(foundAds.get(0).getJob().getAdEmail());
-        assertNull(foundAds.get(0).getJob().getAdPhone());
+        assertEquals(foundAds.get(0).getJob().getRecruiterName(), "");
+        assertEquals(foundAds.get(0).getJob().getAdCompany(), "");
+        assertEquals(foundAds.get(0).getJob().getAdEmail(), "");
+        assertEquals(foundAds.get(0).getJob().getAdPhone(), "");
         assertEquals(foundAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
         assertEquals(foundAds.get(1).getHtmlCode(), "htmlCode 2");
         assertFalse(foundAds.get(1).getDateCreated().isAfter(LocalDate.now()));
@@ -200,10 +195,10 @@ public class AdServiceH2Test {
         assertEquals(foundAds.get(1).getJob().getTitle(), "job1 Title 1");
         assertEquals(foundAds.get(1).getJob().getDescription(), "job1 Description 1");
         assertEquals(foundAds.get(1).getJob().getInstruction(), "job1 Instruction 1");
-        assertNull(foundAds.get(1).getJob().getRecruiterName());
-        assertNull(foundAds.get(1).getJob().getAdCompany());
-        assertNull(foundAds.get(1).getJob().getAdEmail());
-        assertNull(foundAds.get(1).getJob().getAdPhone());
+        assertEquals(foundAds.get(1).getJob().getRecruiterName(), "");
+        assertEquals(foundAds.get(1).getJob().getAdCompany(), "");
+        assertEquals(foundAds.get(1).getJob().getAdEmail(), "");
+        assertEquals(foundAds.get(1).getJob().getAdPhone(), "");
         assertEquals(foundAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
     }
 
