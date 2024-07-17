@@ -13,7 +13,7 @@ public class HtmlUtilities {
         int cutEnd = response.lastIndexOf("</html>") + "</html>".length();
 
         // Extracting the substring
-        if (cutBeginning == -1 || cutEnd == -1 || cutEnd <= cutBeginning)
+        if (cutBeginning == -1 || cutEnd <= cutBeginning)
             throw new IllegalArgumentException("AI response is not valid HTML code");
 
         return response.substring(cutBeginning, cutEnd);

@@ -1,13 +1,8 @@
 package se.sprinta.headhunterbackend;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
-import se.sprinta.headhunterbackend.account.Account;
-import se.sprinta.headhunterbackend.job.Job;
 
 @Log4j2
 @SpringBootApplication

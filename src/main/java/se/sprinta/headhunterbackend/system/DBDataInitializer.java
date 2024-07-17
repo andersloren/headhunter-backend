@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import se.sprinta.headhunterbackend.accountInfo.AccountInfoService;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountService;
 
@@ -18,11 +17,9 @@ import se.sprinta.headhunterbackend.account.AccountService;
 public class DBDataInitializer implements CommandLineRunner {
 
     private final AccountService accountService;
-    private final AccountInfoService accountInfoService;
 
-    public DBDataInitializer(AccountService accountService, AccountInfoService accountInfoService) {
+    public DBDataInitializer(AccountService accountService) {
         this.accountService = accountService;
-        this.accountInfoService = accountInfoService;
     }
 
     @Override
