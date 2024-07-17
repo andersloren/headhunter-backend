@@ -1,18 +1,14 @@
 package se.sprinta.headhunterbackend.ad;
 
 import org.springframework.web.bind.annotation.*;
-import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.converter.AdToAdDtoView;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
-import se.sprinta.headhunterbackend.account.Account;
-import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewConverter;
-import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Backend API endpoints for Ad.
@@ -24,14 +20,10 @@ import java.util.stream.Collectors;
 public class AdController {
 
     private final AdService adService;
-    private final AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
-    private final AdDtoFormToAdConverter adDtoFormToAdConverter;
     private final AdToAdDtoView adToAdDtoView;
 
-    public AdController(AdService adService, AccountToAccountDtoViewConverter accountToAccountDtoViewConverter, AdDtoFormToAdConverter adDtoFormToAdConverter, AdToAdDtoView adToAdDtoView) {
+    public AdController(AdService adService, AdToAdDtoView adToAdDtoView) {
         this.adService = adService;
-        this.accountToAccountDtoViewConverter = accountToAccountDtoViewConverter;
-        this.adDtoFormToAdConverter = adDtoFormToAdConverter;
         this.adToAdDtoView = adToAdDtoView;
     }
 

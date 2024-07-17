@@ -3,14 +3,11 @@ package se.sprinta.headhunterbackend.ad;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
-import se.sprinta.headhunterbackend.ad.converter.AdDtoFormToAdConverter;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
-import se.sprinta.headhunterbackend.job.JobService;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.account.Account;
 
 import java.util.List;
 
@@ -23,16 +20,11 @@ import java.util.List;
 public class AdService {
 
     private final AdRepository adRepository;
-    private final JobService jobService;
     private final JobRepository jobRepository;
 
-    private final AdDtoFormToAdConverter adDtoFormToAdConverter;
-
-    public AdService(AdRepository adRepository, JobService jobService, JobRepository jobRepository, AdDtoFormToAdConverter adDtoFormToAdConverter) {
+    public AdService(AdRepository adRepository, JobRepository jobRepository) {
         this.adRepository = adRepository;
-        this.jobService = jobService;
         this.jobRepository = jobRepository;
-        this.adDtoFormToAdConverter = adDtoFormToAdConverter;
     }
 
     public List<Ad> findAll() {
