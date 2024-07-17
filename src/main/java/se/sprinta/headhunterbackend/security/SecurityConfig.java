@@ -7,14 +7,11 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,8 +31,6 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
 public class SecurityConfig {
@@ -91,8 +86,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                                /**
-                                 * Account requests
+                                /*
+                                  Account requests
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
@@ -102,8 +97,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
 
 
-                                /**
-                                 * Job requests
+                                /*
+                                 Job requests
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/findAll").hasAuthority("ROLE_admin")
@@ -116,8 +111,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlJob + "/delete/{email}/**").hasAuthority("ROLE_user")
                                 .requestMatchers(HttpMethod.GET, this.baseUrlJob + "/generate/**").hasAuthority("ROLE_user")
 
-                                /**
-                                 * Ad requests
+                                /*
+                                  Ad requests
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlAd + "/findAll").hasAuthority("ROLE_admin")
