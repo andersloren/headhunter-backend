@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, String> {
 
     /**
-     * Returns a Account object.
+     * Returns an Account object.
      * Note that Email is the id of an Account object.
      */
 
@@ -35,6 +35,6 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM Account", nativeQuery = true)
+    @Query(value = "DELETE FROM account", nativeQuery = true)
     void deleteAccountTable();
 }
