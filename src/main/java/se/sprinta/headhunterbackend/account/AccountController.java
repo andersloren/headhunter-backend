@@ -3,13 +3,12 @@ package se.sprinta.headhunterbackend.account;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.*;
-import se.sprinta.headhunterbackend.account.converter.AccountDtoFormUpdateToAccountConverter;
-import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
-import se.sprinta.headhunterbackend.system.Result;
-import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.account.converter.AccountToAccountDtoViewConverter;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.Result;
+import se.sprinta.headhunterbackend.system.StatusCode;
 
 import java.util.List;
 
@@ -24,12 +23,10 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
-    private final AccountDtoFormUpdateToAccountConverter accountDtoFormUpdateToAccountConverter;
 
-    public AccountController(AccountService accountService, AccountToAccountDtoViewConverter accountToAccountDtoViewConverter, AccountDtoFormUpdateToAccountConverter accountDtoFormUpdateToAccountConverter) {
+    public AccountController(AccountService accountService, AccountToAccountDtoViewConverter accountToAccountDtoViewConverter) {
         this.accountService = accountService;
         this.accountToAccountDtoViewConverter = accountToAccountDtoViewConverter;
-        this.accountDtoFormUpdateToAccountConverter = accountDtoFormUpdateToAccountConverter;
     }
 
     @GetMapping("/findAll")

@@ -1,7 +1,6 @@
 package se.sprinta.headhunterbackend.ad.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Output Ad data format.

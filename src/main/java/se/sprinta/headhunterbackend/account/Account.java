@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.query.named.FetchMemento;
 import se.sprinta.headhunterbackend.accountInfo.AccountInfo;
 import se.sprinta.headhunterbackend.job.Job;
 
@@ -26,10 +26,12 @@ import java.util.Objects;
 @Table(name = "account")
 public class Account implements Serializable {
 
+    @Getter
     @Id
     @NotEmpty(message = "email is required.") // Is checked on AccountDtoForm when registering a new Account
     private String email;
 
+    @Getter
     @NotEmpty(message = "password is required.") // Is checked on AccountDtoForm when registering a new Account
     private String password;
 
@@ -37,12 +39,14 @@ public class Account implements Serializable {
      * An Account object has specific roles that gives its user authorities to certain parts of the app.
      */
 
+    @Getter
     private String roles;
 
     /**
      * An Account object has an integer number of jobs.
      */
 
+    @Getter
     private long number_of_jobs;
 
     @OneToOne(mappedBy = "account")
@@ -53,6 +57,7 @@ public class Account implements Serializable {
      * Relationship: [Account] 1...* [Job]
      */
 
+    @Getter
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
@@ -81,55 +86,25 @@ public class Account implements Serializable {
         oldJob.setAccount(null);
     }
 
-    public long getNumber_of_jobs() {
-        return this.number_of_jobs;
-    }
-
     public void setNumber_of_jobs() {
         this.number_of_jobs = this.jobs.size();
-    }
-
-    public List<Job> getJobs() {
-        return jobs;
     }
 
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-
     public void setRoles(String roles) {
         this.roles = roles;
     }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) return true;
-//        if (this != obj || getClass() != obj.getClass()) return false;
-//
-//        Account account = (Account) obj;
-//        return email.equals(account.email) && (Objects.equals(email, account.email));
-//    }
-
 
     @Override
     public boolean equals(Object o) {

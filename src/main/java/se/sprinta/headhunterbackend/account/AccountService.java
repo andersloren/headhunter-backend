@@ -1,9 +1,6 @@
 package se.sprinta.headhunterbackend.account;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -111,9 +108,8 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDetails userDetails = this.accountRepository.findAccountByEmail(email) // First, we need to find this user from database.
+        return this.accountRepository.findAccountByEmail(email) // First, we need to find this user from database.
                 .map(MyAccountPrincipal::new) // If found, wrap the returned user instance in a MyAccountPrincipal instance.
-                .orElseThrow(() -> new UsernameNotFoundException("email " + email + " is not found")); // Otherwise, throw an exception.
-        return userDetails;
+                .orElseThrow(() -> new UsernameNotFoundException("email " + email + " is not found"));
     }
 }

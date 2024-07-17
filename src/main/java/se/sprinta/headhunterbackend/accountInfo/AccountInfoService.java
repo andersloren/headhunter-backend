@@ -3,17 +3,14 @@ package se.sprinta.headhunterbackend.accountInfo;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.accountInfo.dto.AccountInfoDtoForm;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.account.AccountRepository;
 
 @Service
 public class AccountInfoService {
 
     private final AccountInfoRepository accountInfoRepository;
-    private final AccountRepository accountRepository;
 
-    public AccountInfoService(AccountInfoRepository accountInfoRepository, AccountRepository accountRepository) {
+    public AccountInfoService(AccountInfoRepository accountInfoRepository) {
         this.accountInfoRepository = accountInfoRepository;
-        this.accountRepository = accountRepository;
     }
 
     public AccountInfo getAccountInfo(String email) {

@@ -2,12 +2,12 @@ package se.sprinta.headhunterbackend.ad;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import se.sprinta.headhunterbackend.job.Job;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -15,6 +15,7 @@ import java.util.Objects;
  * Relationship: [Ad] *...1 [Job]
  */
 
+@Getter
 @AllArgsConstructor
 @Entity
 @Table(name = "ad")
@@ -63,28 +64,12 @@ public class Ad implements Serializable {
         this.htmlCode = htmlCode;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getHtmlCode() {
-        return htmlCode;
-    }
-
     public void setHtmlCode(String htmlCode) {
         this.htmlCode = htmlCode;
-    }
-
-    public LocalDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public Job getJob() {
-        return job;
     }
 
     public void setJob(Job job) {

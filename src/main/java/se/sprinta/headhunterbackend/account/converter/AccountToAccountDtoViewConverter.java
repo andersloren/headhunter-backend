@@ -21,9 +21,6 @@ public class AccountToAccountDtoViewConverter implements Converter<Account, Acco
      */
     @Override
     public AccountDtoView convert(Account source) {
-        if (source == null) {
-            throw new IllegalStateException("Source in userToUserDtoView.convert() cannot be null");
-        }
         return new AccountDtoView(
                 source.getEmail(),
                 source.getRoles(),
