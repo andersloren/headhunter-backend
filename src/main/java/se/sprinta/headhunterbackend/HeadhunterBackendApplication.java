@@ -16,12 +16,12 @@ public class HeadhunterBackendApplication {
         SpringApplication.run(HeadhunterBackendApplication.class, args);
     }
 
-/*    @Bean
+    @Bean
     ApplicationRunner applicationRunner(Environment environment) {
         return args -> {
             log.info("Active Configuration File: " + environment.getProperty("active-application-yml"));
         };
-    }*/
+    }
 }
 
 
