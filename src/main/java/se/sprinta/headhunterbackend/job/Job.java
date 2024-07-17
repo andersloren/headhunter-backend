@@ -1,12 +1,12 @@
 package se.sprinta.headhunterbackend.job;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.ad.Ad;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import java.util.List;
  * Relationship: [Ad] *...1 [Job] *...1 [Account]
  */
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
     @Entity
@@ -126,56 +127,28 @@ public class Job implements Serializable {
         oldAd.setJob(null);
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Account getAccount() {
-        return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
     }
 
-    public String getInstruction() {
-        return instruction;
-    }
-
     public void setInstruction(String instruction) {
         this.instruction = instruction;
     }
 
-    public List<Ad> getAds() {
-        return ads;
-    }
-
     public void setAds(List<Ad> ads) {
         this.ads = ads;
-    }
-
-    public int getNumberOfAds() {
-        return numberOfAds;
     }
 
     /**
@@ -187,40 +160,20 @@ public class Job implements Serializable {
         this.numberOfAds = this.ads.size();
     }
 
-    public String getRecruiterName() {
-        return recruiterName;
-    }
-
     public void setRecruiterName(String recruiterName) {
         this.recruiterName = recruiterName;
-    }
-
-    public String getAdCompany() {
-        return adCompany;
     }
 
     public void setAdCompany(String adCompany) {
         this.adCompany = adCompany;
     }
 
-    public String getAdEmail() {
-        return adEmail;
-    }
-
     public void setAdEmail(String adEmail) {
         this.adEmail = adEmail;
     }
 
-    public String getAdPhone() {
-        return adPhone;
-    }
-
     public void setAdPhone(String adPhone) {
         this.adPhone = adPhone;
-    }
-
-    public String getApplicationDeadline() {
-        return applicationDeadline;
     }
 
     public void setApplicationDeadline(String applicationDeadline) {

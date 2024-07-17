@@ -2,6 +2,8 @@ package se.sprinta.headhunterbackend.job;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.AccountRepository;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
@@ -11,12 +13,8 @@ import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
 import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.account.Account;
-import se.sprinta.headhunterbackend.account.AccountRepository;
-import se.sprinta.headhunterbackend.account.AccountService;
 import se.sprinta.headhunterbackend.utils.HtmlUtilities;
 
 import java.util.List;
@@ -31,15 +29,17 @@ public class JobService {
     private final JobRepository jobRepository;
     private final AdRepository adRepository;
     private final AccountRepository accountRepository;
-    private final AccountService accountService;
     private final ChatClient chatClient;
     private final HtmlUtilities htmlUtilities;
 
-    public JobService(JobRepository jobRepository, AdRepository adRepository, AccountRepository accountRepository, AccountService accountService, ChatClient chatClient, HtmlUtilities htmlUtilities) {
+    public JobService(JobRepository jobRepository,
+                      AdRepository adRepository,
+                      AccountRepository accountRepository,
+                      ChatClient chatClient,
+                      HtmlUtilities htmlUtilities) {
         this.jobRepository = jobRepository;
         this.adRepository = adRepository;
         this.accountRepository = accountRepository;
-        this.accountService = accountService;
         this.chatClient = chatClient;
         this.htmlUtilities = htmlUtilities;
     }

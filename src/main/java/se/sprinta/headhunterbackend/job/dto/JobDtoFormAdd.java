@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Input Job data format.
- *
  *              Relationship: [Job] *...1 [User]
  * @param title The title of the job.
  * @param description The description of the job that the AI will use to generate an ad.
