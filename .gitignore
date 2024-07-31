@@ -34,6 +34,8 @@ build/
 
 ### Configuration Files ###
 src/main/resources/application.yml
+src/main/resources/application-dev.yml
+src/main/resources/application-docker.yml
 src/test/resources/application-test-mysql.yml.yml
 src/test/resources/application-test-h2.yml.yml.yml
 src/test/resources/application-sandbox.yml.yml.yml.yml

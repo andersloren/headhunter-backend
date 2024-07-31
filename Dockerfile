@@ -1,4 +1,10 @@
 FROM openjdk:17-jdk-alpine
-ARG JAR_FILE=target/*.jar
-COPY ./target/headhunter-backend-0.0.1-SNAPSHOT.jar headhunter-backend.jar
-ENTRYPOINT ["java", "-jar", "/headhunter-backend.jar"]
+
+# Define the JAR file location
+ARG JAR_FILE=target/headhunter-backend-0.0.1-SNAPSHOT.jar
+
+# Copy the JAR file to the container
+COPY ${JAR_FILE} app.jar
+
+# Define the entry point to run the JAR file
+ENTRYPOINT ["java", "-jar", "/app.jar"]
