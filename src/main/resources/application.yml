@@ -1,4 +1,4 @@
-active-application-yml: PROD in main
+active-application-yml: Default in main
 
 spring:
   datasource:
@@ -7,10 +7,8 @@ spring:
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
-    #      dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
     show-sql: true
 

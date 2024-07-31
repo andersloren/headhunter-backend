@@ -4,15 +4,13 @@ spring:
   datasource:
     profiles:
       active: test-mysql
-    #    url: jdbc:mysql://${Headhunter_MySQL_Test_Env}
     url: jdbc:mysql://localhost:3306/headhunter-test?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MySQL_Username}
-    password: ${MySQL_Password}
+    username: ${MYSQL_ADMIN_USERNAME}
+    password: ${MYSQL_ADMIN_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create
-      generate-ddl: true
-      dialect: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
     show-sql: true
 
 api:
