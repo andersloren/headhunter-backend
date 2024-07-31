@@ -8,7 +8,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      dialect: org.hibernate.dialect.MySQL8Dialect
       ddl-auto: validate
     generate-ddl: true
     show-sql: true

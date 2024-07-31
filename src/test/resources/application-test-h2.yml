@@ -6,12 +6,12 @@ spring:
       active: test-h2
     url: jdbc:h2:mem:headhunter-test-h2
     driverClassName: org.h2.Driver
-    username: ${H2_Test_Username}
-    password: ${H2_Test_Password}
+    username: ${H2_USERNAME}
+    password: ${H2_PASSWORD}
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
-      dialect: org.hibernate.dialect.H2Dialect
     properties:
       format_sql: true
       use_sql_comments: true

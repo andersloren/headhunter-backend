@@ -8,10 +8,11 @@ import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountService;
 
 /**
- * Database entries (User objects) for demoing and debugging purposes.
+ * Database entries for develop and demoing situations
  */
 
 @Component
+@Profile("default")
 @Transactional
 public class DBDataInitializer implements CommandLineRunner {
 
