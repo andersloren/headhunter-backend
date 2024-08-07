@@ -2,9 +2,10 @@ active-application-yml: DOCKER in main
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MYSQL_PASSWORD}
-    password: ${MYSQL_USERNAME}
+    #    url: jdbc:mysql://mysql:3307/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    url: jdbc:mysql://localhost:3306/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: user
+    password: RbpBcnNv7F4ZACnNUBAFG7bjdd4FmM
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -24,6 +25,6 @@ ai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
 
-logging:
-  level:
-    org.hibernate: DEBUG
+#logging:
+#  level:
+#    org.hibernate: DEBUG

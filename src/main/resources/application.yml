@@ -1,10 +1,10 @@
-active-application-yml: Default in main
+active-application-yml: DEFAULT in main
 
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USER_USERNAME}
+    password: ${MYSQL_USER_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
