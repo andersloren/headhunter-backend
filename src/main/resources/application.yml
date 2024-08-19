@@ -3,8 +3,8 @@ active-application-yml: Default in main
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USER_USERNAME}
+    password: ${MYSQL_USER_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -21,6 +21,8 @@ api:
 
 ai:
   openai:
-    endpoint: ${OPENAI_API_ENDPOINT}
-    api-key: ${OPENAI_API_KEY}
+    endpoint: https://api.openai.com/v1/chat/completions
+    api-key: hJe8Atw0eTUIumr5ZxaST3BlbkFJwEzMxJNv73Ok5HSk2xAc
+#    endpoint: ${OPENAI_API_ENDPOINT}
+#    api-key: ${OPENAI_API_KEY}
 
