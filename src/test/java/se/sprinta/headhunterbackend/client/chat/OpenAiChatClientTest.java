@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.client.chat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatRequest;
 import se.sprinta.headhunterbackend.client.chat.dto.ChatResponse;
@@ -36,13 +37,14 @@ class OpenAiChatClientTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    private String url;
+
     private ChatRequest chatRequest;
+
+    @Value("${ai.openai.endpoint}")
+    private String url;
 
     @BeforeEach
     void setUp() {
-        this.url = System.getenv("OPENAI_API_ENDPOINT");
-
         this.chatRequest = new ChatRequest("gpt-4", List.of(
                 new Message("system", "Your task is to generate a short summary of a given JSON array in at most 100 words. The summary must include the number of artifacts, each artifact's description, and the ownership information. Don't mention that the summary is from a given JSON array."),
                 new Message("user", "A json array.")

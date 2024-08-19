@@ -1,33 +1,28 @@
 package se.sprinta.headhunterbackend.ad;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestExecutionResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
-import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
-import se.sprinta.headhunterbackend.config.JacksonConfig;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -36,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdController.class)
 @AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
-@Import(JacksonConfig.class)
 class AdControllerMockTest {
 
     @MockBean
@@ -57,8 +51,8 @@ class AdControllerMockTest {
 
     @BeforeEach
     void setUp() {
-        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
         this.ads = MockDatabaseInitializer.initializeMockAds();
+        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
         this.adDtos = MockDatabaseInitializer.initializeMockAdDtos();
     }
 
@@ -97,10 +91,12 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data[0].job.adCompany").value(this.ads.get(0).getJob().getAdCompany()))
                 .andExpect(jsonPath("$.data[0].job.adEmail").value(this.ads.get(0).getJob().getAdEmail()))
                 .andExpect(jsonPath("$.data[0].job.adPhone").value(this.ads.get(0).getJob().getAdPhone()))
-                .andExpect(jsonPath("$.data[0].job.applicationDeadline").value(this.ads.get(0).getJob().getApplicationDeadline()))
+                .andExpect(
+                        jsonPath("$.data[0].job.applicationDeadline").value(this.ads.get(0).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data[0].job.account.email").value(this.ads.get(0).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data[0].job.account.roles").value(this.ads.get(0).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data[0].job.account.number_of_jobs").value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()))
+                .andExpect(jsonPath("$.data[0].job.account.number_of_jobs")
+                        .value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()))
                 .andExpect(jsonPath("$.data[1].id").value(this.ads.get(1).getId()))
                 .andExpect(jsonPath("$.data[1].dateCreated").value(this.ads.get(1).getDateCreated().toString()))
                 .andExpect(jsonPath("$.data[1].htmlCode").value(this.ads.get(1).getHtmlCode()))
@@ -112,10 +108,12 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data[1].job.adCompany").value(this.ads.get(1).getJob().getAdCompany()))
                 .andExpect(jsonPath("$.data[1].job.adEmail").value(this.ads.get(1).getJob().getAdEmail()))
                 .andExpect(jsonPath("$.data[1].job.adPhone").value(this.ads.get(1).getJob().getAdPhone()))
-                .andExpect(jsonPath("$.data[1].job.applicationDeadline").value(this.ads.get(1).getJob().getApplicationDeadline()))
+                .andExpect(
+                        jsonPath("$.data[1].job.applicationDeadline").value(this.ads.get(1).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data[1].job.account.email").value(this.ads.get(1).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data[1].job.account.roles").value(this.ads.get(1).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data[1].job.account.number_of_jobs").value(this.ads.get(1).getJob().getAccount().getNumber_of_jobs()))
+                .andExpect(jsonPath("$.data[1].job.account.number_of_jobs")
+                        .value(this.ads.get(1).getJob().getAccount().getNumber_of_jobs()))
                 .andExpect(jsonPath("$.data[2].id").value(this.ads.get(2).getId()))
                 .andExpect(jsonPath("$.data[2].dateCreated").value(this.ads.get(2).getDateCreated().toString()))
                 .andExpect(jsonPath("$.data[2].htmlCode").value(this.ads.get(2).getHtmlCode()))
@@ -127,10 +125,12 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data[2].job.adCompany").value(this.ads.get(2).getJob().getAdCompany()))
                 .andExpect(jsonPath("$.data[2].job.adEmail").value(this.ads.get(2).getJob().getAdEmail()))
                 .andExpect(jsonPath("$.data[2].job.adPhone").value(this.ads.get(2).getJob().getAdPhone()))
-                .andExpect(jsonPath("$.data[2].job.applicationDeadline").value(this.ads.get(2).getJob().getApplicationDeadline()))
+                .andExpect(
+                        jsonPath("$.data[2].job.applicationDeadline").value(this.ads.get(2).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data[2].job.account.email").value(this.ads.get(2).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data[2].job.account.roles").value(this.ads.get(2).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data[2].job.account.number_of_jobs").value(this.ads.get(2).getJob().getAccount().getNumber_of_jobs()));
+                .andExpect(jsonPath("$.data[2].job.account.number_of_jobs")
+                        .value(this.ads.get(2).getJob().getAccount().getNumber_of_jobs()));
     }
 
     @Test
@@ -158,7 +158,8 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data.job.applicationDeadline").value(this.ads.get(0).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data.job.account.email").value(this.ads.get(0).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data.job.account.roles").value(this.ads.get(0).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data.job.account.number_of_jobs").value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()));
+                .andExpect(jsonPath("$.data.job.account.number_of_jobs")
+                        .value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()));
     }
 
     @Test
@@ -203,10 +204,12 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data[0].job.adCompany").value(this.ads.get(0).getJob().getAdCompany()))
                 .andExpect(jsonPath("$.data[0].job.adEmail").value(this.ads.get(0).getJob().getAdEmail()))
                 .andExpect(jsonPath("$.data[0].job.adPhone").value(this.ads.get(0).getJob().getAdPhone()))
-                .andExpect(jsonPath("$.data[0].job.applicationDeadline").value(this.ads.get(0).getJob().getApplicationDeadline()))
+                .andExpect(
+                        jsonPath("$.data[0].job.applicationDeadline").value(this.ads.get(0).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data[0].job.account.email").value(this.ads.get(0).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data[0].job.account.roles").value(this.ads.get(0).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data[0].job.account.number_of_jobs").value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()))
+                .andExpect(jsonPath("$.data[0].job.account.number_of_jobs")
+                        .value(this.ads.get(0).getJob().getAccount().getNumber_of_jobs()))
                 .andExpect(jsonPath("$.data[1].id").value(this.ads.get(1).getId()))
                 .andExpect(jsonPath("$.data[1].dateCreated").value(this.ads.get(1).getDateCreated().toString()))
                 .andExpect(jsonPath("$.data[1].htmlCode").value(this.ads.get(1).getHtmlCode()))
@@ -218,10 +221,12 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data[1].job.adCompany").value(this.ads.get(1).getJob().getAdCompany()))
                 .andExpect(jsonPath("$.data[1].job.adEmail").value(this.ads.get(1).getJob().getAdEmail()))
                 .andExpect(jsonPath("$.data[1].job.adPhone").value(this.ads.get(1).getJob().getAdPhone()))
-                .andExpect(jsonPath("$.data[1].job.applicationDeadline").value(this.ads.get(1).getJob().getApplicationDeadline()))
+                .andExpect(
+                        jsonPath("$.data[1].job.applicationDeadline").value(this.ads.get(1).getJob().getApplicationDeadline()))
                 .andExpect(jsonPath("$.data[1].job.account.email").value(this.ads.get(1).getJob().getAccount().getEmail()))
                 .andExpect(jsonPath("$.data[1].job.account.roles").value(this.ads.get(1).getJob().getAccount().getRoles()))
-                .andExpect(jsonPath("$.data[1].job.account.number_of_jobs").value(this.ads.get(1).getJob().getAccount().getNumber_of_jobs()));
+                .andExpect(jsonPath("$.data[1].job.account.number_of_jobs")
+                        .value(this.ads.get(1).getJob().getAccount().getNumber_of_jobs()));
     }
 
     @Test
@@ -267,7 +272,8 @@ class AdControllerMockTest {
     @DisplayName("(GET) getAdDtosByJobId - Invalid Job Id - Exception")
     void test_GetAdDtosByJobId_InvalidAdId_Exception() throws Exception {
         // Given
-        given(this.adService.getAdDtosByJobId(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
+        given(this.adService.getAdDtosByJobId(Long.MAX_VALUE))
+                .willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
 
         // When and Then
         this.mockMvc.perform(get(this.baseUrlAd + "/getAdDtosByJobId" + "/" + Long.MAX_VALUE)
@@ -297,7 +303,8 @@ class AdControllerMockTest {
     @DisplayName("(GET) getNumberOfAdsByJobId - Invalid Job Id - Exception")
     void test_GetNumberOfAdsByJobId_InvalidAdId_Exception() throws Exception {
         // Given
-        given(this.adService.getNumberOfAdsByJobId(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
+        given(this.adService.getNumberOfAdsByJobId(Long.MAX_VALUE))
+                .willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
 
         // When and Then
         this.mockMvc.perform(get(this.baseUrlAd + "/getNumberOfAdsByJobId" + "/" + Long.MAX_VALUE)
@@ -329,8 +336,7 @@ class AdControllerMockTest {
     @DisplayName("(POST) addAd - Success")
     void test_AddAd_Success() throws Exception {
         AdDtoForm newAd = new AdDtoForm(
-                "htmlCode 4"
-        );
+                "htmlCode 4");
 
         Ad savedAd = new Ad();
         savedAd.setHtmlCode("htmlCode 4");
@@ -357,8 +363,7 @@ class AdControllerMockTest {
     @DisplayName("(POST) addAd - Invalid Job Id - Exception")
     void test_AddAd_InvalidJobId_Exception() throws Exception {
         AdDtoForm newAd = new AdDtoForm(
-                "htmlCode 4"
-        );
+                "htmlCode 4");
 
         String json = this.objectMapper.writeValueAsString(newAd);
 
@@ -406,36 +411,3 @@ class AdControllerMockTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -24,3 +24,8 @@ ai:
   openai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
+# ai:
+#   openai:
+#     endpoint: https://api.openai.com/v1/chat/completions
+#     api-key: hJe8Atw0eTUIumr5ZxaST3BlbkFJwEzMxJNv73Ok5HSk2xAc
+

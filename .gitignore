@@ -45,3 +45,9 @@ src/test/resources/application-sandbox.yml.yml.yml.yml
 
 ### DockerFile ###
 Dockerfile
+
+## Secrets
+.env
+
+## attach_pid
+.attach_pid
