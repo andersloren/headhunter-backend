@@ -49,6 +49,10 @@ public class Account implements Serializable {
     @Getter
     private long number_of_jobs;
 
+    /**
+     * When adding this to the code, make sure to adjust init.sql too
+     */
+
     @OneToOne(mappedBy = "account")
     private AccountInfo accountInfo;
 

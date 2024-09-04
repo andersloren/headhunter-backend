@@ -30,7 +30,7 @@ import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@ActiveProfiles("test-h2")
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class AdServiceMockTest {
 

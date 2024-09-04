@@ -101,4 +101,25 @@
         </plugins>
     </build>
 
+<!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>default</id>-->
+    <!--            <properties>-->
+    <!--                <spring.properties.active>default</spring.properties.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>dev</id>-->
+    <!--            <properties>-->
+    <!--                <spring.properties.active>dev</spring.properties.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>docker</id>-->
+    <!--            <properties>-->
+    <!--                <spring.properties.active>docker</spring.properties.active>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
+
 </project>

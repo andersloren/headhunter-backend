@@ -1,0 +1,35 @@
+active-application-yml: IN MEMORY TEST - H2, in test
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    #    url: jdbc:${DB_TEST_NAME}:mem:${DB_TEST_DATABASE_NAME};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:headhunter-test-h2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: root
+    password: 1234
+    #    username: ${DB_TEST_USERNAME}
+    #    password: ${DB_TEST_PASSWORD}
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+      format_sql: true
+      use_sql_comments: true
+      generate_statistics: true
+    show-sql: true
+
+api:
+  endpoint:
+    base-url-account: /api/v1/account
+    base-url-job: /api/v1/job
+    base-url-ad: /api/v1/ad
+    base-url-accountInfo: /api/v1/accountInfo
+
+ai:
+  openai:
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}
