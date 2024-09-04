@@ -1,6 +1,7 @@
 package se.sprinta.headhunterbackend.job;
 
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;

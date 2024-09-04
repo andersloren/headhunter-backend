@@ -11,8 +11,10 @@ import se.sprinta.headhunterbackend.account.AccountService;
  * Database entries for develop and demoing situations
  */
 
+// TODO: 9/4/2024 Create a separate file for 'prod'
+
 @Component
-@Profile("default")
+@Profile({"dev", "prod"})
 @Transactional
 public class DBDataInitializer implements CommandLineRunner {
 

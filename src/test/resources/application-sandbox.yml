@@ -1,6 +1,0 @@
-active-application-yml: SANDBOX in test
-
-spring:
-  datasource:
-    profiles:
-      active: sandbox

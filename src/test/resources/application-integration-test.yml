@@ -1,0 +1,28 @@
+active-application-yml: INTEGRATION TEST - MYSQL, in test
+
+spring:
+  config:
+    activate:
+      on-profile: integration-test
+  datasource:
+    url: jdbc:${DB_INTEGRATION_TESTS_NAME}://${DB_INTEGRATION_TESTS_HOSTNAME}:${DB_PORT}/${DB_INTEGRATION_TESTS_DATABASE_NAME}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: ${DB_ADMIN_USERNAME}
+    password: ${DB_ADMIN_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+
+api:
+  endpoint:
+    base-url-account: /api/v1/account
+    base-url-job: /api/v1/job
+    base-url-ad: /api/v1/ad
+    base-url-accountInfo: /api/v1/accountInfo
+
+ai:
+  openai:
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}
+

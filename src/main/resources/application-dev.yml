@@ -1,13 +1,16 @@
 active-application-yml: DEV in main
 
 spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/headhunter-prod?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
-    username: ${MYSQL_ADMIN_USERNAME}
-    password: ${MYSQL_ADMIN_PASSWORD}
+    url: jdbc:${DB_NAME}://${DB_DEV_HOSTNAME}:${DB_PORT}/${DB_DEV_DATABASE_NAME}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    username: ${DB_ADMIN_USERNAME}
+    password: ${DB_ADMIN_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    # database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create
     generate-ddl: true
@@ -22,10 +25,6 @@ api:
 
 ai:
   openai:
-    endpoint: https://api.openai.com/v1/chat/completions
-    api-key: hJe8Atw0eTUIumr5ZxaST3BlbkFJwEzMxJNv73Ok5HSk2xAc
-#ai:
-#  openai:
-#    endpoint: ${OPENAI_API_ENDPOINT}
-#    api-key: ${OPENAI_API_KEY}
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}
 

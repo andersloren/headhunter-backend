@@ -32,7 +32,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-//@SpringBootTest
 @WebMvcTest(AccountController.class)
 @AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
 class AccountControllerMockTest {

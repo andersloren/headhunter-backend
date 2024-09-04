@@ -68,13 +68,10 @@ public class Job implements Serializable {
     private String applicationDeadline = "";
 
     /**
-     * The job belongs to an account.
-     * Relationship: [Job] *...1 [Account]
+     * The number of ads that a Job object holds.
      */
 
-    @ManyToOne()
-    @JoinColumn(name = "account_id")
-    private Account account;
+    private int numberOfAds;
 
     /**
      * Every Job object belongs to an account object.
@@ -87,10 +84,13 @@ public class Job implements Serializable {
     private List<Ad> ads = new ArrayList<>();
 
     /**
-     * The number of ads that a Job object holds.
+     * The job belongs to an account.
+     * Relationship: [Job] *...1 [Account]
      */
 
-    private int numberOfAds;
+    @ManyToOne()
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public Job(String title, String description, String instruction) {
         this.title = title;

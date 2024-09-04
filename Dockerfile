@@ -1,10 +1,9 @@
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:21
 
-# Define the JAR file location
-ARG JAR_FILE=target/headhunter-backend-0.0.1-SNAPSHOT.jar
+WORKDIR /app
 
-# Copy the JAR file to the container
-COPY ${JAR_FILE} app.jar
+COPY target/*.jar /app/japp.jar
+COPY target/classes/application-prod.yml /app/
 
-# Define the entry point to run the JAR file
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java","-Dspring.config.location=/app/application-prod.yml", "-jar", "/app/japp.jar"]
+
