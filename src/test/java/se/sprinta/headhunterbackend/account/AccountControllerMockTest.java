@@ -1,5 +1,6 @@
 package se.sprinta.headhunterbackend.account;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
+import se.sprinta.headhunterbackend.TestUtils;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormUpdate;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
@@ -36,235 +39,306 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false) // Turns off Spring security
 class AccountControllerMockTest {
 
-    @MockBean
-    private AccountService accountService;
+  @MockBean
+  private AccountService accountService;
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    private List<Account> accounts = new ArrayList<>();
-    private List<AccountDtoView> accountDtos = new ArrayList<>();
+  private List<Account> accounts = new ArrayList<>();
+  private List<AccountDtoView> accountDtos = new ArrayList<>();
 
-    @Value("${api.endpoint.base-url-account}")
-    String baseUrlAccount;
+  @Value("${api.endpoint.base-url-account}")
+  String baseUrlAccount;
 
-    @BeforeEach
-    void setUp() {
-        this.accounts = MockDatabaseInitializer.initializeMockAccounts();
-        this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+  @BeforeEach
+  void setUp() {
+    this.accounts = MockDatabaseInitializer.initializeMockAccounts();
+    this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+  }
+
+  @Test
+  @DisplayName("Test Data Initializer")
+  void test_DataInitializer() {
+    System.out.println("AccountControllerMockTest, accounts size: " + this.accounts.size());
+    for (Account account : this.accounts) {
+      System.out.println(account.toString());
     }
-
-    @Test
-    @DisplayName("Test Data Initializer")
-    void test_DataInitializer() {
-        System.out.println("AccountControllerMockTest, accounts size: " + this.accounts.size());
-        for (Account account : this.accounts) {
-            System.out.println(account.toString());
-        }
-        System.out.println("AccountControllerMockTest, accountDtos size: " + this.accountDtos.size());
-        for (AccountDtoView accountDto : this.accountDtos) {
-            System.out.println(accountDto.toString());
-        }
+    System.out.println("AccountControllerMockTest, accountDtos size: " + this.accountDtos.size());
+    for (AccountDtoView accountDto : this.accountDtos) {
+      System.out.println(accountDto.toString());
     }
+  }
 
-    @Test
-    @DisplayName("findAll - Success")
-    void test_findAll_Success() throws Exception {
-        // Given
-        given(this.accountService.findAll()).willReturn(this.accounts);
+  @Test
+  @DisplayName("GET - findAll - Success")
+  void test_findAll_Success() throws Exception {
+    // Given
+    given(this.accountService.findAll()).willReturn(this.accounts);
 
-        // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/findAll").accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Accounts Success"))
-                .andExpect(jsonPath("$.data[0].email").value("admin-mock@hh.se"))
-                .andExpect(jsonPath("$.data[0].password").isNotEmpty())
-                .andExpect(jsonPath("$.data[0].roles").value("admin"))
-                .andExpect(jsonPath("$.data[0].number_of_jobs").value(0))
-                .andExpect(jsonPath("$.data[1].email").value("user1-mock@hh.se"))
-                .andExpect(jsonPath("$.data[1].password").isNotEmpty())
-                .andExpect(jsonPath("$.data[1].roles").value("user"))
-                .andExpect(jsonPath("$.data[1].number_of_jobs").value(2))
-                .andExpect(jsonPath("$.data[2].email").value("user2-mock@hh.se"))
-                .andExpect(jsonPath("$.data[2].password").isNotEmpty())
-                .andExpect(jsonPath("$.data[2].roles").value("user"))
-                .andExpect(jsonPath("$.data[2].number_of_jobs").value(1))
-                .andExpect(jsonPath("$.data[3].email").value("user3-mock@hh.se"))
-                .andExpect(jsonPath("$.data[3].password").isNotEmpty())
-                .andExpect(jsonPath("$.data[3].roles").value("user"))
-                .andExpect(jsonPath("$.data[3].number_of_jobs").value(1));
+    // When and then
+    ResultActions result = this.mockMvc
+        .perform(get(this.baseUrlAccount + "/findAll").accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Find All Accounts Success"));
+
+    JsonNode dataArray = TestUtils.getJSONResponse(result);
+
+    for (int i = 0; i < dataArray.size(); i++) {
+      result.andExpect(jsonPath("$.data[" + i + "].email").value(this.accounts.get(i).getEmail()))
+          .andExpect(jsonPath("$.data[" + i + "].password").isNotEmpty())
+          .andExpect(jsonPath("$.data[" + i + "].roles").value(this.accounts.get(i).getRoles()))
+          .andExpect(jsonPath("$.data[" + i + "].number_of_jobs").value(this.accounts.get(i).getNumber_of_jobs()));
+
     }
+  }
 
-    @Test
-    @DisplayName("getAccountById - Success")
-    void test_GetAccountById_Success() throws Exception {
-        AccountDtoView accountDtoView = this.accountDtos.get(1);
+  @Test
+  @DisplayName("GET - getAccountDtos - Success")
+  void test_GetAccountDtos_Success() throws Exception {
+    // Given
+    given(this.accountService.getAccountDtos()).willReturn(this.accountDtos);
 
-        // Given
-        given(this.accountService.getAccountDtoByEmail("user1-mock@hh.se")).willReturn(accountDtoView);
+    // When and then
+    ResultActions result = this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtos")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Find Account Dtos Success"));
 
-        // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/user1-mock@hh.se").accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find One Account Success"))
-                .andExpect(jsonPath("$.data.email").value(this.accountDtos.get(1).email()))
-                .andExpect(jsonPath("$.data.roles").value(this.accountDtos.get(1).roles()))
-                .andExpect(jsonPath("$.data.number_of_jobs").value(this.accountDtos.get(1).number_of_jobs()));
+    JsonNode dataArray = TestUtils.getJSONResponse(result);
+
+    for (int i = 0; i < dataArray.size(); i++) {
+
+      result.andExpect(jsonPath("$.data[" + i + "].email").value(this.accountDtos.get(i).email()))
+          .andExpect(jsonPath("$.data[" + i + "].password").doesNotExist())
+          .andExpect(jsonPath("$.data[" + i + "].number_of_jobs").value(this.accountDtos.get(i).number_of_jobs()))
+          .andExpect(jsonPath("$.data[" + i + "].roles").value(this.accountDtos.get(i).roles()));
     }
+  }
 
-    @Test
-    @DisplayName("getAccountById - Non-existent Id (Exception)")
-    void test_FindAccountById_NonExistentId() throws Exception {
-        String nonExistingEmail = "abc";
+  @Test
+  @DisplayName("GET - findById - Success")
+  void test_FindById_Success() throws Exception {
+    Account expectedAccount = this.accounts.get(1);
 
-        // Given
-        given(this.accountService.getAccountDtoByEmail("abc")).willThrow(new ObjectNotFoundException("account", "abc"));
+    // Given
+    given(this.accountService.findById("user1-test@hh.se")).willReturn(this.accounts.get(1));
 
-        // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/" + nonExistingEmail).accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+    // When and then
+    this.mockMvc
+        .perform(get(this.baseUrlAccount + "/findById" + "/user1-test@hh.se")
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Find Account By Id Success"))
+        .andExpect(jsonPath("$.data.email").value(expectedAccount.getEmail()))
+        .andExpect(jsonPath("$.data.password").isNotEmpty())
+        .andExpect(jsonPath("$.data.roles").value(expectedAccount.getRoles()))
+        .andExpect(jsonPath("$.data.number_of_jobs").value(expectedAccount.getNumber_of_jobs()));
+  }
 
-    @Test
-    @DisplayName("validateEmailAvailable - Non-Existing Email - Success")
-    void test_ValidateEmailAvailable_NonExistingEmail_Success() throws Exception {
-        // Given
-        given(this.accountService.validateEmailAvailable("availableEmail@hh.se")).willReturn(true);
+  @Test
+  @DisplayName("GET - findById - Non-existent Email - Exception")
+  void test_FindById_NonExistentEmail_Exception() throws Exception {
+    // Given
+    given(this.accountService.findById("abc"))
+        .willThrow(new ObjectNotFoundException("account", "abc"));
 
-        // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Email is available"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+    // When and then
+    this.mockMvc.perform(get(this.baseUrlAccount + "/findById" + "/abc")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+        .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
 
-    @Test
-    @DisplayName("validateEmailAvailable - Existing Email - Exception")
-    void test_ValidateEmailAvailable_ExistingEmail_Exception() throws Exception {
-        // Given
-        given(this.accountService.validateEmailAvailable("admin@hh.se")).willThrow(new EmailNotFreeException("admin@hh.se"));
+  @Test
+  @DisplayName("GET - validateEmailAvailable - Non-Existing Email - Success")
+  // If the mail is non-existing, then it
+  // can be registered, so it's a success
+  void test_ValidateEmailAvailable_NonExistingEmail_Success() throws Exception {
+    // Given
+    given(this.accountService.validateEmailAvailable("availableEmail@hh.se")).willReturn(true);
 
-        // When and then
-        this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin@hh.se")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
-                .andExpect(jsonPath("$.message").value("admin@hh.se is already registered"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+    // When and then
+    this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/availableEmail@hh.se")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Email is available"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
 
-    @Test
-    @DisplayName("registerAccount")
-    void test_RegisterAccount_Success() throws Exception {
-        AccountDtoFormRegister newAccountFormRegister = new AccountDtoFormRegister(
-                "newAccount@hh.se",
-                "123"
+  @Test
+  @DisplayName("GET - validateEmailAvailable - Existing Email - Exception")
+  // If the mail is existing, then it can not
+  // be registered, causing an exception to be
+  // thrown
+  void test_ValidateEmailAvailable_ExistingEmail_Exception() throws Exception {
+    // Given
+    given(this.accountService.validateEmailAvailable("admin@hh.se"))
+        .willThrow(new EmailNotFreeException("admin@hh.se"));
 
-        );
+    // When and then
+    this.mockMvc.perform(get(this.baseUrlAccount + "/validateEmailAvailable" + "/admin@hh.se")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.CONFLICT))
+        .andExpect(jsonPath("$.message").value("admin@hh.se is already registered"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
 
-        Account registeredAccount = new Account();
-        registeredAccount.setEmail("newAccount@hh.se");
-        registeredAccount.setRoles("user");
+  @Test
+  @DisplayName("PUT - registerAccount - Success")
+  void test_RegisterAccount_Success() throws Exception {
+    AccountDtoFormRegister newAccountFormRegister = new AccountDtoFormRegister(
+        "newAccount@hh.se",
+        "123");
 
-        String json = this.objectMapper.writeValueAsString(newAccountFormRegister);
+    Account registeredAccount = new Account();
+    registeredAccount.setEmail("newAccount@hh.se");
+    registeredAccount.setRoles("user");
 
-        // Given
-        given(this.accountService.register(any(AccountDtoFormRegister.class))).willReturn(registeredAccount);
+    String json = this.objectMapper.writeValueAsString(newAccountFormRegister);
 
-        // When and then
-        this.mockMvc.perform(post(this.baseUrlAccount + "/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json).accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Add Account Success"))
-                .andExpect(jsonPath("$.data.email").value("newAccount@hh.se"))
-                .andExpect(jsonPath("$.data.roles").value("user"));
-    }
+    // Given
+    given(this.accountService.register(any(AccountDtoFormRegister.class))).willReturn(registeredAccount);
 
-    @Test
-    void test_UpdateAccount_Success() throws Exception {
+    // When and then
+    this.mockMvc.perform(post(this.baseUrlAccount + "/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json).accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Add Account Success"))
+        .andExpect(jsonPath("$.data.email").value("newAccount@hh.se"))
+        .andExpect(jsonPath("$.data.roles").value("user"));
+  }
 
-        AccountDtoFormUpdate accountDtoFormUpdate = new AccountDtoFormUpdate("newRole"); // Role changes from 'user' to 'admin'
+  @Test
+  @DisplayName("GET - getAccountDtoByEmail - Success")
+  void test_getAccountDtoByEmail_Success() throws Exception {
+    AccountDtoView accountDtoView = this.accountDtos.get(1);
 
-        Account updatedAccount = new Account();
-        updatedAccount.setEmail("user@hh.se");
-        updatedAccount.setRoles("newRole");
+    // Given
+    given(this.accountService.getAccountDtoByEmail("user1-test@hh.se")).willReturn(this.accountDtos.get(1));
 
-        String json = this.objectMapper.writeValueAsString(accountDtoFormUpdate);
+    // When and then
+    this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/user1-test@hh.se")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Find Account Dto Success"))
+        .andExpect(jsonPath("$.data.email").value(accountDtoView.email()))
+        .andExpect(jsonPath("$.data.password").doesNotExist())
+        .andExpect(jsonPath("$.data.roles").value(accountDtoView.roles()))
+        .andExpect(jsonPath("$.data.number_of_jobs").value(accountDtoView.number_of_jobs()));
+  }
 
-        // Given
-        given(this.accountService.update(eq("user@hh.se"), Mockito.any(AccountUpdateDtoForm.class))).willReturn(updatedAccount);
+  @Test
+  @DisplayName("GET - getAccountDtoByEmail - Non-existent Email - Exception")
+  void test_GetAccountDtoByEmail_NonExistentEmail_Exception() throws Exception {
+    String nonExistingEmail = "abc";
 
-        // When and then
-        this.mockMvc.perform(put(this.baseUrlAccount + "/update" + "/user@hh.se")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Update Account Success"))
-                .andExpect(jsonPath("$.data.email").value("user@hh.se"))
-                .andExpect(jsonPath("$.data.roles").value("newRole"));
-    }
+    // Given
+    given(this.accountService.getAccountDtoByEmail("abc")).willThrow(new ObjectNotFoundException("account", "abc"));
 
-    @Test
-    void test_UpdateAccount_NonExistentEmail() throws Exception {
+    // When and then
+    this.mockMvc
+        .perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/" + nonExistingEmail)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+        .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
 
-        AccountDtoFormUpdate accountDtoFormUpdate = new AccountDtoFormUpdate("newRole");
+  @Test
+  @DisplayName("POST - update - Success")
+  void test_update_Success() throws Exception {
 
-        String json = this.objectMapper.writeValueAsString(accountDtoFormUpdate);
+    AccountDtoFormUpdate accountDtoFormUpdate = new AccountDtoFormUpdate("newRole"); // Role changes from 'user' to
+    // 'admin'
 
-        // Given
-        given(this.accountService.update(eq("abc"), Mockito.any(AccountUpdateDtoForm.class))).willThrow(new ObjectNotFoundException("account", "abc"));
+    Account updatedAccount = new Account();
+    updatedAccount.setEmail("user@hh.se");
+    updatedAccount.setRoles("newRole");
 
-        // When and then
-        this.mockMvc.perform(put(this.baseUrlAccount + "/update" + "/abc")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+    String json = this.objectMapper.writeValueAsString(accountDtoFormUpdate);
 
-    @Test
-    void test_DeleteAccountById_Success() throws Exception {
+    // Given
+    given(this.accountService.update(eq("user@hh.se"), Mockito.any(AccountUpdateDtoForm.class)))
+        .willReturn(updatedAccount);
 
-        // Given
-        willDoNothing().given(this.accountService).delete("abc");
+    // When and then
+    this.mockMvc.perform(put(this.baseUrlAccount + "/update" + "/user@hh.se")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Update Account Success"))
+        .andExpect(jsonPath("$.data.email").value("user@hh.se"))
+        .andExpect(jsonPath("$.data.roles").value("newRole"));
+  }
 
-        // When and then
-        this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/user@hh.se")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Delete Account Success"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+  @Test
+  @DisplayName("POST - update - Non-existent Email - Exception")
+  void test_update_NonExistentEmail() throws Exception {
 
-    @Test
-    void test_DeleteAccountByI_NonExistingId() throws Exception {
-        // Given
-        doThrow(new ObjectNotFoundException("account", "abc")).when(this.accountService).delete("abc");
+    AccountDtoFormUpdate accountDtoFormUpdate = new AccountDtoFormUpdate("newRole");
 
-        // When and then
-        this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/abc")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
+    String json = this.objectMapper.writeValueAsString(accountDtoFormUpdate);
+
+    // Given
+    given(this.accountService.update(eq("abc"), Mockito.any(AccountUpdateDtoForm.class)))
+        .willThrow(new ObjectNotFoundException("account", "abc"));
+
+    // When and then
+    this.mockMvc.perform(put(this.baseUrlAccount + "/update" + "/abc")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+        .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  @Test
+  @DisplayName("DELETE - delete - Success")
+  void test_delete_Success() throws Exception {
+
+    // Given
+    willDoNothing().given(this.accountService).delete("abc");
+
+    // When and then
+    this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/user@hh.se")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(true))
+        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+        .andExpect(jsonPath("$.message").value("Delete Account Success"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  @Test
+  @DisplayName("DELETE - delete - Non-existent Email - Exception")
+  void test_DeleteAccountByI_NonExistingId() throws Exception {
+    // Given
+    doThrow(new ObjectNotFoundException("account", "abc")).when(this.accountService).delete("abc");
+
+    // When and then
+    this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/abc")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+        .andExpect(jsonPath("$.message").value("Could not find account with Email abc"))
+        .andExpect(jsonPath("$.data").isEmpty());
+  }
 }
