@@ -11,7 +11,10 @@ import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
+import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
+
 import java.util.List;
 
 @Getter
@@ -32,11 +35,6 @@ public class MockDatabaseInitializer {
 
     accounts.clear();
 
-    Account admin = new Account();
-    admin.setEmail("admin-mock@hh.se");
-    admin.setPassword("a");
-    admin.setRoles("admin");
-
     Account user1 = new Account();
     user1.setEmail("user1-mock@hh.se");
     user1.setPassword("a");
@@ -51,6 +49,11 @@ public class MockDatabaseInitializer {
     user3.setEmail("user3-mock@hh.se");
     user3.setPassword("a");
     user3.setRoles("user");
+
+    Account user4 = new Account();
+    user4.setEmail("user4-mock@hh.se");
+    user4.setPassword("a");
+    user4.setRoles("user");
 
     Job job1 = new Job();
     job1.setId(1L);
@@ -104,16 +107,19 @@ public class MockDatabaseInitializer {
     ad2.setJob(job1);
     ad3.setJob(job2);
 
-    accounts.add(admin);
+    accounts.clear();
     accounts.add(user1);
     accounts.add(user2);
     accounts.add(user3);
+    accounts.add(user4);
 
+    jobs.clear();
     jobs.add(job1);
     jobs.add(job2);
     jobs.add(job3);
     jobs.add(job4);
 
+    ads.clear();
     ads.add(ad1);
     ads.add(ad2);
     ads.add(ad3);
@@ -124,11 +130,6 @@ public class MockDatabaseInitializer {
   public static List<Job> initializeMockJobs() {
 
     jobs.clear();
-
-    Account admin = new Account();
-    admin.setEmail("admin-mock@hh.se");
-    admin.setPassword("a");
-    admin.setRoles("admin");
 
     Account user1 = new Account();
     user1.setEmail("user1-mock@hh.se");
@@ -144,6 +145,11 @@ public class MockDatabaseInitializer {
     user3.setEmail("user3-mock@hh.se");
     user3.setPassword("a");
     user3.setRoles("user");
+
+    Account user4 = new Account();
+    user4.setEmail("user4-mock@hh.se");
+    user4.setPassword("a");
+    user4.setRoles("user");
 
     Job job1 = new Job();
     job1.setId(1L);
@@ -197,10 +203,10 @@ public class MockDatabaseInitializer {
     ad2.setJob(job1);
     ad3.setJob(job2);
 
-    accounts.add(admin);
     accounts.add(user1);
     accounts.add(user2);
     accounts.add(user3);
+    accounts.add(user4);
 
     jobs.add(job1);
     jobs.add(job2);
@@ -218,11 +224,6 @@ public class MockDatabaseInitializer {
 
     ads.clear();
 
-    Account admin = new Account();
-    admin.setEmail("admin-mock@hh.se");
-    admin.setPassword("a");
-    admin.setRoles("admin");
-
     Account user1 = new Account();
     user1.setEmail("user1-mock@hh.se");
     user1.setPassword("a");
@@ -237,6 +238,11 @@ public class MockDatabaseInitializer {
     user3.setEmail("user3-mock@hh.se");
     user3.setPassword("a");
     user3.setRoles("user");
+
+    Account user4 = new Account();
+    user4.setEmail("user4-mock@hh.se");
+    user4.setPassword("a");
+    user4.setRoles("user");
 
     Job job1 = new Job();
     job1.setId(1L);
@@ -290,10 +296,10 @@ public class MockDatabaseInitializer {
     ad2.setJob(job1);
     ad3.setJob(job2);
 
-    accounts.add(admin);
     accounts.add(user1);
     accounts.add(user2);
     accounts.add(user3);
+    accounts.add(user4);
 
     jobs.add(job1);
     jobs.add(job2);
@@ -394,32 +400,53 @@ public class MockDatabaseInitializer {
     jobs.clear();
     jobs = initializeMockJobs();
 
-    JobCardDtoView jobDCardto1 = new JobCardDtoView(
+    JobCardDtoView jobDCardDto1 = new JobCardDtoView(
         1L,
         jobs.get(0).getTitle(),
         jobs.get(0).getApplicationDeadline());
 
-    JobCardDtoView jobDCardto2 = new JobCardDtoView(
+    JobCardDtoView jobDCardDto2 = new JobCardDtoView(
         2L,
         jobs.get(1).getTitle(),
         jobs.get(1).getApplicationDeadline());
 
-    JobCardDtoView jobDCardto3 = new JobCardDtoView(
+    JobCardDtoView jobDCardDto3 = new JobCardDtoView(
         3L,
         jobs.get(2).getTitle(),
         jobs.get(2).getApplicationDeadline());
 
-    JobCardDtoView jobDCardto4 = new JobCardDtoView(
+    JobCardDtoView jobDCardDto4 = new JobCardDtoView(
         4L,
         jobs.get(3).getTitle(),
         jobs.get(3).getApplicationDeadline());
 
-    jobCardDtos.add(jobDCardto1);
-    jobCardDtos.add(jobDCardto2);
-    jobCardDtos.add(jobDCardto3);
-    jobCardDtos.add(jobDCardto4);
+    jobCardDtos.add(jobDCardDto1);
+    jobCardDtos.add(jobDCardDto2);
+    jobCardDtos.add(jobDCardDto3);
+    jobCardDtos.add(jobDCardDto4);
 
     return jobCardDtos;
+  }
+
+  public static JobDtoFormAdd initializeMockJobDtoFormAdd() {
+
+    return new JobDtoFormAdd(
+        "Title Mock",
+        "Description Mock",
+        "Instruction Mock");
+  }
+
+  public static JobDtoFormUpdate initializeMockJobDtoFormUpdate() {
+
+    return new JobDtoFormUpdate(
+        "Updated Title Mock",
+        "Updated Description Mock",
+        "Updated Instruction Mock",
+        "Updated RecruiterName Mock",
+        "Updated adCompany Mock",
+        "Updated adEmail Mock",
+        "Updated adPhone Mock",
+        "Updated adApplicationDeadline Mock");
   }
 
   public static List<AdDtoView> initializeMockAdDtos() {
