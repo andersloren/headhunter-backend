@@ -83,7 +83,6 @@ public class JobService {
     foundAccount.addJob(newJob);
 
     // Dirty check on foundUser, so is automatically persisted
-
     return this.jobRepository.save(newJob);
   }
 
