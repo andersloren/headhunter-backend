@@ -19,94 +19,71 @@ import java.util.List;
 @Transactional
 public class AdService {
 
-    private final AdRepository adRepository;
-    private final JobRepository jobRepository;
+  private final AdRepository adRepository;
+  private final JobRepository jobRepository;
 
-    public AdService(AdRepository adRepository, JobRepository jobRepository) {
-        this.adRepository = adRepository;
-        this.jobRepository = jobRepository;
-    }
+  public AdService(AdRepository adRepository, JobRepository jobRepository) {
+    this.adRepository = adRepository;
+    this.jobRepository = jobRepository;
+  }
 
-    public List<Ad> findAll() {
-        return this.adRepository.findAll();
-    }
+  public List<Ad> findAll() {
+    return this.adRepository.findAll();
+  }
 
-    public List<AdDtoView> getAllAdDtos() {
-        return this.adRepository.getAllAdDtos();
-    }
+  public List<AdDtoView> getAdDtos() {
+    return this.adRepository.getAdDtos();
+  }
 
-    public Ad findById(String id) {
-        return this.adRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("ad", id));
-    }
+  public Ad findById(String id) {
+    return this.adRepository.findById(id)
+        .orElseThrow(() -> new ObjectNotFoundException("ad", id));
+  }
 
-    public List<Ad> getAdsByJobId(long jobId) {
-        this.jobRepository.findById(jobId)
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+  public List<AdDtoView> getAdDtosByJobId(Long jobId) {
+    this.jobRepository.findById(jobId)
+        .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-        return this.adRepository.getAdsByJobId(jobId);
-    }
+    return this.adRepository.getAdDtosByJobId(jobId);
+  }
 
-    public List<AdDtoView> getAdDtosByJobId(Long jobId) {
-        this.jobRepository.findById(jobId)
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+  public AccountDtoView getAccountDtoByAdId(String adId) {
+    this.adRepository.findById(adId)
+        .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
 
-        return this.adRepository.getAdDtosByJobId(jobId);
-    }
+    return this.adRepository.getAccountDtoByAdId(adId);
+  }
 
-    /**
-     * Returns the user that has a job that holds the ad
-     * Relationship: [Ad] *...1 [Job] *...1 [User]
-     *
-     * @param adId The value used to find the right ad.
-     * @return Account The object that is the ultimate owner of the ad.
-     */
+  public long getNumberOfAdsByJobId(long jobId) {
+    this.jobRepository.findById(jobId)
+        .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-    public AccountDtoView getAccountDtoByAdId(String adId) {
-        this.adRepository.findById(adId)
-                .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
+    return this.adRepository.getNumberOfAdsByJobId(jobId);
+  }
 
-        return this.adRepository.getAccountDtoByAdId(adId);
-    }
+  public Ad save(Ad ad) {
+    return this.adRepository.save(ad);
+  }
 
-    public long getNumberOfAdsByJobId(long jobId) {
-        this.jobRepository.findById(jobId)
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+  public Ad addAd(Long jobId, AdDtoForm adDtoForm) {
 
-        return this.adRepository.getNumberOfAdsByJobId(jobId);
-    }
+    Job foundJob = this.jobRepository.findById(jobId)
+        .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-    public Ad save(Ad ad) {
-        return this.adRepository.save(ad);
-    }
+    Ad newAd = new Ad();
+    newAd.setHtmlCode(adDtoForm.htmlCode());
 
-    /**
-     * Establishes relationship between job and ad.
-     *
-     * @param jobId The id that is used to find the job
-     * @return Ad The same Ad that was created.
-     */
+    foundJob.addAd(newAd);
 
-    public Ad addAd(Long jobId, AdDtoForm adDtoForm) {
-        if (adDtoForm == null) throw new NullPointerException("Ad can't be null");
+    // Dirty check on foundUser, so is automatically persisted
 
-        Job foundJob = this.jobRepository.findById(jobId)
-                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+    return this.adRepository.save(newAd);
+  }
 
-        Ad newAd = new Ad();
-        newAd.setHtmlCode(adDtoForm.htmlCode());
+  public void delete(String adId) {
+    Ad foundAd = this.adRepository.findById(adId)
+        .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
 
-        foundJob.addAd(newAd);
-
-        // Dirty check on foundUser, so is automatically persisted
-
-        return this.adRepository.save(newAd);
-    }
-
-    public void delete(String adId) {
-        Ad foundAd = this.adRepository.findById(adId)
-                .orElseThrow(() -> new ObjectNotFoundException("ad", adId));
-
-        this.adRepository.delete(foundAd);
-    }
+    this.adRepository.delete(foundAd);
+  }
 }

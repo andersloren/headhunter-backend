@@ -49,7 +49,7 @@ public class JobControllerAuthorityIntegrationTest {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
                         .with(httpBasic(
-                                "user1-mysql@hh.se",
+                                "user1-integrationTest@hh.se",
                                 "a"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
@@ -60,7 +60,7 @@ public class JobControllerAuthorityIntegrationTest {
     public String adminToken() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
-                        .with(httpBasic("admin-mysql@hh.se",
+                        .with(httpBasic("admin-integrationTest@hh.se",
                                 "a"))); // httpBasic() is from spring-security-test.
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
@@ -69,7 +69,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) findAll - Admin Permission - Success")
+    @DisplayName("GET - findAll - Admin Permission - Success")
     void test_FindAll_AdminPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
@@ -119,7 +119,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) findAll - User No Permission - Exception")
+    @DisplayName("GET - findAll - User No Permission - Exception")
     void test_FindAll_UserNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtos - Admin Permission - Success")
+    @DisplayName("GET - getJobDtos - Admin Permission - Success")
     void test_GetJobDtos_AdminPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtos")
                         .accept(MediaType.APPLICATION_JSON)
@@ -172,7 +172,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtos - User Permission - Success")
+    @DisplayName("GET - getJobDtos - User Permission - Success")
     void test_GetJobDtos_UserPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtos")
                         .accept(MediaType.APPLICATION_JSON)
@@ -212,9 +212,9 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtosByUserEmail - Admin No Permission - Success")
-    void test_getAllJobDtosByUserEmail_AdminNoPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/user1-mysql@hh.se")
+    @DisplayName("GET - getJobDtosByUserEmail - Admin No Permission - Success")
+    void test_getJobDtosByUserEmail_AdminNoPermission_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/user1-integrationTest@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -224,10 +224,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtosByUserEmail - User Permission - Success")
-    void test_getJobDtosByUserEmail_UserPermission_Success() throws Exception {
+    @DisplayName("GET - getJobDtosByEmail - User Permission - Success")
+    void test_getJobDtosByEmail_UserPermission_Success() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByUserEmail" + "/user1-mysql@hh.se")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByEmail" + "/user1-integrationTest@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -251,10 +251,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getAllJobDtosByUserEmail - User Permission - Invalid Email - Exception")
-    void test_getAllJobDtosByUserEmail_UserPermission_InvalidEmail_Exception() throws Exception {
+    @DisplayName("GET - getJobDtosByEmail - User Permission - Invalid Email - Exception")
+    void test_getAllJobDtosByEmail_UserPermission_InvalidEmail_Exception() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByUserEmail" + "/Invalid Email")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByEmail" + "/Invalid Email")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -264,7 +264,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) findById - Admin Permission - Success")
+    @DisplayName("GET - findById - Admin Permission - Success")
     void test_findById_AdminPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/findById" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -284,7 +284,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) findById - Admin Permission - Invalid Id - Exception")
+    @DisplayName("GET - findById - Admin Permission - Invalid Id - Exception")
     void test_findById_AdminPermission_InvalidId_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/findById" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
@@ -296,7 +296,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) findById - User No Permission - Exception")
+    @DisplayName("GET - findById - User No Permission - Exception")
     void test_findById_UserNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/findById" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -308,7 +308,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtoById - Admin No Permission - Success")
+    @DisplayName("GET - getJobDtoById - Admin No Permission - Success")
     void test_GetJobDtoById_AdminNoPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -320,10 +320,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtoById - User Permission - Success")
-    void test_GetJobDtoById_UserPermission_Success() throws Exception {
+    @DisplayName("GET - getJobDto - User Permission - Success")
+    void test_GetJobDto_UserPermission_Success() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/1")
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDto" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -339,10 +339,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) getJobDtoById - User Permission - Invalid Id - Exception")
-    void test_GetJobDtoById_UserPermission_InvalidId_Exception() throws Exception {
+    @DisplayName("GET - getJobDto - User Permission - Invalid Id - Exception")
+    void test_GetJobDto_UserPermission_InvalidId_Exception() throws Exception {
 
-        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtoById" + "/" + Long.MAX_VALUE)
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDto" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -354,7 +354,7 @@ public class JobControllerAuthorityIntegrationTest {
     @Test
     @DisplayName("(POST) addJob - Admin No Permission - (Exception)")
     void test_AddJob_AdminNoPermission_Exception() throws Exception {
-        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-mysql@hh.se")
+        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-integrationTest@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -364,7 +364,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(POST) addJob - User Permission - Success")
+    @DisplayName("POST - addJob - User Permission - Success")
     void test_AddJob_UserPermission_Success() throws Exception {
         JobDtoFormAdd newJob = new JobDtoFormAdd(
                 "New Job, Title",
@@ -373,7 +373,7 @@ public class JobControllerAuthorityIntegrationTest {
 
         String json = this.objectMapper.writeValueAsString(newJob);
 
-        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-mysql@hh.se")
+        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-integrationTest@hh.se")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -391,7 +391,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(POST) addJob - User Permission - Invalid Email - Exception")
+    @DisplayName("POST - addJob - User Permission - Invalid Email - Exception")
     void test_AddJob_UserPermission_InvalidEmail_Exception() throws Exception {
 
         JobDtoFormAdd newJob = new JobDtoFormAdd(
@@ -413,14 +413,14 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(POST) addJob - User Permission - Invalid Form - Exception")
+    @DisplayName("POST - addJob - User Permission - Invalid Form - Exception")
     void test_AddJob_UserPermission_InvalidForm_Exception() throws Exception {
 
         JobDtoFormAdd newJob = new JobDtoFormAdd(null, null, null);
 
         String json = this.objectMapper.writeValueAsString(newJob);
 
-        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-mysql@hh.se")
+        this.mockMvc.perform(post(this.baseUrlJob + "/addJob" + "/user1-integrationTest@hh.se")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -432,7 +432,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(PUT) update - Admin No Permission - Exception")
+    @DisplayName("PUT - update - Admin No Permission - Exception")
     void test_Update_AdminNoPermission_Exception() throws Exception {
         this.mockMvc.perform(put(this.baseUrlJob + "/update" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -444,7 +444,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(PUT) update - User Permission - Success")
+    @DisplayName("PUT - update - User Permission - Success")
     void test_Update_UserPermission_Success() throws Exception {
         JobDtoFormUpdate updateJob = new JobDtoFormUpdate(
                 "Updated Title",
@@ -476,7 +476,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(PUT) update - User Permission - Invalid Id - Exception")
+    @DisplayName("PUT - update - User Permission - Invalid Id - Exception")
     void test_Update_UserPermission_InvalidId_Exception() throws Exception {
         JobDtoFormUpdate updateJob = new JobDtoFormUpdate(
                 "Updated Title",
@@ -502,7 +502,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(PUT) update - User Permission - Invalid Form - Exception")
+    @DisplayName("PUT - update - User Permission - Invalid Form - Exception")
     void test_Update_UserPermission_InvalidForm_Exception() throws Exception {
 
         JobDtoFormUpdate newJob = new JobDtoFormUpdate(
@@ -529,9 +529,9 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - Admin No Permission - Exception")
+    @DisplayName("DELETE - delete - Admin No Permission - Exception")
     void test_Delete_AdminNoPermission_Exception() throws Exception {
-        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-mysql@hh.se" + "/1")
+        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-integrationTest@hh.se" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -541,10 +541,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - User Permission - Success")
+    @DisplayName("DELETE - delete - User Permission - Success")
     void test_Delete_UserPermission_Success() throws Exception {
 
-        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-mysql@hh.se" + "/1")
+        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-integrationTest@hh.se" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -553,7 +553,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - Invalid Email - Exception")
+    @DisplayName("DELETE - delete - Invalid Email - Exception")
     void test_Delete_InvalidEmail_Exception() throws Exception {
 
         this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/Invalid Email" + "/1")
@@ -566,10 +566,10 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - Invalid Id - Exception")
+    @DisplayName("DELETE - delete - Invalid Id - Exception")
     void test_Delete_InvalidId_Exception() throws Exception {
 
-        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-mysql@hh.se" + "/" + Long.MAX_VALUE)
+        this.mockMvc.perform(delete(this.baseUrlJob + "/delete" + "/user1-integrationTest@hh.se" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -579,7 +579,7 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) generate - Admin No Permission (Exception)")
+    @DisplayName("GET - generate - Admin No Permission (Exception)")
     void test_Generate_AdminNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/generate" + "/4")
                         .accept(MediaType.APPLICATION_JSON)
@@ -591,8 +591,8 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(GET) generate - User Permission - Success")
-    @Disabled
+    @DisplayName("GET - generate - User Permission - Success")
+//    @Disabled
     void test_Generate_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/generate" + "/4")
                         .contentType(MediaType.APPLICATION_JSON)

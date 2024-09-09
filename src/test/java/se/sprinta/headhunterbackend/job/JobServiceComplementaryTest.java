@@ -10,17 +10,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.TestsDatabaseInitializer;
 
-import java.util.List;
+import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
 public class JobServiceComplementaryTest {
 
     @Autowired
-    private JobRepository jobRepository;
-
-    @Autowired
     private JobService jobService;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -42,16 +42,10 @@ public class JobServiceComplementaryTest {
     @Test
     @DisplayName("delete - Success")
     void test_Delete_Success() {
-        List<Job> allJobsBeforeDelete = this.jobRepository.findAll();
-        allJobsBeforeDelete.forEach(job ->
-                System.out.println(job.getId())
-        );
 
-        this.jobService.delete("user1-h2@hh.se", 1L);
+        this.jobService.delete("user1-test@hh.se", 1L);
 
-        List<Job> allJobsAfterDelete = this.jobRepository.findAll();
-        allJobsAfterDelete.forEach(job ->
-                System.out.println(job.getId())
-        );
+        assertThrows(ObjectNotFoundException.class,
+                () -> this.jobService.findById(1L));
     }
 }

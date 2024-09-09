@@ -48,7 +48,7 @@ public class AdControllerAuthorityIntegrationTest {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
                         .with(httpBasic(
-                                "user1-mysql@hh.se",
+                                "user1-integrationTest@hh.se",
                                 "a")));
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
@@ -59,7 +59,7 @@ public class AdControllerAuthorityIntegrationTest {
     public String adminToken() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
-                        .with(httpBasic("admin-mysql@hh.se",
+                        .with(httpBasic("admin-integrationTest@hh.se",
                                 "a")));
 
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
@@ -91,7 +91,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("findAll - Admin Permission - Success")
+    @DisplayName("GET - findAll - Admin Permission - Success")
     void test_FindAll_AdminPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
@@ -103,7 +103,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("findAll - User No Permission - Exception")
+    @DisplayName("GET - findAll - User No Permission - Exception")
     void test_FindAll_UserNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/findAll")
                         .accept(MediaType.APPLICATION_JSON)
@@ -115,7 +115,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("findById - Admin Permission - Success")
+    @DisplayName("GET - findById - Admin Permission - Success")
     void test_FindById_AdminPermission_Success() throws Exception {
         String adId = getAdId();
 
@@ -129,7 +129,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("findById - User No Permission - Exception")
+    @DisplayName("GET - findById - User No Permission - Exception")
     void test_FindById_UserNoPermission_Exception() throws Exception {
         String adId = getAdId();
 
@@ -143,7 +143,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAdsByJobId - Admin No Permission - Exception")
+    @DisplayName("GET - getAdsByJobId - Admin No Permission - Exception")
     void test_GetAdsByJobId_AdminNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getAdsByJobId" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -155,31 +155,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAdsByJobId - User Permission - Success")
-    void test_GetAdsByJobId_UserPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAd + "/getAdsByJobId" + "/1")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, userToken()))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Get Ads by Job Id Success"))
-                .andExpect(jsonPath("$.data", Matchers.hasSize(2)));
-    }
-
-    @Test
-    @DisplayName("getAdsByJobId - User Permission - Invalid Job Id - Exception")
-    void test_GetAdsByJobId_UserPermission_InvalidJobId_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAd + "/getAdsByJobId" + "/" + Long.MAX_VALUE)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, userToken()))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find job with Id " + Long.MAX_VALUE))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @Test
-    @DisplayName("getAdDtosByJobId - Admin No Permission - Exception")
+    @DisplayName("GET - getAdDtosByJobId - Admin No Permission - Exception")
     void test_GetAdDtosByJobId_AdminNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getAdDtosByJobId" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -191,7 +167,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAdDtosByJobId - User Permission - Success")
+    @DisplayName("GET - getAdDtosByJobId - User Permission - Success")
     void test_GetAdDtosByJobId_UserPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getAdDtosByJobId" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -203,7 +179,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAdDtosByJobId - User Permission - Invalid Job Id - Exception")
+    @DisplayName("GET - getAdDtosByJobId - User Permission - Invalid Job Id - Exception")
     void test_GetAdDtosByJobId_UserPermission_InvalidJobId_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getAdDtosByJobId" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
@@ -215,7 +191,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getNumberOfAdsByJobId - Admin No Permission - Exception")
+    @DisplayName("GET - getNumberOfAdsByJobId - Admin No Permission - Exception")
     void test_GetNumberOfAdsByJobId_AdminNoPermission_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getNumberOfAdsByJobId" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -227,7 +203,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getNumberOfAdsByJobId - User Permission - Success")
+    @DisplayName("GET - getNumberOfAdsByJobId - User Permission - Success")
     void test_GetNumberOfAdsByJobId_UserPermission_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getNumberOfAdsByJobId" + "/1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -239,7 +215,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getNumberOfAdsByJobId - User Permission - Invalid Job Id - Exception")
+    @DisplayName("GET - getNumberOfAdsByJobId - User Permission - Invalid Job Id - Exception")
     void test_GetNumberOfAdsByJobId_UserPermission_InvalidJobId_Exception() throws Exception {
         this.mockMvc.perform(get(this.baseUrlAd + "/getNumberOfAdsByJobId" + "/" + Long.MAX_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
@@ -251,7 +227,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAccountDtoByAdId - Admin No Permission - Exception")
+    @DisplayName("GET - getAccountDtoByAdId - Admin No Permission - Exception")
     void test_GetAccountDtoByAdId_AdminNoPermission_Exception() throws Exception {
         String adId = getAdId();
 
@@ -265,7 +241,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("getAccountDtoByAdId - User Permission - Success")
+    @DisplayName("GET - getAccountDtoByAdId - User Permission - Success")
     void test_GetAccountDtoByAdId_UserPermission_Success() throws Exception {
         String adId = getAdId();
 
@@ -281,11 +257,10 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("adAdd - Admin No Permission - Exception")
+    @DisplayName("POST - adAdd - Admin No Permission - Exception")
     void test_AddAd_AdminNoPermission_Exception() throws Exception {
         AdDtoForm newAd = new AdDtoForm(
-                "htmlCode 4"
-        );
+                "htmlCode 4");
 
         String json = this.objectMapper.writeValueAsString(newAd);
 
@@ -301,11 +276,10 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("addAd - User Permission - Success")
+    @DisplayName("POST - addAd - User Permission - Success")
     void test_AddAd_UserPermission_Success() throws Exception {
         AdDtoForm newAd = new AdDtoForm(
-                "htmlCode 4"
-        );
+                "htmlCode 4");
 
         String json = this.objectMapper.writeValueAsString(newAd);
 
@@ -326,8 +300,7 @@ public class AdControllerAuthorityIntegrationTest {
     @DisplayName("addAd - User Permission - Invalid Job Id - Exception")
     void test_AddAd_UserPermission_InvalidJobId_Exception() throws Exception {
         AdDtoForm newAd = new AdDtoForm(
-                "htmlCode 4"
-        );
+                "htmlCode 4");
 
         String json = this.objectMapper.writeValueAsString(newAd);
 
@@ -343,7 +316,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) addAd - Admin No Permission - Exception")
+    @DisplayName("DELETE - addAd - Admin No Permission - Exception")
     void test_Delete_AdminNoPermission_Exception() throws Exception {
         String adId = getAdId();
 
@@ -357,7 +330,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - User Permission - Success")
+    @DisplayName("DELETE - delete - User Permission - Success")
     void test_Delete_UserPermission_Success() throws Exception {
         String adId = getAdId();
 
@@ -370,7 +343,7 @@ public class AdControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("(DELETE) delete - User Permission - Invalid Ad Id - Exception")
+    @DisplayName("DELETE - delete - User Permission - Invalid Ad Id - Exception")
     void test_Delete_UserPermission_InvalidJobId_Exception() throws Exception {
         String adId = getAdId();
 
@@ -383,5 +356,3 @@ public class AdControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }
-
-

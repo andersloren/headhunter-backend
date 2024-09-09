@@ -1,14 +1,17 @@
 package se.sprinta.headhunterbackend.job;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
-import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.AccountRepository;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.AdRepository;
 import se.sprinta.headhunterbackend.client.chat.ChatClient;
@@ -19,18 +22,18 @@ import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.job.dto.JobIdAndTitleDtoView;
+import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import se.sprinta.headhunterbackend.account.Account;
-import se.sprinta.headhunterbackend.account.AccountRepository;
 import se.sprinta.headhunterbackend.utils.HtmlUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.*;
 
@@ -53,14 +56,15 @@ class JobServiceMockTest {
 
     private List<Job> jobs = new ArrayList<>();
     private List<JobDtoView> jobDtos = new ArrayList<>();
-
     private List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         this.jobs = MockDatabaseInitializer.initializeMockJobs();
         this.jobDtos = MockDatabaseInitializer.initializeMockJobDtos();
         this.jobCardDtoViews = MockDatabaseInitializer.initializeMockJobCardDtos();
+        this.accounts = MockDatabaseInitializer.initializeMockAccounts();
     }
 
     @Test
@@ -81,7 +85,7 @@ class JobServiceMockTest {
     }
 
     @Test
-    @DisplayName("findAllJobs - List<Job>")
+    @DisplayName("GET - findAll - Success")
     void testFindAllJobs() {
         // Given
         given(this.jobRepository.findAll()).willReturn(this.jobs);
@@ -97,7 +101,7 @@ class JobServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAllJobDtos - List<JobDtoView>")
+    @DisplayName("GET - getJobDtos - Success")
     void testGetAllJobDtos() {
         // Given
         given(this.jobRepository.getJobDtos()).willReturn(this.jobDtos);
@@ -113,47 +117,80 @@ class JobServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAllJobDtosByEmail - List<Job>")
-    void test_GetAllJobsByEmail() {
+    @DisplayName("GET - getJobDtosByEmail - Success")
+    void test_GetJobsByEmail() {
         Account account = new Account();
-        account.setEmail("user@hh.se");
+        account.setEmail("user1-mock@hh.se");
         account.setPassword("a");
         account.setRoles("user");
 
         // Given
-        given(this.accountRepository.findById("user@hh.se")).willReturn(Optional.of(account));
-        given(this.jobRepository.getJobDtosByUserEmail("user@hh.se")).willReturn(this.jobDtos);
+        given(this.accountRepository.findById("user1-mock@hh.se")).willReturn(Optional.of(account));
+        given(this.jobRepository.getJobDtosByEmail("user1-mock@hh.se")).willReturn(this.jobDtos);
 
         // When
-        List<JobDtoView> foundJobs = this.jobService.getJobDtosByUserEmail("user@hh.se");
+        List<JobDtoView> foundJobs = this.jobService.getJobDtosByEmail("user1-mock@hh.se");
 
         // Then
         assertEquals(foundJobs.size(), this.jobs.size());
 
         // Verify
-        then(this.jobRepository).should().getJobDtosByUserEmail("user@hh.se");
+        then(this.jobRepository).should().getJobDtosByEmail("user1-mock@hh.se");
     }
 
-
     @Test
-    @DisplayName("getAllJobCardsByUserEmail - List<JobDtoView>")
-    void test_GetAllJobCardsByUserEmail_Success() {
-
-        // Given
-        given(this.jobRepository.getJobCardDtosByUserEmail("user@hh.se")).willReturn(this.jobCardDtoViews);
-
+    @DisplayName("GET - getJobDtosByEmail - Non-existent Email - Exception")
+    void test_GetJobDtosByEmail_NonExistentEmail_Exception() {
         // When
-        List<JobCardDtoView> jobDtos = this.jobService.getJobCardDtosByUserEmail("user@hh.se");
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.jobService.getJobDtosByEmail("abc"));
 
         // Then
-        assertEquals(this.jobCardDtoViews.size(), jobDtos.size());
-
-        // Verify
-        then(this.jobRepository).should().getJobCardDtosByUserEmail("user@hh.se");
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find account with Email abc");
     }
 
     @Test
-    @DisplayName("findByID - Success")
+    @DisplayName("GET - getJobCardDtosByEmail - Success")
+    void test_GetJobCardsByEmail_Success() {
+        List<Job> filteredJobs = this.jobs.stream()
+                .filter(job -> job.getAccount().getEmail().equals("user1-mock@hh.se"))
+                .toList();
+
+        System.out.println(filteredJobs);
+
+        // Given
+        given(this.accountRepository.findById("user1-mock@hh.se")).willReturn(Optional.of(this.accounts.get(0)));
+        given(this.jobRepository.getJobCardDtosByEmail("user1-mock@hh.se")).willReturn(List.of(
+                this.jobCardDtoViews.get(0),
+                this.jobCardDtoViews.get(1)));
+
+        // When
+        List<JobCardDtoView> jobCardDtos = this.jobService.getJobCardDtosByEmail("user1-mock@hh.se");
+
+        // Then
+        assertEquals(jobCardDtos.size(), filteredJobs.size());
+
+        // Verify
+        then(this.jobRepository).should().getJobCardDtosByEmail("user1-mock@hh.se");
+    }
+
+    @Test
+    @DisplayName("GET - getJobDtoDtosByEmail - Non-existent Email - Exception")
+    void test_GetJobDtoDtosByEmail_NonExistentEmail_Exception() {
+        // When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.jobService.getJobDtosByEmail("abc"));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find account with Email abc");
+    }
+
+    @Test
+    @DisplayName("GET - findByID - Success")
     void test_FindByIdSuccess() {
         Job job = new Job();
 
@@ -170,22 +207,28 @@ class JobServiceMockTest {
         then(this.jobRepository).should().findById(1L);
     }
 
+    @DisplayName("GET - findByID - Invalid Id - Exception")
     @Test
-    @DisplayName("findByID - Invalid Id")
     void test_FindJobByInvalidId() {
+        // Given
+        given(this.jobRepository.findById(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
+
+        // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
                 () -> this.jobService.findById(Long.MAX_VALUE));
 
+        // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
 
+        // Verify
         then(this.jobRepository).should().findById(Long.MAX_VALUE);
     }
 
     @Test
-    @DisplayName("getFullJobDtoByJobId - Success")
-    void test_GetFullJobDtoByJobIdSuccess() {
+    @DisplayName("GET - getJobDto - Success")
+    void test_GetJobDto_Success() {
         JobDtoView jobDtoView = new JobDtoView(
                 "Title",
                 "Description",
@@ -193,29 +236,27 @@ class JobServiceMockTest {
                 "adCompany",
                 "adEmail",
                 "adPhone",
-                "applicationDeadline"
-        );
+                "applicationDeadline");
 
         // Given
-        given(this.jobRepository.getFullJobDtoByJobId(Mockito.anyLong())).willReturn(Optional.of(jobDtoView));
+        given(this.jobRepository.getJobDto(Mockito.anyLong())).willReturn(Optional.of(jobDtoView));
 
         // When
-        JobDtoView foundJobDtoView = this.jobService.getFullJobDtoByJobId(Mockito.anyLong());
+        JobDtoView foundJobDtoView = this.jobService.getJobDto(Mockito.anyLong());
 
         // Then
         assertEquals(foundJobDtoView, jobDtoView);
 
         // Verify
-        then(this.jobRepository).should().getFullJobDtoByJobId(Mockito.anyLong());
+        then(this.jobRepository).should().getJobDto(Mockito.anyLong());
     }
 
     @Test
-    @DisplayName("getFullJobDtoByJobId - Invalid Id")
-    void test_GetFullJobDtoByJobIdInvalidId() {
-
+    @DisplayName("GET - getJobDto - Invalid Id - Exception")
+    void test_GetJobDto_InvalidId_Exception() {
         // Given
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.jobService.getFullJobDtoByJobId(Long.MAX_VALUE));
+                () -> this.jobService.getJobDto(Long.MAX_VALUE));
 
         // Then
         assertThat(thrown)
@@ -223,36 +264,18 @@ class JobServiceMockTest {
                 .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
 
         // Verify
-        then(this.jobRepository).should().getFullJobDtoByJobId(Long.MAX_VALUE);
+        then(this.jobRepository).should().getJobDto(Long.MAX_VALUE);
+
     }
 
     @Test
-    @DisplayName("save - Success")
-    void test_Save() {
-        Job job = new Job();
-
-        // Given
-        given(this.jobRepository.save(job)).willReturn(job);
-
-        // When
-        Job savedJob = this.jobRepository.save(job);
-
-        // Then
-        assertEquals(savedJob, job);
-
-        // Verify
-        then(this.jobRepository).should().save(job);
-    }
-
-    @Test
-    @DisplayName("addJob - Success")
+    @DisplayName("POST - addJob - Success")
     void test_AddJob() {
 
         Job newJob = new Job(
                 "title",
                 "description",
-                "instruction"
-        );
+                "instruction");
 
         ArgumentCaptor<Job> jobArgumentCaptor = forClass(Job.class);
 
@@ -281,9 +304,9 @@ class JobServiceMockTest {
         then(this.accountRepository).should().findAccountByEmail("email");
         then(this.jobRepository).should().save(jobArgumentCaptor.capture());
     }
-
+  
     @Test
-    @DisplayName("update - Success")
+    @DisplayName("PUT - update - Success")
     void test_UpdateSuccess() {
         JobDtoFormUpdate jobDtoFormUpdate = new JobDtoFormUpdate(
                 "updated title",
@@ -293,21 +316,23 @@ class JobServiceMockTest {
                 "adCompany",
                 "adEmail",
                 "adPhone",
-                "applicationDeadline"
-        );
+                "applicationDeadline");
 
         ArgumentCaptor<Job> jobArgumentCaptor = forClass(Job.class);
 
         Job foundJob = new Job();
 
+        // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(foundJob));
         given(this.jobRepository
                 .save(jobArgumentCaptor.capture()))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
+        // When
         Job savedJob = this.jobService.update(1L, jobDtoFormUpdate);
         Job capturedJob = jobArgumentCaptor.getValue();
 
+        // Then
         assertEquals(savedJob.getTitle(), capturedJob.getTitle());
         assertEquals(savedJob.getDescription(), capturedJob.getDescription());
         assertEquals(savedJob.getInstruction(), capturedJob.getInstruction());
@@ -317,12 +342,26 @@ class JobServiceMockTest {
         assertEquals(savedJob.getAdPhone(), capturedJob.getAdPhone());
         assertEquals(savedJob.getApplicationDeadline(), capturedJob.getApplicationDeadline());
 
+        // Verify
         then(this.jobRepository).should().findById(1L);
         then(this.jobRepository).should().save(jobArgumentCaptor.capture());
     }
 
     @Test
-    @DisplayName("update - Invalid Id")
+    @DisplayName("PUT - update - Null Input - Exception")
+    void test_UpdateNullUpdate() {
+        // When
+        Throwable thrown = assertThrows(NullPointerException.class,
+                () -> this.jobService.update(1L, null));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Update can't be null");
+    }
+
+    @Test
+    @DisplayName("PUT - update - Invalid Id - Exception")
     void test_UpdateInvalidId() {
         JobDtoFormUpdate jobDtoFormUpdate = new JobDtoFormUpdate(
                 "updated title",
@@ -332,83 +371,82 @@ class JobServiceMockTest {
                 "adCompany",
                 "adEmail",
                 "adPhone",
-                "applicationDeadline"
-        );
+                "applicationDeadline");
 
+        // Given
+        given(this.jobRepository.findById(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
+
+        // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
                 () -> this.jobService.update(Long.MAX_VALUE, jobDtoFormUpdate));
 
+        // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
-    }
-
-    @Test
-    @DisplayName("update - Null Update")
-    void test_UpdateNullUpdate() {
-        Throwable thrown = assertThrows(NullPointerException.class,
-                () -> this.jobService.update(1L, null));
-
-        assertThat(thrown)
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("Update can't be null");
-    }
-
-    @Test
-    @DisplayName("delete - Success")
-    void test_Delete() {
-        Job job = new Job();
-        Account account = new Account();
-        account.setEmail("email");
-        job.setAccount(account);
-
-        // Given
-        given(this.jobRepository.findById(1L)).willReturn(Optional.of(job));
-        given(this.accountRepository.findAccountByEmail("email")).willReturn(Optional.of(account));
-        willDoNothing().given(this.jobRepository).delete(job);
-
-        // When
-        this.jobService.delete("email", 1L);
 
         // Verify
-        then(this.jobRepository).should().findById(1L);
-        then(this.accountRepository).should().findAccountByEmail("email");
+        then(this.jobRepository).should().findById(Long.MAX_VALUE);
     }
 
     @Test
-    @DisplayName("delete - Invalid User Email")
+    @DisplayName("DELETE - delete - Success")
+    void test_Delete() {
+        // Given
+        given(this.accountRepository.findById("user1-mock@hh.se")).willReturn(Optional.of(this.accounts.get(0)));
+        given(this.jobRepository.findById(1L)).willReturn(Optional.of(this.jobs.get(0)));
+        willDoNothing().given(this.jobRepository).delete(this.jobs.get(0));
+
+        // When
+        this.jobService.delete("user1-mock@hh.se", 1L);
+
+        // Verify
+        then(this.accountRepository).should().findById("user1-mock@hh.se");
+        then(this.jobRepository).should().findById(1L);
+    }
+
+    @Test
+    @DisplayName("DELETE - delete - Invalid Email - Exception")
     void test_DeleteWithInvalidUserEmail() {
+        // Given
+        given(this.accountRepository.findById("abc")).willThrow(new ObjectNotFoundException("account", "abc"));
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.jobService.delete("Invalid Email", 1L));
+                () -> this.jobService.delete("abc", 1L));
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find account with Email Invalid Email");
+                .hasMessage("Could not find account with Email abc");
+
+        // Verify
+        then(this.accountRepository).should().findById("abc");
     }
 
     @Test
-    @DisplayName("delete - Invalid Id")
+    @DisplayName("DELETE - delete - Invalid Job Id - Exception")
     void test_DeleteWithInvalidId() {
-        Account account = new Account();
-
         // Given
-        given(this.accountRepository.findAccountByEmail("email")).willReturn(Optional.of(account));
+        given(this.accountRepository.findById("user1-mock@hh.se")).willReturn(Optional.of(this.accounts.get(0)));
+        given(this.jobRepository.findById(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.jobService.delete("email", Long.MAX_VALUE));
+                () -> this.jobService.delete("user1-mock@hh.se", Long.MAX_VALUE));
 
         // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+
+        // Verify
+        then(this.accountRepository).should().findById("user1-mock@hh.se");
+        then(this.jobRepository).should().findById(Long.MAX_VALUE);
     }
 
     @Test
-    @DisplayName("generate - Success")
+    @DisplayName("POST - generate - Success")
     void test_GenerateSuccess() {
         Job job = new Job();
         job.setId(1L);
@@ -464,4 +502,22 @@ class JobServiceMockTest {
         assertEquals("<!DOCTYPE html><html><body>generate content</body></html>", substringResponse);
     }
 
+    @Test
+    @DisplayName("POST - generate - Invalid Job Id - Exception")
+    void test_Generate_InvalidJobId_Exception() {
+        // Given
+        given(this.jobRepository.findById(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
+
+        // When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.jobService.generate(Long.MAX_VALUE));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+
+        // Verify
+        then(this.jobRepository).should().findById(Long.MAX_VALUE);
+    }
 }

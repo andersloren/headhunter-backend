@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend;
 
 import jakarta.transaction.Transactional;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -65,6 +66,8 @@ public class TestsDatabaseInitializer {
     @Getter
     private static List<Ad> ads = new ArrayList<>();
 
+    private final List<AccountDtoView> accountDtosTest = new ArrayList<>();
+
     public TestsDatabaseInitializer(AccountRepository accountRepository, JobRepository jobRepository,
                                     AdRepository adRepository) {
         this.accountRepository = accountRepository;
@@ -74,30 +77,25 @@ public class TestsDatabaseInitializer {
 
     public void initializeH2Database() {
 
-        // jdbcTemplate.execute("TRUNCATE TABLE ad");
-        // jdbcTemplate.execute("TRUNCATE TABLE job");
-        // jdbcTemplate.execute("TRUNCATE TABLE account");
-        // jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-
-        Account admin = new Account();
-        admin.setEmail("admin-h2@hh.se");
-        admin.setPassword("a");
-        admin.setRoles("admin");
-
         Account user1 = new Account();
-        user1.setEmail("user1-h2@hh.se");
+        user1.setEmail("user1-test@hh.se");
         user1.setPassword("a");
         user1.setRoles("user");
 
         Account user2 = new Account();
-        user2.setEmail("user2-h2@hh.se");
+        user2.setEmail("user2-test@hh.se");
         user2.setPassword("a");
         user2.setRoles("user");
 
         Account user3 = new Account();
-        user3.setEmail("user3-h2@hh.se");
+        user3.setEmail("user3-test@hh.se");
         user3.setPassword("a");
         user3.setRoles("user");
+
+        Account user4 = new Account();
+        user4.setEmail("user4-test@hh.se");
+        user4.setPassword("a");
+        user4.setRoles("user");
 
         /**
          * Jobs to be persisted
@@ -155,10 +153,10 @@ public class TestsDatabaseInitializer {
         ad2.setJob(job1);
         ad3.setJob(job2);
 
-        this.accountRepository.save(admin);
         this.accountRepository.save(user1);
         this.accountRepository.save(user2);
         this.accountRepository.save(user3);
+        this.accountRepository.save(user4);
 
         this.jobRepository.save(job1);
         this.jobRepository.save(job2);
@@ -169,20 +167,22 @@ public class TestsDatabaseInitializer {
         this.adRepository.save(ad2);
         this.adRepository.save(ad3);
 
-        accounts.add(admin);
+        accounts.clear();
         accounts.add(user1);
         accounts.add(user2);
         accounts.add(user3);
+        accounts.add(user4);
 
+        jobs.clear();
         jobs.add(job1);
         jobs.add(job2);
         jobs.add(job3);
         jobs.add(job4);
 
+        ads.clear();
         ads.add(ad1);
         ads.add(ad2);
         ads.add(ad3);
-
     }
 
     public List<AccountDtoView> initializeH2AccountDtos() {

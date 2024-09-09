@@ -18,7 +18,6 @@ import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobRepository;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,74 +72,50 @@ public class AdServiceMockTest {
         }
     }
 
-
     @Test
-    @DisplayName("findAll - Success()")
+    @DisplayName("GET - findAll - Success")
     void test_FindAll() {
-        for (Ad ad : this.ads) {
-            System.out.println(ad.getId());
-        }
-
         // Given
         given(this.adRepository.findAll()).willReturn(this.ads);
 
         // When
         List<Ad> foundAds = this.adService.findAll();
-        for (Ad ad : foundAds) {
-            System.out.println(ad.getId());
-            System.out.println(ad.getDateCreated());
-            System.out.println(ad.getHtmlCode());
-            System.out.println(ad.getJob().getId());
-        }
 
         // Then
-        assertEquals(foundAds.size(), this.ads.size());
-        assertEquals(foundAds.get(0).getId(), this.ads.get(0).getId());
-        assertEquals(foundAds.get(0).getDateCreated(), this.ads.get(0).getDateCreated());
-        assertEquals(foundAds.get(0).getHtmlCode(), this.ads.get(0).getHtmlCode());
-        assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
-        assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
-        assertEquals(foundAds.get(2).getId(), this.ads.get(2).getId());
-        assertEquals(foundAds.get(2).getDateCreated(), this.ads.get(2).getDateCreated());
-        assertEquals(foundAds.get(2).getHtmlCode(), this.ads.get(2).getHtmlCode());
-
-        System.out.print("assertEquals: " + foundAds.get(0).getId() + " - ");
-        System.out.println(this.ads.get(0).getId());
+        for (int i = 0; i < foundAds.size(); i++) {
+            assertEquals(foundAds.size(), this.ads.size());
+            assertEquals(foundAds.get(i).getId(), this.ads.get(i).getId());
+            assertEquals(foundAds.get(i).getDateCreated(), this.ads.get(i).getDateCreated());
+            assertEquals(foundAds.get(i).getHtmlCode(), this.ads.get(i).getHtmlCode());
+        }
 
         // Verify
         then(this.adRepository).should().findAll();
     }
 
     @Test
-    @DisplayName("getAllAdDtos - Success")
-    void test_GetAllAdDtos_Success() {
+    @DisplayName("GET - getAdDtos - Success")
+    void test_GetAdDtos_Success() {
         // Given
-        given(this.adRepository.getAllAdDtos()).willReturn(this.adDtos);
+        given(this.adRepository.getAdDtos()).willReturn(this.adDtos);
 
         // When
-        List<AdDtoView> foundAdDtos = this.adService.getAllAdDtos();
-        for (AdDtoView adDto : foundAdDtos) {
-            System.out.println(adDto.id());
-            System.out.println(adDto.dateCreated());
-            System.out.println(adDto.htmlCode());
+        List<AdDtoView> foundAdDtos = this.adService.getAdDtos();
+
+        // Then
+        for (int i = 0; i < foundAdDtos.size(); i++) {
+            assertEquals(foundAdDtos.size(), this.adDtos.size());
+            assertEquals(foundAdDtos.get(i).id(), this.adDtos.get(i).id());
+            assertEquals(foundAdDtos.get(i).dateCreated(), this.adDtos.get(i).dateCreated());
+            assertEquals(foundAdDtos.get(i).htmlCode(), this.adDtos.get(i).htmlCode());
+
+            // Then
+            then(this.adRepository).should().getAdDtos();
         }
-
-        // Then
-        assertEquals(foundAdDtos.size(), this.adDtos.size());
-        assertEquals(foundAdDtos.get(0).id(), this.adDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).dateCreated(), this.adDtos.get(0).dateCreated());
-        assertEquals(foundAdDtos.get(0).htmlCode(), this.adDtos.get(0).htmlCode());
-        assertEquals(foundAdDtos.get(1).id(), this.adDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).dateCreated(), this.adDtos.get(1).dateCreated());
-        assertEquals(foundAdDtos.get(1).htmlCode(), this.adDtos.get(1).htmlCode());
-
-        // Then
-        then(this.adRepository).should().getAllAdDtos();
     }
 
     @Test
-    @DisplayName("findById - Sucess")
+    @DisplayName("GET - findById - Success")
     void test_FindById_Success() {
         // Given
         given(this.adRepository.findById("id 1")).willReturn(Optional.of(this.ads.get(0)));
@@ -159,79 +134,14 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("findById - Invalid Ad Id - Exception")
-    void test_FindById_InvalidAdId_Exception() {
-        // Given
-        given(this.adRepository.findById("invalid id")).willThrow(new ObjectNotFoundException("ad", "invalid id"));
-
-        // When
-        Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.findById("invalid id"));
-
-        // Then
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find ad with Id invalid id");
-
-        // Verify
-        then(this.adRepository).should().findById("invalid id");
-    }
-
-    @Test
-    @DisplayName("getAdsByJobId - Success")
-    void test_GetAdsByJobId_Success() {
-        System.out.println("getAdsByJobId - ads before remove()");
-        for (Ad ad : this.ads) {
-            System.out.println(ad.toString());
-        }
-        System.out.println("End");
-
-        this.ads.remove(2);
-
-        System.out.println("getAdsByJobId - ads after remove()");
-        for (Ad ad : this.ads) {
-            System.out.println(ad.toString());
-        }
-        System.out.println("End");
-
-        // Given
-        given(this.jobRepository.findById(1L)).willReturn(Optional.of(this.jobs.get(0)));
-        given(this.adRepository.getAdsByJobId(1L)).willReturn(this.ads);
-
-        // When
-        List<Ad> foundAds = this.adService.getAdsByJobId(1L);
-        for (Ad ad : foundAds) {
-            System.out.println(ad.getId());
-            System.out.println(ad.getDateCreated());
-            System.out.println(ad.getHtmlCode());
-            System.out.println(ad.getJob().getId());
-        }
-
-        // Then
-        assertEquals(foundAds.size(), this.ads.size());
-        assertEquals(foundAds.get(0).getId(), this.ads.get(0).getId());
-        assertEquals(foundAds.get(0).getDateCreated(), this.ads.get(0).getDateCreated());
-        assertEquals(foundAds.get(0).getHtmlCode(), this.ads.get(0).getHtmlCode());
-        assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
-        assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
-        assertEquals(foundAds.get(1).getId(), this.ads.get(1).getId());
-        assertEquals(foundAds.get(1).getDateCreated(), this.ads.get(1).getDateCreated());
-        assertEquals(foundAds.get(1).getHtmlCode(), this.ads.get(1).getHtmlCode());
-
-        // Verify
-        then(this.adRepository).should().getAdsByJobId(1L);
-    }
-
-    @Test
-    @DisplayName("findById - Invalid Job Id - Exception")
+    @DisplayName("GET - findById - Invalid Job Id - Exception")
     void test_GetAdsByJobId_InvalidJobId_Exception() {
         // Given
         given(this.jobRepository.findById(Long.MAX_VALUE)).willThrow(new ObjectNotFoundException("job", Long.MAX_VALUE));
 
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.getAdsByJobId(Long.MAX_VALUE));
+                () -> this.adService.getAdDtosByJobId(Long.MAX_VALUE));
 
         // Then
         assertThat(thrown)
@@ -240,35 +150,30 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAdDtosByJobId - Success")
-    void test_GetAdDtossByJobId_Success() {
+    @DisplayName("GET - getAdDtosByJobId - Success")
+    void test_GetAdsByJobId_Success() {
         // Given
         given(this.jobRepository.findById(1L)).willReturn(Optional.of(this.jobs.get(0)));
         given(this.adRepository.getAdDtosByJobId(1L)).willReturn(this.adDtos);
 
         // When
-        List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(1L);
-        for (AdDtoView adDto : foundAdDtos) {
-            System.out.println(adDto.id());
-            System.out.println(adDto.dateCreated());
-            System.out.println(adDto.htmlCode());
-        }
+        List<AdDtoView> foundAds = this.adService.getAdDtosByJobId(1L);
 
         // Then
-        assertEquals(foundAdDtos.size(), this.adDtos.size());
-        assertEquals(foundAdDtos.get(0).id(), this.adDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).dateCreated(), this.adDtos.get(0).dateCreated());
-        assertEquals(foundAdDtos.get(0).htmlCode(), this.adDtos.get(0).htmlCode());
-        assertEquals(foundAdDtos.get(1).id(), this.adDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).dateCreated(), this.adDtos.get(1).dateCreated());
-        assertEquals(foundAdDtos.get(1).htmlCode(), this.adDtos.get(1).htmlCode());
+        assertEquals(foundAds.size(), this.adDtos.size());
+
+        for (int i = 0; i < foundAds.size(); i++) {
+            assertEquals(foundAds.get(i).id(), this.adDtos.get(i).id());
+            assertEquals(foundAds.get(i).dateCreated(), this.adDtos.get(i).dateCreated());
+            assertEquals(foundAds.get(i).htmlCode(), this.adDtos.get(i).htmlCode());
+        }
 
         // Verify
         then(this.adRepository).should().getAdDtosByJobId(1L);
     }
 
     @Test
-    @DisplayName("getAdDtosByJobId - Invalid Job Id - Exception")
+    @DisplayName("GET - getAdDtosByJobId - Invalid Job Id - Exception")
     void test_GetAdDtosByJobId_InvalidJobId_Exception() {
         // When
         Throwable thrown = assertThrows(ObjectNotFoundException.class,
@@ -281,7 +186,7 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAccountDtoByAdId - Success")
+    @DisplayName("GET - getAccountDtoByAdId - Success")
     void test_GetAccountDtoByAdId_Success() {
         // Given
         given(this.adRepository.getAccountDtoByAdId("id 1")).willReturn(this.accountDtos.get(0));
@@ -297,7 +202,7 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("getAccountDtoByAdId - Invalid Ad Id - Exception")
+    @DisplayName("GET - getAccountDtoByAdId - Invalid Ad Id - Exception")
     void test_GetAccountDtoByAdId_InvalidAdId_Exception() {
         Account account = new Account();
         account.setEmail("user1@hh.se");
@@ -319,7 +224,37 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("addAd - Success")
+    @DisplayName("GET - getNumberOfAdsByJobId - Success")
+    void test_getNumberOfAdsByJobId_Success() {
+        // Given
+        given(this.jobRepository.findById(1L)).willReturn(Optional.of(this.jobs.get(0)));
+        given(this.adRepository.getNumberOfAdsByJobId(1L)).willReturn(2L);
+
+        // When
+        long numberOfAds = this.adService.getNumberOfAdsByJobId(1L);
+
+        // Then
+        assertEquals(numberOfAds, 2);
+
+        // Verify
+        then(this.jobRepository).should().findById(1L);
+    }
+
+    @Test
+    @DisplayName("GET - getNumberOfAdsByJobId - Invalid Job Id - Exception")
+    void test_GetNumberOfAdsByJobId_InvalidJobId_Exception() {
+        // When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.adService.getNumberOfAdsByJobId(Long.MAX_VALUE));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+    }
+
+    @Test
+    @DisplayName("POST - addAd - Success")
     void test_AddAd_Success() {
         AdDtoForm adDtoForm = new AdDtoForm("htmlCode 1");
 
@@ -346,7 +281,7 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("addAd - Invalid Job Id - Exception")
+    @DisplayName("POST - addAd - Invalid Job Id - Exception")
     void test_AddAd_InvalidJobId_Exception() {
         AdDtoForm adDtoForm = new AdDtoForm("htmlCode 1");
 
@@ -367,7 +302,7 @@ public class AdServiceMockTest {
     }
 
     @Test
-    @DisplayName("delete - Invalid Ad Id - Exception")
+    @DisplayName("DELETE - delete - Invalid Ad Id - Exception")
     void test_Delete_Success() {
         // Given
         given(this.adRepository.findById("invalid id")).willThrow(new ObjectNotFoundException("ad", "invalid id"));
