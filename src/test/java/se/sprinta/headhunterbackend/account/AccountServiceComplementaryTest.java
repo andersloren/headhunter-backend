@@ -16,27 +16,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ActiveProfiles("test")
 public class AccountServiceComplementaryTest {
 
-    @Autowired
-    private AccountService accountService;
+  @Autowired
+  private AccountService accountService;
 
-    @Autowired
-    private TestsDatabaseInitializer h2DbInit;
+  @Autowired
+  private TestsDatabaseInitializer h2DbInit;
 
-    @BeforeEach
-    void setUp() {
-        this.h2DbInit.initializeH2Database();
-    }
+  @BeforeEach
+  void setUp() {
+    this.h2DbInit.initializeH2Database();
+  }
 
-    @AfterEach
-    void tearDown() {
-        this.h2DbInit.clearH2Database();
-    }
+  @AfterEach
+  void tearDown() {
+    this.h2DbInit.clearH2Database();
+  }
 
-    @Test
-    @DisplayName("delete - Success")
-    void test_Delete_Success() {
-        this.accountService.delete("user1-h2@hh.se");
+  @Test
+  @DisplayName("delete - Success")
+  void test_Delete_Success() {
+    this.accountService.delete("user1-test@hh.se");
 
-        assertThrows(ObjectNotFoundException.class, () -> this.accountService.findById("user1-h2@hh.se"));
-    }
+    assertThrows(ObjectNotFoundException.class,
+        () -> this.accountService.findById("user1-test@hh.se"));
+  }
 }
