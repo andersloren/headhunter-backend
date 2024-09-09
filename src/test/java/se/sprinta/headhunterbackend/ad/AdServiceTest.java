@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.TestsDatabaseInitializer;
+import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -26,223 +27,192 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 public class AdServiceTest {
 
-    @Autowired
-    private AdRepository adRepository;
+  @Autowired
+  private AdService adService;
 
-    @Autowired
-    private AdService adService;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private TestsDatabaseInitializer h2DbInit;
 
-    @Autowired
-    private TestsDatabaseInitializer h2DbInit;
+  List<Job> jobs = new ArrayList<>();
 
-    List<Job> jobs = new ArrayList<>();
+  List<Ad> ads = new ArrayList<>();
 
-    List<Ad> ads = new ArrayList<>();
+  List<AdDtoView> adDtos = new ArrayList<>();
 
-    List<AdDtoView> adDtos = new ArrayList<>();
+  @BeforeEach
+  void setUp() {
+    jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
+    this.h2DbInit.initializeH2Database();
+    this.jobs = TestsDatabaseInitializer.getJobs();
+    this.ads = TestsDatabaseInitializer.getAds();
+    this.adDtos = this.h2DbInit.initializeH2AdDtos();
+  }
 
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("ALTER TABLE job ALTER COLUMN id RESTART WITH 1");
-        this.h2DbInit.initializeH2Database();
-        this.jobs = TestsDatabaseInitializer.getJobs();
-        this.ads = TestsDatabaseInitializer.getAds();
-        this.adDtos = this.h2DbInit.initializeH2AdDtos();
-    }
+  @AfterEach
+  void tearDown() {
+    this.h2DbInit.clearH2Database();
+  }
 
-    @AfterEach
-    void tearDown() {
-        this.h2DbInit.clearH2Database();
-    }
+  @Test
+  @DisplayName("findAll - Success")
+  void test_FindAll_Success() {
+    // When
+    List<Ad> allAds = this.adService.findAll();
 
-    @Test
-    @DisplayName("findAll - Success")
-    void test_FindAll_Success() {
-        List<Ad> allAds = this.adService.findAll();
-
-        for (Ad ad : allAds) {
-            System.out.println(ad.getId());
-            System.out.println(ad.getHtmlCode());
-            System.out.println(ad.getJob());
-            System.out.println(ad.getDateCreated());
-        }
-
-        assertEquals(allAds.size(), 3);
-
-        assertEquals(allAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertFalse(allAds.get(0).getDateCreated().isAfter(LocalDate.now()));
-
-        assertNotNull(allAds.get(0).getId());
-        assertEquals(allAds.get(0).getJob().getTitle(), "job1 Title 1");
-        assertEquals(allAds.get(0).getJob().getDescription(), "job1 Description 1");
-        assertEquals(allAds.get(0).getJob().getInstruction(), "job1 Instruction 1");
-        assertEquals(allAds.get(0).getJob().getRecruiterName(), "");
-        assertEquals(allAds.get(0).getJob().getAdCompany(), "");
-        assertEquals(allAds.get(0).getJob().getAdEmail(), "");
-        assertEquals(allAds.get(0).getJob().getAdPhone(), "");
-        assertEquals(allAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertFalse(allAds.get(1).getDateCreated().isAfter(LocalDate.now()));
-        assertNotNull(allAds.get(1).getId());
-        assertEquals(allAds.get(1).getJob().getTitle(), "job1 Title 1");
-        assertEquals(allAds.get(1).getJob().getDescription(), "job1 Description 1");
-        assertEquals(allAds.get(1).getJob().getInstruction(), "job1 Instruction 1");
-        assertEquals(allAds.get(1).getJob().getRecruiterName(), "");
-        assertEquals(allAds.get(1).getJob().getAdCompany(), "");
-        assertEquals(allAds.get(1).getJob().getAdEmail(), "");
-        assertEquals(allAds.get(1).getJob().getAdPhone(), "");
-        assertEquals(allAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(allAds.get(2).getHtmlCode(), "htmlCode 3");
-        assertFalse(allAds.get(2).getDateCreated().isAfter(LocalDate.now()));
-        assertNotNull(allAds.get(2).getId());
-        assertEquals(allAds.get(2).getJob().getTitle(), "job2 Title 2");
-        assertEquals(allAds.get(2).getJob().getDescription(), "job2 Description 2");
-        assertEquals(allAds.get(2).getJob().getInstruction(), "job2 Instruction 2");
-        assertEquals(allAds.get(2).getJob().getRecruiterName(), "");
-        assertEquals(allAds.get(2).getJob().getAdCompany(), "");
-        assertEquals(allAds.get(2).getJob().getAdEmail(), "");
-        assertEquals(allAds.get(2).getJob().getAdPhone(), "");
-        assertEquals(allAds.get(2).getJob().getApplicationDeadline(), "job2 applicationDeadline 2");
-    }
-
-    @Test
-    @DisplayName("getAllAdDtos - Success")
-    void test_GetAllAdDtos_Success() {
-        List<AdDtoView> foundAdDtos = this.adService.getAllAdDtos();
-
-        for (AdDtoView adDti : foundAdDtos) {
-            System.out.println(adDti.id());
-            System.out.println(adDti.htmlCode());
-            System.out.println(adDti.dateCreated());
-        }
-
-        assertNotNull(foundAdDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertFalse(foundAdDtos.get(0).dateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAdDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertFalse(foundAdDtos.get(1).dateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAdDtos.get(2).id());
-        assertEquals(foundAdDtos.get(2).htmlCode(), "htmlCode 3");
-        assertFalse(foundAdDtos.get(2).dateCreated().isAfter(LocalDate.now()));
+    // Then
+    assertEquals(allAds.size(), 3);
+    for (int i = 0; i < allAds.size(); i++) {
+      assertEquals(allAds.get(i).getHtmlCode(), this.ads.get(i).getHtmlCode());
+      assertFalse(allAds.get(i).getDateCreated().isAfter(LocalDate.now()));
+      assertNotNull(allAds.get(i).getId(), this.ads.get(i).getId());
+      assertEquals(allAds.get(i).getJob().getTitle(), this.ads.get(i).getJob().getTitle());
+      assertEquals(allAds.get(i).getJob().getDescription(), this.ads.get(i).getJob().getDescription());
+      assertEquals(allAds.get(i).getJob().getInstruction(), this.ads.get(i).getJob().getInstruction());
+      assertEquals(allAds.get(i).getJob().getRecruiterName(), this.ads.get(i).getJob().getRecruiterName());
+      assertEquals(allAds.get(i).getJob().getAdCompany(), this.ads.get(i).getJob().getAdCompany());
+      assertEquals(allAds.get(i).getJob().getAdEmail(), this.ads.get(i).getJob().getAdEmail());
+      assertEquals(allAds.get(i).getJob().getAdPhone(), this.ads.get(i).getJob().getAdPhone());
+      assertEquals(allAds.get(i).getJob().getApplicationDeadline(), this.ads.get(i).getJob().getApplicationDeadline());
 
     }
+  }
 
-    @Test
-    @DisplayName("findById - Success")
-    void test_FindById_Success() {
-        String adId = this.adService.findAll().get(0).getId();
+  @Test
+  @DisplayName("getAllAdDtos - Success")
+  void test_GetAdDtos_Success() {
+    // When
+    List<AdDtoView> foundAdDtos = this.adService.getAdDtos();
 
-        Ad foundAd = this.adService.findById(adId);
+    // Then
 
-        System.out.println(foundAd.getId());
-        System.out.println(foundAd.getHtmlCode());
-        System.out.println(foundAd.getDateCreated());
-
-        assertEquals(foundAd.getHtmlCode(), "htmlCode 1");
-        assertFalse(foundAd.getDateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAd.getId());
-        assertEquals(foundAd.getJob().getTitle(), "job1 Title 1");
-        assertEquals(foundAd.getJob().getDescription(), "job1 Description 1");
-        assertEquals(foundAd.getJob().getInstruction(), "job1 Instruction 1");
-        assertEquals(foundAd.getJob().getRecruiterName(), "");
-        assertEquals(foundAd.getJob().getAdCompany(), "");
-        assertEquals(foundAd.getJob().getAdEmail(), "");
-        assertEquals(foundAd.getJob().getAdPhone(), "");
-        assertEquals(foundAd.getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
+    for (int i = 0; i < foundAdDtos.size(); i++) {
+      assertEquals(foundAdDtos.get(i).id(), this.adDtos.get(i).id());
+      assertEquals(foundAdDtos.get(i).htmlCode(), this.adDtos.get(i).htmlCode());
+      assertFalse(foundAdDtos.get(i).dateCreated().isAfter(LocalDate.now()));
     }
+  }
 
-    @Test
-    @DisplayName("findById - Invalid Ad Id - Exception")
-    void test_FindById_InvalidAdId_Exception() {
-        Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.findById("Invalid Id"));
+  @Test
+  @DisplayName("findById - Success")
+  void test_FindById_Success() {
+    String adId = this.adService.findAll().get(0).getId();
 
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find ad with Id Invalid Id");
+    // When
+    Ad foundAd = this.adService.findById(adId);
+
+    // Then
+    assertEquals(foundAd.getHtmlCode(), this.ads.get(0).getHtmlCode());
+    assertFalse(foundAd.getDateCreated().isAfter(LocalDate.now()));
+    assertNotNull(foundAd.getId(), this.ads.get(0).getId());
+    assertEquals(foundAd.getJob().getTitle(), this.ads.get(0).getJob().getTitle());
+    assertEquals(foundAd.getJob().getDescription(), this.ads.get(0).getJob().getDescription());
+    assertEquals(foundAd.getJob().getInstruction(), this.ads.get(0).getJob().getInstruction());
+    assertEquals(foundAd.getJob().getRecruiterName(), this.ads.get(0).getJob().getRecruiterName());
+    assertEquals(foundAd.getJob().getAdCompany(), this.ads.get(0).getJob().getAdCompany());
+    assertEquals(foundAd.getJob().getAdEmail(), this.ads.get(0).getJob().getAdEmail());
+    assertEquals(foundAd.getJob().getApplicationDeadline(), this.ads.get(0).getJob().getApplicationDeadline());
+    assertEquals(foundAd.getJob().getAdPhone(), this.ads.get(0).getJob().getAdPhone());
+  }
+
+  @Test
+  @DisplayName("GET - findById - Invalid Ad Id - Exception")
+  void test_FindById_InvalidAdId_Exception() {
+    Throwable thrown = assertThrows(ObjectNotFoundException.class,
+        () -> this.adService.findById("Invalid Id"));
+
+    assertThat(thrown)
+        .isInstanceOf(ObjectNotFoundException.class)
+        .hasMessage("Could not find ad with Id Invalid Id");
+  }
+
+  @Test
+  @DisplayName("GET - getAdDtosByJobId - Success")
+  void test_GetAdsByJobId_Success() {
+    // When
+    List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(1L);
+
+    // Then
+    for (int i = 0; i < foundAdDtos.size(); i++) {
+      assertNotNull(foundAdDtos.get(i).id());
+      assertEquals(foundAdDtos.get(i).htmlCode(), this.adDtos.get(i).htmlCode());
+      assertFalse(foundAdDtos.get(i).dateCreated().isAfter(LocalDate.now()));
     }
+  }
 
-    @Test
-    @DisplayName("getAdsByJobId - Success")
-    void test_GetAdsByJobId_Success() {
-        List<Ad> foundAds = this.adService.getAdsByJobId(1L);
+  @Test
+  @DisplayName("GET - getAdsByJobId - Invalid Job Id - Exception")
+  void test_GetAdsByJobId_InvalidJobId_Exception() {
+    // When
+    Throwable thrown = assertThrows(ObjectNotFoundException.class,
+        () -> this.adService.getAdDtosByJobId(Long.MAX_VALUE));
 
-        for (Ad ad : foundAds) {
-            System.out.println(ad.getId());
-            System.out.println(ad.getHtmlCode());
-            System.out.println(ad.getJob());
-            System.out.println(ad.getDateCreated());
-        }
+    // Then
+    assertThat(thrown)
+        .isInstanceOf(ObjectNotFoundException.class)
+        .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+  }
 
-        assertEquals(foundAds.get(0).getHtmlCode(), "htmlCode 1");
-        assertFalse(foundAds.get(0).getDateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAds.get(0).getId());
-        assertEquals(foundAds.get(0).getJob().getTitle(), "job1 Title 1");
-        assertEquals(foundAds.get(0).getJob().getDescription(), "job1 Description 1");
-        assertEquals(foundAds.get(0).getJob().getInstruction(), "job1 Instruction 1");
-        assertEquals(foundAds.get(0).getJob().getRecruiterName(), "");
-        assertEquals(foundAds.get(0).getJob().getAdCompany(), "");
-        assertEquals(foundAds.get(0).getJob().getAdEmail(), "");
-        assertEquals(foundAds.get(0).getJob().getAdPhone(), "");
-        assertEquals(foundAds.get(0).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
-        assertEquals(foundAds.get(1).getHtmlCode(), "htmlCode 2");
-        assertFalse(foundAds.get(1).getDateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAds.get(1).getId());
-        assertEquals(foundAds.get(1).getJob().getTitle(), "job1 Title 1");
-        assertEquals(foundAds.get(1).getJob().getDescription(), "job1 Description 1");
-        assertEquals(foundAds.get(1).getJob().getInstruction(), "job1 Instruction 1");
-        assertEquals(foundAds.get(1).getJob().getRecruiterName(), "");
-        assertEquals(foundAds.get(1).getJob().getAdCompany(), "");
-        assertEquals(foundAds.get(1).getJob().getAdEmail(), "");
-        assertEquals(foundAds.get(1).getJob().getAdPhone(), "");
-        assertEquals(foundAds.get(1).getJob().getApplicationDeadline(), "job1 applicationDeadline 1");
-    }
+  @Test
+  @DisplayName("GET - numberOfAdsByJobId - Success")
+  void test_getNumberOfAdsByJobId() {
+    // When
+    long numberOfJobs = this.adService.getNumberOfAdsByJobId(1L);
 
-    @Test
-    @DisplayName("getAdsByJobId - Invalid Job Id - Exception")
-    void test_GetAdsByJobId_InvalidJobId_Exception() {
-        Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.getAdsByJobId(Long.MAX_VALUE));
+    // Then
+    assertEquals(numberOfJobs, 2);
+  }
 
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
-    }
+  @Test
+  @DisplayName("GET - getNumberOfAdsByJobId - Invalid Job Id - Success")
+  void test_GetNumberOfJobsById_InvalidJobId_Exception() {
+    // Wen
+    Throwable thrown = assertThrows(ObjectNotFoundException.class,
+        () -> this.adService.getNumberOfAdsByJobId(Long.MAX_VALUE));
 
-    @Test
-    @DisplayName("getAdDtosByJobId - Success")
-    void test_GetAdDtosByJobId_Success() {
-        List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(1L);
+    // Then
+    assertThat(thrown)
+        .isInstanceOf(ObjectNotFoundException.class)
+        .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+  }
 
-        System.out.println("Initialize array print outs");
-        System.out.println("foundAdDtos size: " + foundAdDtos.size());
-        for (AdDtoView adDti : foundAdDtos) {
-            System.out.println(adDti.id());
-            System.out.println(adDti.htmlCode());
-            System.out.println(adDti.dateCreated());
-        }
+  @Test
+  @DisplayName("POST - addAd - Success")
+  void test_AddAd_Success() {
+    AdDtoForm newAdDtoForm = new AdDtoForm("HtmlCode");
+    // When
+    Ad newAd = this.adService.addAd(this.jobs.get(0).getId(), newAdDtoForm);
 
-        assertNotNull(foundAdDtos.get(0).id());
-        assertEquals(foundAdDtos.get(0).htmlCode(), "htmlCode 1");
-        assertFalse(foundAdDtos.get(0).dateCreated().isAfter(LocalDate.now()));
-        assertNotNull(foundAdDtos.get(1).id());
-        assertEquals(foundAdDtos.get(1).htmlCode(), "htmlCode 2");
-        assertFalse(foundAdDtos.get(1).dateCreated().isAfter(LocalDate.now()));
-    }
+    // Then
+    assertEquals(newAd.getHtmlCode(), newAdDtoForm.htmlCode());
+  }
 
-    @Test
-    @DisplayName("getAdDtosByJobId - Invalid Job Id - Exception")
-    void test_GetAdDtosByJobId_InvalidJobId_Exception() {
-        Throwable thrown = assertThrows(ObjectNotFoundException.class,
-                () -> this.adService.getAdDtosByJobId(Long.MAX_VALUE));
+  @Test
+  @DisplayName("POST - addAd - Invalid Job Id - Exception")
+  void test_Addad_InvalidJobId_Exception() {
+    AdDtoForm newAdDtoForm = new AdDtoForm("HtmlCode");
+    // Wen
+    Throwable thrown = assertThrows(ObjectNotFoundException.class,
+        () -> this.adService.addAd(Long.MAX_VALUE, newAdDtoForm));
 
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
-    }
+    // Then
+    assertThat(thrown)
+        .isInstanceOf(ObjectNotFoundException.class)
+        .hasMessage("Could not find job with Id " + Long.MAX_VALUE);
+  }
+
+  @Test
+  @DisplayName("DELETE - delete - Success")
+  void test_Delete_Success() {
+    // When
+    this.adService.delete(this.ads.get(0).getId());
+
+    // Then
+    assertThrows(ObjectNotFoundException.class,
+        () -> this.adService.findById(this.ads.get(0).getId()));
+
+    assertEquals(this.adService.findAll().size(), this.ads.size() - 1);
+  }
 }
-
