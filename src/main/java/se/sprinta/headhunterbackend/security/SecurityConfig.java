@@ -91,6 +91,7 @@ public class SecurityConfig {
                                  */
 
                                 .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/findAccount/**").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.GET, this.baseUrlAccount + "/validateEmailAvailable/{email}").permitAll()
                                 .requestMatchers(HttpMethod.POST, this.baseUrlAccount + "/register").permitAll()
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")

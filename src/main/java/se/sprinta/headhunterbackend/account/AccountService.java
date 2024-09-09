@@ -73,17 +73,6 @@ public class AccountService implements UserDetailsService {
     return this.accountRepository.save(newAccount);
   }
 
-  /**
-   * Updates a user. Certain precautions has to be made for the roles.
-   *
-   * @param accountEmail Is used to find the Account object that we want to
-   *                     update.
-   * @param update       Holds potentially both username and roles, or at least
-   *                     one of them.
-   *                     Any double quotes are being removed by the logic.
-   * @return The updated Account object.
-   */
-
   public Account update(String accountEmail, AccountUpdateDtoForm update) {
     Account foundAccount = this.accountRepository.findAccountByEmail(accountEmail)
         .orElseThrow(() -> new ObjectNotFoundException("account", accountEmail));
