@@ -43,7 +43,7 @@ public class JobServiceComplementaryTest {
     @DisplayName("delete - Success")
     void test_Delete_Success() {
 
-        this.jobService.delete("user1-mock@hh.se", 1L);
+        this.jobService.delete("user1-test@hh.se", 1L);
 
         assertThrows(ObjectNotFoundException.class,
                 () -> this.jobService.findById(1L));
