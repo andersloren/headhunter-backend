@@ -17,28 +17,28 @@ import java.util.List;
 @Repository
 public interface AdRepository extends JpaRepository<Ad, String> {
 
-    /**
-     * Returns Ad objects that are related a Job object
-     * Relationship: [Ad] *...1 [Job]
-     */
+  /**
+   * Returns Ad objects that are related a Job object
+   * Relationship: [Ad] *...1 [Job]
+   */
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad")
-    List<AdDtoView> getAllAdDtos();
+  @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad")
+  List<AdDtoView> getAdDtos();
 
-    @Query("SELECT ad FROM Ad ad WHERE ad.job.id = :jobId")
-    List<Ad> getAdsByJobId(Long jobId);
+  @Query("SELECT ad FROM Ad ad WHERE ad.job.id = :jobId")
+  List<Ad> getAdsByJobId(Long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
-    List<AdDtoView> getAdDtosByJobId(long jobId);
+  @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
+  List<AdDtoView> getAdDtosByJobId(long jobId);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ad.job.account.email, ad.job.account.roles, ad.job.account.number_of_jobs) FROM Ad ad where ad.id = :adId")
-    AccountDtoView getAccountDtoByAdId(String adId);
+  @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ad.job.account.email, ad.job.account.roles, ad.job.account.number_of_jobs) FROM Ad ad where ad.id = :adId")
+  AccountDtoView getAccountDtoByAdId(String adId);
 
-    @Query("SELECT COUNT(ad) FROM Ad ad WHERE ad.job.id = :jobId")
-    long getNumberOfAdsByJobId(long jobId);
+  @Query("SELECT COUNT(ad) FROM Ad ad WHERE ad.job.id = :jobId")
+  long getNumberOfAdsByJobId(long jobId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM Ad", nativeQuery = true)
-    void deleteAdTable();
+  @Modifying
+  @Transactional
+  @Query(value = "DELETE FROM ad", nativeQuery = true)
+  void deleteAdTable();
 }

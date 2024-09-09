@@ -19,72 +19,60 @@ import java.util.List;
 @CrossOrigin("http://localhost:5173")
 public class AdController {
 
-    private final AdService adService;
-    private final AdToAdDtoView adToAdDtoView;
+  private final AdService adService;
+  private final AdToAdDtoView adToAdDtoView;
 
-    public AdController(AdService adService, AdToAdDtoView adToAdDtoView) {
-        this.adService = adService;
-        this.adToAdDtoView = adToAdDtoView;
-    }
+  public AdController(AdService adService, AdToAdDtoView adToAdDtoView) {
+    this.adService = adService;
+    this.adToAdDtoView = adToAdDtoView;
+  }
 
-    @GetMapping("/findAll")
-    public Result findAll() {
-        List<Ad> allAds = this.adService.findAll();
-        return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAds);
-    }
+  @GetMapping("/findAll")
+  public Result findAll() {
+    List<Ad> allAds = this.adService.findAll();
+    return new Result(true, StatusCode.SUCCESS, "Find All Ads Success", allAds);
+  }
 
-    @GetMapping("/findById/{adId}")
-    public Result findById(@PathVariable String adId) {
-        Ad foundAd = this.adService.findById(adId);
-        return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAd);
-    }
+  @GetMapping("/findById/{adId}")
+  public Result findById(@PathVariable String adId) {
+    Ad foundAd = this.adService.findById(adId);
+    return new Result(true, StatusCode.SUCCESS, "Find Ad Success", foundAd);
+  }
 
-    /**
-     * Searches for job and returns array of ads that is associated to it.
-     * Relationship: [Ad] *...1 [Job]
-     *
-     * @param jobId The id of the Job object that holds all the ads the user are looking for.
-     */
+  @GetMapping("/getAdDtosByJobId/{jobId}")
+  public Result getAdDtosByJobId(@PathVariable long jobId) {
+    List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(jobId);
+    return new Result(true, StatusCode.SUCCESS, "Get Ad Dtos by Job Id Success", foundAdDtos);
+  }
 
-    @GetMapping("/getAdsByJobId/{jobId}")
-    public Result findAllAdsByJobId(@PathVariable Long jobId) {
-        List<Ad> foundAds = this.adService.getAdsByJobId(jobId);
-        return new Result(true, StatusCode.SUCCESS, "Get Ads by Job Id Success", foundAds);
-    }
+  @GetMapping("/getNumberOfAdsByJobId/{jobId}")
+  public Result getNumberOfAds(@PathVariable Long jobId) {
+    Long numberOfAds = this.adService.getNumberOfAdsByJobId(jobId);
+    return new Result(true, StatusCode.SUCCESS, "Get Number Of Ads by Job Id Success", numberOfAds);
+  }
 
-    @GetMapping("/getAdDtosByJobId/{jobId}")
-    public Result getAdDtosByJobId(@PathVariable long jobId) {
-        List<AdDtoView> foundAdDtos = this.adService.getAdDtosByJobId(jobId);
-        return new Result(true, StatusCode.SUCCESS, "Get Ad Dtos by Job Id Success", foundAdDtos);
-    }
+  /**
+   * Searches for ad, look at the job associated to it and returns the user that
+   * owns that job.
+   * Relationship: [Ad] *...1 [Job] *...1 [User]
+   */
 
-    @GetMapping("/getNumberOfAdsByJobId/{jobId}")
-    public Result getNumberOfAds(@PathVariable Long jobId) {
-        Long numberOfAds = this.adService.getNumberOfAdsByJobId(jobId);
-        return new Result(true, StatusCode.SUCCESS, "Get Number Of Ads by Job Id Success", numberOfAds);
-    }
+  @GetMapping("/getAccountDtoByAdId/{adId}")
+  public Result findUserByAdId(@PathVariable String adId) {
+    AccountDtoView foundAccountDto = this.adService.getAccountDtoByAdId(adId);
+    return new Result(true, StatusCode.SUCCESS, "Get Account Dto By Ad Id Success", foundAccountDto);
+  }
 
-    /**
-     * Searches for ad, look at the job associated to it and returns the user that owns that job.
-     * Relationship: [Ad] *...1 [Job] *...1 [User]
-     */
+  @PostMapping("/addAd/{jobId}")
+  public Result saveAd(@PathVariable Long jobId, @RequestBody AdDtoForm adDtoForm) {
+    Ad savedAd = this.adService.addAd(jobId, adDtoForm);
+    AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
+    return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
+  }
 
-    @GetMapping("/getAccountDtoByAdId/{adId}")
-    public Result findUserByAdId(@PathVariable String adId) {
-        AccountDtoView foundAccountDto = this.adService.getAccountDtoByAdId(adId);
-        return new Result(true, StatusCode.SUCCESS, "Get Account Dto By Ad Id Success", foundAccountDto);
-    }
-
-    @PostMapping("/addAd/{jobId}")
-    public Result saveAd(@PathVariable Long jobId, @RequestBody AdDtoForm adDtoForm) {
-        Ad savedAd = this.adService.addAd(jobId, adDtoForm);
-        AdDtoView savedAdDtoView = this.adToAdDtoView.convert(savedAd);
-        return new Result(true, StatusCode.SUCCESS, "Save Ad Success", savedAdDtoView);
-    }
-
-    @DeleteMapping("/delete/{adId}")
-    public Result deleteAd(@PathVariable String adId) {
-        this.adService.delete(adId);
-        return new Result(true, StatusCode.SUCCESS, "Delete Ad Success");
-    }
+  @DeleteMapping("/delete/{adId}")
+  public Result deleteAd(@PathVariable String adId) {
+    this.adService.delete(adId);
+    return new Result(true, StatusCode.SUCCESS, "Delete Ad Success");
+  }
 }
