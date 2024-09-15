@@ -592,7 +592,7 @@ public class JobControllerAuthorityIntegrationTest {
 
     @Test
     @DisplayName("GET - generate - User Permission - Success")
-    @Disabled
+//    @Disabled
     void test_Generate_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/generate" + "/4")
                         .contentType(MediaType.APPLICATION_JSON)
