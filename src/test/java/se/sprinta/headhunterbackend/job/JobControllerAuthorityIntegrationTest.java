@@ -347,7 +347,7 @@ public class JobControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find job with Id " + +Long.MAX_VALUE))
+                .andExpect(jsonPath("$.message").value("Could not find job with Id " + Long.MAX_VALUE))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -592,7 +592,7 @@ public class JobControllerAuthorityIntegrationTest {
 
     @Test
     @DisplayName("GET - generate - User Permission - Success")
-    @Disabled
+//    @Disabled
     void test_Generate_Success() throws Exception {
         this.mockMvc.perform(get(this.baseUrlJob + "/generate" + "/4")
                         .contentType(MediaType.APPLICATION_JSON)

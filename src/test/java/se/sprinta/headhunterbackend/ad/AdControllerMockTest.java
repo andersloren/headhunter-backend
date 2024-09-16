@@ -25,7 +25,6 @@ import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -48,9 +47,6 @@ class AdControllerMockTest {
 
     @Value("${api.endpoint.base-url-ad}")
     String baseUrlAd;
-
-    @Value("${ai.openai.model}")
-    private String model;
 
     List<AccountDtoView> accountDtos = new ArrayList<>();
     List<Ad> ads = new ArrayList<>();

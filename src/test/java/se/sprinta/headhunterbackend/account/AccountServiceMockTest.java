@@ -192,9 +192,8 @@ class AccountServiceMockTest {
         given(this.accountRepository.getAccountDtoByEmail("abc")).willThrow(new ObjectNotFoundException("account", "abc"));
 
         // When
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.accountService.getAccountDtoByEmail("abc");
-        });
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.accountService.getAccountDtoByEmail("abc"));
 
         // Then
         assertThat(thrown)
@@ -285,9 +284,8 @@ class AccountServiceMockTest {
         given(this.accountRepository.findAccountByEmail(email)).willReturn(Optional.empty());
 
         // When
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            Account updatedAccount = this.accountService.update("abc", update);
-        });
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.accountService.update("abc", update));
 
         // Then
         assertThat(thrown)
@@ -299,7 +297,7 @@ class AccountServiceMockTest {
     }
 
     @Test
-    @DisplayName("DELETE - deleteAccount - Succes")
+    @DisplayName("DELETE - deleteAccount - Success")
     void test_DeleteAccount_Success() {
         Account account = this.accounts.get(1);
 
@@ -321,9 +319,8 @@ class AccountServiceMockTest {
         given(this.accountRepository.findAccountByEmail("abc")).willReturn(Optional.empty());
 
         // When
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.accountService.delete("abc");
-        });
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.accountService.delete("abc"));
 
         // Then
         assertThat(thrown)

@@ -24,14 +24,12 @@ import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.utils.HtmlUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

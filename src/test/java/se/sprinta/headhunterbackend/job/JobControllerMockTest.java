@@ -1,9 +1,5 @@
 package se.sprinta.headhunterbackend.job;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +22,10 @@ import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 import se.sprinta.headhunterbackend.system.StatusCode;
-import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
