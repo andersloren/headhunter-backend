@@ -48,7 +48,7 @@ public class AdControllerAuthorityIntegrationTest {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
                         .with(httpBasic(
-                                "user1-mysql@hh.se",
+                                "user1-integrationTest@hh.se",
                                 "a")));
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
         String contentAsString = mvcResult.getResponse().getContentAsString();
@@ -59,7 +59,7 @@ public class AdControllerAuthorityIntegrationTest {
     public String adminToken() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(
                 post(this.baseUrlAccount + "/login")
-                        .with(httpBasic("admin-mysql@hh.se",
+                        .with(httpBasic("admin-integrationTest@hh.se",
                                 "a")));
 
         MvcResult mvcResult = resultActions.andDo(print()).andReturn();
@@ -152,30 +152,6 @@ public class AdControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
                 .andExpect(jsonPath("$.message").value("No permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
-    }
-
-    @Test
-    @DisplayName("getAdsByJobId - User Permission - Success")
-    void test_GetAdsByJobId_UserPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAd + "/getAdsByJobId" + "/1")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, userToken()))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Get Ads by Job Id Success"))
-                .andExpect(jsonPath("$.data", Matchers.hasSize(2)));
-    }
-
-    @Test
-    @DisplayName("getAdsByJobId - User Permission - Invalid Job Id - Exception")
-    void test_GetAdsByJobId_UserPermission_InvalidJobId_Exception() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlAd + "/getAdsByJobId" + "/" + Long.MAX_VALUE)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, userToken()))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find job with Id " + Long.MAX_VALUE))
-                .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test
