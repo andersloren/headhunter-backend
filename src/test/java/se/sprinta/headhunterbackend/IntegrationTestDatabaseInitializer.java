@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Disabled;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.AccountService;
 import se.sprinta.headhunterbackend.ad.AdService;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobService;
-import se.sprinta.headhunterbackend.account.Account;
-import se.sprinta.headhunterbackend.account.AccountService;
 
 /**
  * * Database entries (User objects, Job objects, and Ad objects) for testing.
