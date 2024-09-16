@@ -345,7 +345,6 @@ public class AdControllerAuthorityIntegrationTest {
     @Test
     @DisplayName("DELETE - delete - User Permission - Invalid Ad Id - Exception")
     void test_Delete_UserPermission_InvalidJobId_Exception() throws Exception {
-        String adId = getAdId();
 
         this.mockMvc.perform(delete(this.baseUrlAd + "/delete" + "/Invalid Id")
                         .accept(MediaType.APPLICATION_JSON)

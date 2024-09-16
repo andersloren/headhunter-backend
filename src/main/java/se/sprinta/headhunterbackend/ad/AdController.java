@@ -16,7 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url-ad}")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin(origins = "${CORS_ALLOWED_ORIGIN}"
+        , methods = {
+        RequestMethod.GET,
+        RequestMethod.POST,
+        RequestMethod.PUT,
+        RequestMethod.DELETE})
 public class AdController {
 
   private final AdService adService;

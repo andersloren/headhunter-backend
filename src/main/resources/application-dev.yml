@@ -5,7 +5,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:${DB_NAME}://${DB_DEV_HOSTNAME}:${DB_PORT}/${DB_DEV_DATABASE_NAME}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    url: jdbc:mysql://localhost:3306/headhunter-dev
     username: ${DB_ADMIN_USERNAME}
     password: ${DB_ADMIN_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -27,4 +27,4 @@ ai:
   openai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
-
+    model: ${OPENAI_API_MODEL}

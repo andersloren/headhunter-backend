@@ -2,10 +2,8 @@ package se.sprinta.headhunterbackend;
 
 import jakarta.transaction.Transactional;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
@@ -50,23 +48,18 @@ public class TestsDatabaseInitializer {
     @Autowired
     private final AdRepository adRepository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Getter
-    private static List<Account> accounts = new ArrayList<>();
+    private static final List<Account> accounts = new ArrayList<>();
     @Getter
-    private static List<Job> jobs = new ArrayList<>();
+    private static final List<Job> jobs = new ArrayList<>();
     @Getter
-    private static List<JobDtoView> jobDtos = new ArrayList<>();
+    private static final List<JobDtoView> jobDtos = new ArrayList<>();
     @Getter
-    private static List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
+    private static final List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
     @Getter
-    private static List<AccountDtoView> accountDtos = new ArrayList<>();
+    private static final List<AccountDtoView> accountDtos = new ArrayList<>();
     @Getter
-    private static List<Ad> ads = new ArrayList<>();
-
-    private final List<AccountDtoView> accountDtosTest = new ArrayList<>();
+    private static final List<Ad> ads = new ArrayList<>();
 
     public TestsDatabaseInitializer(AccountRepository accountRepository, JobRepository jobRepository,
                                     AdRepository adRepository) {
@@ -97,7 +90,7 @@ public class TestsDatabaseInitializer {
         user4.setPassword("a");
         user4.setRoles("user");
 
-        /**
+        /*
          * Jobs to be persisted
          */
 
@@ -127,7 +120,7 @@ public class TestsDatabaseInitializer {
         job4.setInstruction(
                 "Du ska skapa en jobbannons på svenska i HTML-format med en professionell CSS styling. För att omarbeta en arbetsbeskrivning till en jobbannons, börja med att läsa igenom arbetsbeskrivningen noggrant för att förstå de huvudsakliga arbetsuppgifterna, nödvändiga kompetenser och kvalifikationer. Sedan, översätt denna information till en mer engagerande och tilltalande form som lockar potentiella kandidater. Det är viktigt att framhäva företagets kultur och de unika fördelarna med att arbeta där. Börja annonsen med en kort introduktion till företaget, följt av en översikt av jobbrollen. Använd en positiv och inkluderande ton, och undvik jargong. Gör klart vilka huvudsakliga ansvarsområden rollen innefattar och vilka färdigheter och erfarenheter som är önskvärda. Inkludera även information om eventuella förmåner eller möjligheter till personlig och professionell utveckling. Avsluta med hur man ansöker till tjänsten, inklusive viktiga datum och kontaktinformation. Kom ihåg att vara tydlig och koncis för att hålla potentiella kandidaters uppmärksamhet. En välformulerad jobbannons ska inte bara informera utan också inspirera och locka rätt talanger till att söka.");
 
-        /**
+        /*
          * Ads to be persisted
          */
 

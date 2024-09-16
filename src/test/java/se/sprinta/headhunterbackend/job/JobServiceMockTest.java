@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
@@ -22,14 +24,12 @@ import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.utils.HtmlUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.*;
 
+@ActiveProfiles("mock-test")
 @ExtendWith(MockitoExtension.class)
 class JobServiceMockTest {
 
@@ -58,6 +59,9 @@ class JobServiceMockTest {
     private List<JobDtoView> jobDtos = new ArrayList<>();
     private List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
     private List<Account> accounts = new ArrayList<>();
+
+    @Value("${ai.openai.model}")
+    private String model;
 
     @BeforeEach
     void setUp() {
@@ -304,7 +308,7 @@ class JobServiceMockTest {
         then(this.accountRepository).should().findAccountByEmail("email");
         then(this.jobRepository).should().save(jobArgumentCaptor.capture());
     }
-  
+
     @Test
     @DisplayName("PUT - update - Success")
     void test_UpdateSuccess() {
@@ -457,7 +461,7 @@ class JobServiceMockTest {
 
         Message systemMessage = new Message("system", job.getInstruction());
         Message userMessage = new Message("user", job.getDescription());
-        ChatRequest chatRequest = new ChatRequest("gpt-4o", List.of(systemMessage, userMessage));
+        ChatRequest chatRequest = new ChatRequest(this.model, List.of(systemMessage, userMessage));
 
         Choice choice = mock(Choice.class);
         when(choice.message()).thenReturn(new Message(

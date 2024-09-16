@@ -212,9 +212,9 @@ public class JobControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET - getJobDtosByUserEmail - Admin No Permission - Success")
-    void test_getJobDtosByUserEmail_AdminNoPermission_Success() throws Exception {
-        this.mockMvc.perform(get(this.baseUrlJob + "/getAllJobDtosByUserEmail" + "/user1-integrationTest@hh.se")
+    @DisplayName("GET - getJobDtosByEmail - Admin No Permission - Success")
+    void test_getJobDtosByEmail_AdminNoPermission_Success() throws Exception {
+        this.mockMvc.perform(get(this.baseUrlJob + "/getJobDtosByEmail" + "/user1-integrationTest@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
@@ -347,7 +347,7 @@ public class JobControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find job with Id " + +Long.MAX_VALUE))
+                .andExpect(jsonPath("$.message").value("Could not find job with Id " + Long.MAX_VALUE))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 

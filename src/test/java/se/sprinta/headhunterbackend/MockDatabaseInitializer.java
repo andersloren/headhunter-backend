@@ -1,8 +1,5 @@
 package se.sprinta.headhunterbackend;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
@@ -15,6 +12,7 @@ import se.sprinta.headhunterbackend.job.dto.JobDtoFormAdd;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter

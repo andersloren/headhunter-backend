@@ -1,6 +1,7 @@
 package se.sprinta.headhunterbackend.job;
 
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
@@ -13,7 +14,6 @@ import se.sprinta.headhunterbackend.client.chat.dto.Message;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoFormUpdate;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
-import se.sprinta.headhunterbackend.system.exception.DoesNotExistException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.utils.HtmlUtilities;
 
@@ -26,125 +26,128 @@ import java.util.List;
 @Service
 @Transactional
 public class JobService {
-  private final JobRepository jobRepository;
-  private final AdRepository adRepository;
-  private final AccountRepository accountRepository;
-  private final ChatClient chatClient;
-  private final HtmlUtilities htmlUtilities;
+    private final JobRepository jobRepository;
+    private final AdRepository adRepository;
+    private final AccountRepository accountRepository;
+    private final ChatClient chatClient;
+    private final HtmlUtilities htmlUtilities;
 
-  public JobService(JobRepository jobRepository,
-      AdRepository adRepository,
-      AccountRepository accountRepository,
-      ChatClient chatClient,
-      HtmlUtilities htmlUtilities) {
-    this.jobRepository = jobRepository;
-    this.adRepository = adRepository;
-    this.accountRepository = accountRepository;
-    this.chatClient = chatClient;
-    this.htmlUtilities = htmlUtilities;
-  }
+    @Value("${ai.openai.model}")
+    private String model;
 
-  public List<Job> findAll() {
-    return this.jobRepository.findAll();
-  }
+    public JobService(JobRepository jobRepository,
+                      AdRepository adRepository,
+                      AccountRepository accountRepository,
+                      ChatClient chatClient,
+                      HtmlUtilities htmlUtilities) {
+        this.jobRepository = jobRepository;
+        this.adRepository = adRepository;
+        this.accountRepository = accountRepository;
+        this.chatClient = chatClient;
+        this.htmlUtilities = htmlUtilities;
+    }
 
-  public List<JobDtoView> getJobDtos() {
-    return this.jobRepository.getJobDtos();
-  }
+    public List<Job> findAll() {
+        return this.jobRepository.findAll();
+    }
 
-  public List<JobDtoView> getJobDtosByEmail(String email) {
-    this.accountRepository.findById(email)
-        .orElseThrow(() -> new ObjectNotFoundException("account", email));
+    public List<JobDtoView> getJobDtos() {
+        return this.jobRepository.getJobDtos();
+    }
 
-    return this.jobRepository.getJobDtosByEmail(email);
-  }
+    public List<JobDtoView> getJobDtosByEmail(String email) {
+        this.accountRepository.findById(email)
+                .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
-  public List<JobCardDtoView> getJobCardDtosByEmail(String email) {
-    this.accountRepository.findById(email)
-        .orElseThrow(() -> new ObjectNotFoundException("account", email));
+        return this.jobRepository.getJobDtosByEmail(email);
+    }
 
-    return this.jobRepository.getJobCardDtosByEmail(email);
-  }
+    public List<JobCardDtoView> getJobCardDtosByEmail(String email) {
+        this.accountRepository.findById(email)
+                .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
-  public Job findById(long jobId) {
-    return this.jobRepository.findById(jobId)
-        .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
-  }
+        return this.jobRepository.getJobCardDtosByEmail(email);
+    }
 
-  public JobDtoView getJobDto(Long id) {
-    return this.jobRepository.getJobDto(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
-  }
+    public Job findById(long jobId) {
+        return this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+    }
 
-  public Job addJob(String email, Job newJob) {
+    public JobDtoView getJobDto(Long id) {
+        return this.jobRepository.getJobDto(id).orElseThrow(() -> new ObjectNotFoundException("job", id));
+    }
 
-    Account foundAccount = this.accountRepository.findAccountByEmail(email)
-        .orElseThrow(() -> new ObjectNotFoundException("account", email));
+    public Job addJob(String email, Job newJob) {
 
-    foundAccount.addJob(newJob);
+        Account foundAccount = this.accountRepository.findAccountByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
-    // Dirty check on foundUser, so is automatically persisted
-    return this.jobRepository.save(newJob);
-  }
+        foundAccount.addJob(newJob);
 
-  public Job update(Long id, JobDtoFormUpdate update) {
-    if (update == null)
-      throw new NullPointerException("Update can't be null");
+        // Dirty check on foundUser, so is automatically persisted
+        return this.jobRepository.save(newJob);
+    }
 
-    Job job = this.jobRepository.findById(id)
-        .orElseThrow(() -> new ObjectNotFoundException("job", id));
+    public Job update(Long id, JobDtoFormUpdate update) {
+        if (update == null)
+            throw new NullPointerException("Update can't be null");
 
-    job.setTitle(update.title());
-    job.setDescription(update.description());
-    job.setInstruction(update.instruction());
-    job.setRecruiterName(update.recruiterName());
-    job.setAdCompany(update.adCompany());
-    job.setAdEmail(update.adEmail());
-    job.setAdPhone(update.adPhone());
-    job.setApplicationDeadline(update.applicationDeadline());
+        Job job = this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
 
-    return this.jobRepository.save(job);
-  }
+        job.setTitle(update.title());
+        job.setDescription(update.description());
+        job.setInstruction(update.instruction());
+        job.setRecruiterName(update.recruiterName());
+        job.setAdCompany(update.adCompany());
+        job.setAdEmail(update.adEmail());
+        job.setAdPhone(update.adPhone());
+        job.setApplicationDeadline(update.applicationDeadline());
 
-  public void delete(String email, Long jobId) {
+        return this.jobRepository.save(job);
+    }
 
-    Account foundAccount = this.accountRepository.findById(email)
-        .orElseThrow(() -> new ObjectNotFoundException("account", email));
+    public void delete(String email, Long jobId) {
 
-    Job foundJob = this.jobRepository.findById(jobId)
-        .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
+        Account foundAccount = this.accountRepository.findById(email)
+                .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
-    foundAccount.removeJob(foundJob);
+        Job foundJob = this.jobRepository.findById(jobId)
+                .orElseThrow(() -> new ObjectNotFoundException("job", jobId));
 
-    this.jobRepository.delete(foundJob);
-  }
+        foundAccount.removeJob(foundJob);
 
-  public String generate(Long id) {
+        this.jobRepository.delete(foundJob);
+    }
 
-    Job foundJob = this.jobRepository.findById(id)
-        .orElseThrow(() -> new ObjectNotFoundException("job", id));
+    public String generate(Long id) {
 
-    // Prepare the message for summarizing
-    List<Message> messages = List.of(
-        new Message("system", foundJob.getInstruction()),
-        new Message("user", foundJob.getDescription()));
+        Job foundJob = this.jobRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("job", id));
 
-    ChatRequest chatRequest = new ChatRequest("gpt-4o", messages);
+        // Prepare the message for summarizing
+        List<Message> messages = List.of(
+                new Message("system", foundJob.getInstruction()),
+                new Message("user", foundJob.getDescription()));
 
-    ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on
-    // the given chatRequest
+        ChatRequest chatRequest = new ChatRequest(this.model, messages);
 
-    String response = chatResponse.choices().get(0).message().content();
+        ChatResponse chatResponse = this.chatClient.generate(chatRequest); // Tell chatClient to generate a job ad based on
+        // the given chatRequest
 
-    // To trim the response, response is being passed to makeResponseSubstring and a
-    // trimmed string is returned
+        String response = chatResponse.choices().get(0).message().content();
 
-    String substringResponse = this.htmlUtilities.makeHtmlResponseSubstring(response);
+        // To trim the response, response is being passed to makeResponseSubstring and a
+        // trimmed string is returned
 
-    Ad newHtmlAd = new Ad(substringResponse);
-    foundJob.addAd(newHtmlAd);
-    newHtmlAd.setJob(foundJob);
+        String substringResponse = this.htmlUtilities.makeHtmlResponseSubstring(response);
 
-    this.adRepository.save(newHtmlAd);
-    return substringResponse;
-  }
+        Ad newHtmlAd = new Ad(substringResponse);
+        foundJob.addAd(newHtmlAd);
+        newHtmlAd.setJob(foundJob);
+
+        this.adRepository.save(newHtmlAd);
+        return substringResponse;
+    }
 }
