@@ -40,3 +40,4 @@ Dockerfile
 
 ## attach_pid
 .attach_pid
+.attach_files
