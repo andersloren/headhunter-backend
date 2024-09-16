@@ -5,9 +5,10 @@ spring:
     activate:
       on-profile: integration-test
   datasource:
-    url: jdbc:${DB_INTEGRATION_TESTS_NAME}://${DB_INTEGRATION_TESTS_HOSTNAME}:${DB_PORT}/${DB_INTEGRATION_TESTS_DATABASE_NAME}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
+    url: jdbc:mysql://${DB_INTEGRATION_TESTS_HOSTNAME}:${DB_PORT}/${DB_INTEGRATION_TESTS_DATABASE_NAME}?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Berlin
     username: ${DB_ADMIN_USERNAME}
     password: ${DB_ADMIN_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create
@@ -25,4 +26,4 @@ ai:
   openai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
-
+    model: ${OPENAI_API_MODEL}

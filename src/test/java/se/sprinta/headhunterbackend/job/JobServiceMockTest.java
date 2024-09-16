@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.AccountRepository;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.*;
 
+@ActiveProfiles("mock-test")
 @ExtendWith(MockitoExtension.class)
 class JobServiceMockTest {
 
@@ -304,7 +306,7 @@ class JobServiceMockTest {
         then(this.accountRepository).should().findAccountByEmail("email");
         then(this.jobRepository).should().save(jobArgumentCaptor.capture());
     }
-  
+
     @Test
     @DisplayName("PUT - update - Success")
     void test_UpdateSuccess() {

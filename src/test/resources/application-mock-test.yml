@@ -1,0 +1,14 @@
+active-application-yml: MOCK TEST, in test
+
+api:
+  endpoint:
+    base-url-account: /api/v1/account
+    base-url-job: /api/v1/job
+    base-url-ad: /api/v1/ad
+    base-url-accountInfo: /api/v1/accountInfo
+
+ai:
+  openai:
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}
+    model: ${OPENAI_API_MODEL}

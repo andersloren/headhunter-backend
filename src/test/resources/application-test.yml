@@ -5,7 +5,7 @@ spring:
     activate:
       on-profile: test
   datasource:
-    url: jdbc:h2:mem:headhunter-test-h2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:${DB_TEST_NAME}:mem:${DB_TEST_DATABASE_NAME};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: ${DB_TEST_USERNAME}
     password: ${DB_TEST_PASSWORD}
     driver-class-name: org.h2.Driver
@@ -30,4 +30,4 @@ ai:
   openai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
-
+    model: ${OPENAI_API_MODEL}
