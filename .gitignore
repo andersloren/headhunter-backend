@@ -38,6 +38,6 @@ Dockerfile
 ## Secrets
 .env
 
-## attach_pid
+## attach_files
 .attach_pid
 .attach_files
