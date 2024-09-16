@@ -1,4 +1,4 @@
-active-application-yml: PRODUCTION in main
+active-application-yml: PROD in main
 
 spring:
   config:
@@ -7,9 +7,10 @@ spring:
   #  config:
   #    import: "optional:configtree:/run/secrets/"
   datasource:
-    url: jdbc:${DB_NAME}://${DB_PROD_HOSTNAME}:${DB_PORT}/${DB_PRODUCTION_DATABASE_NAME}
+    url: jdbc:mysql://${DB_PROD_HOSTNAME}:${DB_PORT}/${DB_PROD_DATABASE_NAME}
     username: ${DB_USER_USERNAME}
     password: ${DB_USER_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: validate
@@ -27,3 +28,4 @@ ai:
   openai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
+    model: ${OPENAI_API_MODEL}
