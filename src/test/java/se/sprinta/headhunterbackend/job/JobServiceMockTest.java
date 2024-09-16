@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.Account;
@@ -60,6 +61,9 @@ class JobServiceMockTest {
     private List<JobDtoView> jobDtos = new ArrayList<>();
     private List<JobCardDtoView> jobCardDtoViews = new ArrayList<>();
     private List<Account> accounts = new ArrayList<>();
+
+    @Value("${ai.openai.model}")
+    private String model;
 
     @BeforeEach
     void setUp() {
@@ -459,7 +463,7 @@ class JobServiceMockTest {
 
         Message systemMessage = new Message("system", job.getInstruction());
         Message userMessage = new Message("user", job.getDescription());
-        ChatRequest chatRequest = new ChatRequest("gpt-4o", List.of(systemMessage, userMessage));
+        ChatRequest chatRequest = new ChatRequest(this.model, List.of(systemMessage, userMessage));
 
         Choice choice = mock(Choice.class);
         when(choice.message()).thenReturn(new Message(
