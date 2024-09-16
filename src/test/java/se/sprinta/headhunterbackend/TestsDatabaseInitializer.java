@@ -66,8 +66,6 @@ public class TestsDatabaseInitializer {
     @Getter
     private static List<Ad> ads = new ArrayList<>();
 
-    private final List<AccountDtoView> accountDtosTest = new ArrayList<>();
-
     public TestsDatabaseInitializer(AccountRepository accountRepository, JobRepository jobRepository,
                                     AdRepository adRepository) {
         this.accountRepository = accountRepository;
