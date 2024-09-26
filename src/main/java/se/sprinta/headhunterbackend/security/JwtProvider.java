@@ -27,7 +27,7 @@ public class JwtProvider {
 
         // Prepare a claim called authorities.
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority) // Inverse of what we did in MyUserPrincipal
+                .map(GrantedAuthority::getAuthority) // Inverse of what we did in MyAccountPrincipal
                 .collect(Collectors.joining(" ")); // Space delimiter as decided earlier
 
         String email = ((MyAccountPrincipal) authentication.getPrincipal()).getName();
@@ -37,8 +37,8 @@ public class JwtProvider {
                 .issuedAt(now)
                 .expiresAt(now.plus(expiresIn, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("roles", authorities) // The user's roles (user, admin)
-                .claim("email", email) // This user's username
+                .claim("roles", authorities) // The account's roles (user, admin)
+                .claim("email", email) // This account's email
                 .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

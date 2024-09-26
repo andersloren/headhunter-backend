@@ -22,14 +22,14 @@ public class AuthService {
     }
 
     /**
-     * We retrieve the user info by casting the authentication.getPrincipal() into a MyUserPrincipal object.
-     * Then, we can put that user information into a User object.
+     * We retrieve the Account info by casting the authentication.getPrincipal() into a MyAccountPrincipal object.
+     * Then, we can put that Account information into a Account object.
      * <p>
      * The User object now holds the password, so it must be transformed into a dto.
      */
 
     public Map<String, Object> createLoginInfo(Authentication authentication) {
-        // Create user info.
+        // Create account info.
         MyAccountPrincipal principal = (MyAccountPrincipal) authentication.getPrincipal();
         Account account = principal.getUser();
         AccountDtoView accountDtoView = this.accountToAccountDtoViewConverter.convert(account);
