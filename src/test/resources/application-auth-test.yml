@@ -1,0 +1,47 @@
+active-application-yml: AUTH TEST in main
+
+spring:
+  config:
+    activate:
+      on-profile: auth-test
+  datasource:
+    url: jdbc:mysql://localhost:3306/headhunter-dev
+    username: ${DB_ADMIN_USERNAME}
+    password: ${DB_ADMIN_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+
+api:
+  endpoint:
+    base-url-account: /api/v1/account
+    base-url-job: /api/v1/job
+    base-url-ad: /api/v1/ad
+    base-url-accountInfo: /api/v1/accountInfo
+
+ai:
+  openai:
+    endpoint: ${OPENAI_API_ENDPOINT}
+    api-key: ${OPENAI_API_KEY}
+    model: ${OPENAI_API_MODEL}
+
+email:
+  service:
+    service-address: ${EMAIL_SERVICE_ADDRESS}
+
+azure:
+  client-id: ${AZURE_CLIENT_ID}
+  tenant-id: ${AZURE_TENANT_ID}
+
+server:
+  ssl:
+    certificate:
+      path: ${PKCS12_PATH}
+      password: ${PKCS12_PASSWORD}
+
+token:
+  path: ${TOKEN_CACHE_FILE_PATH}
