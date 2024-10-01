@@ -1,7 +1,6 @@
 package se.sprinta.headhunterbackend.email;
 
 import com.microsoft.aad.msal4j.*;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.system.exception.TokenDoesNotExistException;
@@ -66,8 +65,6 @@ public class MicrosoftGraphAuth {
 
                 result = future.join();
 
-                System.out.println("***WE MADE IT THIS FAR***");
-
 //                this.tokenCache.saveToken(result);
                 return result.accessToken();
             } catch (MsalException msalException) {
@@ -78,35 +75,6 @@ public class MicrosoftGraphAuth {
             }
         }
     }
-
-//    public void getUserInfo() throws IOException, URISyntaxException {
-//        URL url = new URI("https://graph.microsoft.com/v1.0/me").toURL();
-//        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//
-//        connection.setRequestMethod("GET");
-//        connection.setRequestProperty("Authorization", "Bearer " + getAccessToken());
-//        connection.setRequestProperty("Accept", "application/json");
-//
-//        int responseCode = connection.getResponseCode();
-//        if (responseCode == HttpURLConnection.HTTP_OK) {
-//            BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            String inputLine;
-//            StringBuilder response = new StringBuilder();
-//
-//            while ((inputLine = inputStream.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            inputStream.close();
-//
-//            JSONObject jsonResponse = new JSONObject(response.toString());
-//
-//            String displayName = jsonResponse.getString("displayName");
-//            System.out.println("User's display name: " + displayName);
-//        } else {
-//            System.out.println("GET request failed. Response Code: " + responseCode);
-//        }
-//        connection.disconnect();
-//    }
 
     public void sendEmail() throws IOException, URISyntaxException {
 

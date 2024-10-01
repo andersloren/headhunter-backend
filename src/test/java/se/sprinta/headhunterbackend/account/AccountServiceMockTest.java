@@ -17,6 +17,8 @@ import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -206,7 +208,7 @@ class AccountServiceMockTest {
 
     @Test
     @DisplayName("POST - register - Success")
-    void test_RegisterAccount_Success() {
+    void test_RegisterAccount_Success() throws IOException, URISyntaxException {
         // Setup
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister("newUser@hh.se", "123456");
 

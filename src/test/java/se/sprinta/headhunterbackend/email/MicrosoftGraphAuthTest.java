@@ -18,12 +18,6 @@ class MicrosoftGraphAuthTest {
     @Autowired
     private MicrosoftGraphAuth microsoftGraphAuth;
 
-//    @Test
-//    @DisplayName("Test getUserInfo")
-//    void test_GetUserInfo() throws IOException, URISyntaxException {
-//        this.microsoftGraphAuth.getUserInfo();
-//    }
-
     @Test
     @DisplayName("Test Send Email")
     void test_SendEmail() throws IOException, URISyntaxException {
