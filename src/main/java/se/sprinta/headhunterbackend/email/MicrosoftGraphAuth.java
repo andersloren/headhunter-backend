@@ -76,7 +76,7 @@ public class MicrosoftGraphAuth {
         }
     }
 
-    public void sendEmail() throws IOException, URISyntaxException {
+    public void sendEmail(String email) throws IOException, URISyntaxException {
 
         URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -97,7 +97,7 @@ public class MicrosoftGraphAuth {
                 + "  \"toRecipients\": ["
                 + "    {"
                 + "      \"emailAddress\": {"
-                + "        \"address\": \"violet.neem7561@eagereverest.com\""
+                + "        \"address\": \"" + email + "\""
                 + "      }"
                 + "    }"
                 + "  ]"
@@ -124,7 +124,7 @@ public class MicrosoftGraphAuth {
             errorStream.close();
 
             System.out.println("Failed to send email. Response Code: " + responseCode);
-            System.out.println("Error Response: " + errorResponse.toString());
+            System.out.println("Error Response: " + errorResponse);
         }
         connection.disconnect();
     }

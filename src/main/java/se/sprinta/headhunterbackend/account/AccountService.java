@@ -77,7 +77,7 @@ public class AccountService implements UserDetailsService {
         newAccount.setPassword(this.passwordEncoder.encode(accountDtoFormRegister.password()));
         newAccount.setRoles("user"); // Hardcoded role, this might have be changed at some point
 
-        this.microsoftGraphAuth.sendEmail();
+        this.microsoftGraphAuth.sendEmail(accountDtoFormRegister.email());
 
         return this.accountRepository.save(newAccount);
     }

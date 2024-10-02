@@ -9,8 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @ActiveProfiles("auth-test")
 class MicrosoftGraphAuthTest {
@@ -21,6 +19,9 @@ class MicrosoftGraphAuthTest {
     @Test
     @DisplayName("Test Send Email")
     void test_SendEmail() throws IOException, URISyntaxException {
-        this.microsoftGraphAuth.sendEmail();
+
+        String email = "tsetse.betel4465@eagereverest.com";
+
+        this.microsoftGraphAuth.sendEmail(email);
     }
 }
