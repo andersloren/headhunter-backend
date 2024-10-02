@@ -36,9 +36,11 @@ public class MicrosoftGraphAuth {
     private String serviceAddress;
 
     private final TokenCache tokenCache;
+    private final Messages messages;
 
-    public MicrosoftGraphAuth(TokenCache tokenCache) {
+    public MicrosoftGraphAuth(TokenCache tokenCache, Messages messages) {
         this.tokenCache = tokenCache;
+        this.messages = messages;
     }
 
     public String getAccessToken() throws IOException {
@@ -87,23 +89,7 @@ public class MicrosoftGraphAuth {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
-        String emailPayload = "{"
-                + "\"message\": {"
-                + "  \"subject\": \"Test Email from Java App\","
-                + "  \"body\": {"
-                + "    \"contentType\": \"Text\","
-                + "    \"content\": \"Hello, this is a test email sent from Java using Microsoft Graph API.\""
-                + "  },"
-                + "  \"toRecipients\": ["
-                + "    {"
-                + "      \"emailAddress\": {"
-                + "        \"address\": \"" + email + "\""
-                + "      }"
-                + "    }"
-                + "  ]"
-                + "},"
-                + "\"saveToSentItems\": \"true\""
-                + "}";
+        String emailPayload = this.messages.emailTemplate(email);
 
         try (OutputStream outputStream = connection.getOutputStream()) {
             byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
