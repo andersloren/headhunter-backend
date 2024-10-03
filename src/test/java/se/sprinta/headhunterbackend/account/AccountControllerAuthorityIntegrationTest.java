@@ -228,7 +228,8 @@ public class AccountControllerAuthorityIntegrationTest {
     void test_RegisterAccount_AdminNoPermission_Exception() throws Exception {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
                 "user4-integrationTest@hh.se",
-                "a");
+                "a",
+                "user");
 
         String json = this.objectMapper.writeValueAsString(accountDtoFormRegister);
 
@@ -250,7 +251,8 @@ public class AccountControllerAuthorityIntegrationTest {
     void test_Register_UserPermission_Success() throws Exception {
         AccountDtoFormRegister newAccount = new AccountDtoFormRegister(
                 "user4-integrationTest@hh.se",
-                "a");
+                "a",
+                "user");
 
         String json = this.objectMapper.writeValueAsString(newAccount);
 
@@ -299,6 +301,7 @@ public class AccountControllerAuthorityIntegrationTest {
     @DisplayName("POST - register - User Permission - Invalid Input - Exception")
     void test_Register_UserPermission_InvalidInput_Exception() throws Exception {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
+                "",
                 "",
                 "");
 

@@ -3,6 +3,8 @@ package se.sprinta.headhunterbackend.account;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
@@ -69,7 +71,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public Result registerAccount(@RequestBody @Valid AccountDtoFormRegister accountDtoFormRegister) {
+    public Result registerAccount(@RequestBody @Valid AccountDtoFormRegister accountDtoFormRegister) throws IOException, URISyntaxException {
         Account addedAccount = this.accountService.register(accountDtoFormRegister);
         AccountDtoView addedAccountDtoView = this.accountToAccountDtoViewConverter.convert(addedAccount);
         return new Result(true, StatusCode.SUCCESS, "Add Account Success", addedAccountDtoView);

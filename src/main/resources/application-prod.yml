@@ -29,3 +29,20 @@ ai:
     endpoint: ${OPENAI_API_ENDPOINT}
     api-key: ${OPENAI_API_KEY}
     model: ${OPENAI_API_MODEL}
+
+email:
+  service:
+    service-address: ${EMAIL_SERVICE_ADDRESS}
+
+azure:
+  client-id: ${AZURE_CLIENT_ID}
+  tenant-id: ${AZURE_TENANT_ID}
+
+server:
+  ssl:
+    certificate:
+      path: ${PKCS12_PATH}
+      password: ${PKCS12_PASSWORD}
+
+token:
+  path: ${TOKEN_CACHE_FILE_PATH}

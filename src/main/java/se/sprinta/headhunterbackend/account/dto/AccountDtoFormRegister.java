@@ -7,6 +7,9 @@ public record AccountDtoFormRegister(
         String email,
 
         @NotEmpty(message = "password is required")
-        String password
+        String password,
+
+        @NotEmpty(message = "at least one role is required")
+        String roles
 ) {
 }

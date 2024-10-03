@@ -1,4 +1,4 @@
-active-application-yml: MOCK TEST, in test
+active-application-yml: AUTH TEST in main
 
 api:
   endpoint:
