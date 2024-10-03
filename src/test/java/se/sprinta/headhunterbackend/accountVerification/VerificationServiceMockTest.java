@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.accountVerification;
 
-import lombok.ToString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,19 +11,16 @@ import org.springframework.test.context.ActiveProfiles;
 import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.Account;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.doNothing;
 
 @SpringBootTest
 @ActiveProfiles("mock-test")
-class VerificationServiceTest {
+class VerificationServiceMockTest {
 
     @Mock
     VerificationRepository verificationRepository;
@@ -53,8 +49,6 @@ class VerificationServiceTest {
     @DisplayName("POST - Send Verification Email - Success")
     void test_CreateVerification_Success() {
         // Setup
-        Verification verification = this.verifications.get(0);
-
         ArgumentCaptor<Verification> verificationArgumentCaptor = forClass(Verification.class);
 
         // Given
@@ -73,19 +67,4 @@ class VerificationServiceTest {
         // Verify
         then(this.verificationRepository).should().save(verificationArgumentCaptor.capture());
     }
-
-//    @Test
-//    @DisplayName("POST - Send Verification Email - Success")
-//    void test_SendVerificationEmail_Success() throws IOException, URISyntaxException {
-//        Verification verification = this.verifications.get(0);
-//        // Given
-//        given(this.verificationRepository.save(this.verifications.get(0))).willReturn(verification);
-//        given(this.verificationService.save(this.verifications.get(0)).
-//
-//                // When
-//        this.verificationService.sendVerificationEmail(this.accounts.get(0));
-//
-//        // Verify
-//        then(this.verificationRepository).should().save(this.verifications.get(0));
-//    }
 }

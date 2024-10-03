@@ -43,6 +43,78 @@ public class MicrosoftGraphAuth {
         this.messages = messages;
     }
 
+    private HttpURLConnection getHttpURLConnection() throws URISyntaxException, IOException {
+        URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Authorization", "Bearer " + getAccessToken());
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+        return connection;
+    }
+
+    public void sendVerificationEmail(String email, String verificationCode) throws IOException, URISyntaxException {
+
+        HttpURLConnection connection = getHttpURLConnection();
+
+        String emailPayload = this.messages.verificationEmail(email, verificationCode);
+
+        try (OutputStream outputStream = connection.getOutputStream()) {
+            byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_ACCEPTED) {
+            System.out.println("Email sent successfully");
+        } else {
+            BufferedReader errorStream = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
+            String inputLine;
+            StringBuilder errorResponse = new StringBuilder();
+
+            while ((inputLine = errorStream.readLine()) != null) {
+                errorResponse.append(inputLine);
+            }
+            errorStream.close();
+
+            System.out.println("Failed to send email. Response Code: " + responseCode);
+            System.out.println("Error Response: " + errorResponse);
+        }
+        connection.disconnect();
+    }
+
+    public void sendConfirmationEmail(String email) throws IOException, URISyntaxException {
+
+        HttpURLConnection connection = getHttpURLConnection();
+
+        String emailPayload = this.messages.confirmationEmail(email);
+
+        try (OutputStream outputStream = connection.getOutputStream()) {
+            byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_ACCEPTED) {
+            System.out.println("Email sent successfully");
+        } else {
+            BufferedReader errorStream = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
+            String inputLine;
+            StringBuilder errorResponse = new StringBuilder();
+
+            while ((inputLine = errorStream.readLine()) != null) {
+                errorResponse.append(inputLine);
+            }
+            errorStream.close();
+
+            System.out.println("Failed to send email. Response Code: " + responseCode);
+            System.out.println("Error Response: " + errorResponse);
+        }
+        connection.disconnect();
+    }
+
     public String getAccessToken() throws IOException {
         try {
             IAuthenticationResult cachedResult = this.tokenCache.loadToken();
@@ -76,42 +148,5 @@ public class MicrosoftGraphAuth {
                 throw new RuntimeException(ex);
             }
         }
-    }
-
-    public void sendEmail(String email) throws IOException, URISyntaxException {
-
-        URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization", "Bearer " + getAccessToken());
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
-
-        String emailPayload = this.messages.emailTemplate(email);
-
-        try (OutputStream outputStream = connection.getOutputStream()) {
-            byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
-            outputStream.write(input, 0, input.length);
-        }
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_ACCEPTED) {
-            System.out.println("Email sent successfully");
-        } else {
-            BufferedReader errorStream = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
-            String inputLine;
-            StringBuilder errorResponse = new StringBuilder();
-
-            while ((inputLine = errorStream.readLine()) != null) {
-                errorResponse.append(inputLine);
-            }
-            errorStream.close();
-
-            System.out.println("Failed to send email. Response Code: " + responseCode);
-            System.out.println("Error Response: " + errorResponse);
-        }
-        connection.disconnect();
     }
 }

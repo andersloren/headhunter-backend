@@ -16,7 +16,41 @@ public class Messages {
         this.objectMapper = objectMapper;
     }
 
-    public String emailTemplate(String email) throws JsonProcessingException {
+    public String verificationEmail(String email, String verificationCode) throws JsonProcessingException {
+
+        Map<String, Object> emailPayload = new HashMap<>();
+
+        Map<String, Object> message = new HashMap<>();
+        // TODO: 10/2/2024 Change this to verification email at some point...
+        message.put("subject", "Headhunter verification email");
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("contentType", "Text");
+        // TODO: 10/2/2024 Externalize the message at some point?
+        body.put("content", "To complete the registration, use this code: " + verificationCode);
+        message.put("body", body);
+
+        Map<String, Object> emailAddress = new HashMap<>();
+        emailAddress.put("address", email);
+
+        Map<String, Object> recipient = new HashMap<>();
+        recipient.put("emailAddress", emailAddress);
+
+        message.put("toRecipients", new Object[]{recipient});
+
+        emailPayload.put("message", message);
+        emailPayload.put("saveToSentItems", "true");
+
+        try {
+            return this.objectMapper.writeValueAsString(emailPayload);
+        } catch (JsonProcessingException e) {
+            System.out.println("Transform JSON email to string failed");
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    public String confirmationEmail(String email) throws JsonProcessingException {
 
         Map<String, Object> emailPayload = new HashMap<>();
 

@@ -17,11 +17,22 @@ class MicrosoftGraphAuthTest {
     private MicrosoftGraphAuth microsoftGraphAuth;
 
     @Test
-    @DisplayName("Test Send Email")
-    void test_SendEmail() throws IOException, URISyntaxException {
+    @DisplayName("Test Send Verification Email")
+    void test_SendVerificationEmail() throws IOException, URISyntaxException {
 
         String email = "tsetse.betel4465@eagereverest.com";
+        String verificationCode = "12345";
 
-        this.microsoftGraphAuth.sendEmail(email);
+        this.microsoftGraphAuth.sendVerificationEmail(email, verificationCode);
+    }
+
+    @Test
+    @DisplayName("Test Send Confirmation Email")
+    void test_SendConfirmationEmail() throws IOException, URISyntaxException {
+
+        String email = "tsetse.betel4465@eagereverest.com";
+        String verificationCode = "12345";
+
+        this.microsoftGraphAuth.sendConfirmationEmail(email);
     }
 }
