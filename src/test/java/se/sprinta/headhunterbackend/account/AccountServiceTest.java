@@ -162,7 +162,8 @@ public class AccountServiceTest {
     void test_Register_Success() throws IOException, URISyntaxException {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
                 "registerAccount@hh.se",
-                "password");
+                "password",
+                "user");
 
         Account savedAccount = this.accountService.register(accountDtoFormRegister);
         assertEquals(savedAccount.getEmail(), "registerAccount@hh.se");

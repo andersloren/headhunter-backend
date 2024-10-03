@@ -210,7 +210,7 @@ class AccountServiceMockTest {
     @DisplayName("POST - register - Success")
     void test_RegisterAccount_Success() throws IOException, URISyntaxException {
         // Setup
-        AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister("newUser@hh.se", "123456");
+        AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister("newUser@hh.se", "123456", "user");
 
         ArgumentCaptor<Account> accountArgumentCaptor = forClass(Account.class);
 
