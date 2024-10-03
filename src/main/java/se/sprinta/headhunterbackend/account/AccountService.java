@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.accountVerification.Verification;
+import se.sprinta.headhunterbackend.accountVerification.VerificationService;
 import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -28,11 +30,17 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final MicrosoftGraphAuth microsoftGraphAuth;
+    private final VerificationService verificationService;
 
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder, MicrosoftGraphAuth microsoftGraphAuth) {
+    public AccountService(
+            AccountRepository accountRepository,
+            PasswordEncoder passwordEncoder,
+            MicrosoftGraphAuth microsoftGraphAuth,
+            VerificationService verificationService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.microsoftGraphAuth = microsoftGraphAuth;
+        this.verificationService = verificationService;
     }
 
     public List<Account> findAll() {
@@ -75,11 +83,11 @@ public class AccountService implements UserDetailsService {
         Account newAccount = new Account();
         newAccount.setEmail(accountDtoFormRegister.email());
         newAccount.setPassword(this.passwordEncoder.encode(accountDtoFormRegister.password()));
-        newAccount.setRoles("user"); // Hardcoded role, this might have be changed at some point
 
-        this.microsoftGraphAuth.sendEmail(accountDtoFormRegister.email());
+        Account savedAccount = this.accountRepository.save(newAccount);
+        this.verificationService.sendVerificationEmail(savedAccount);
 
-        return this.accountRepository.save(newAccount);
+        return savedAccount;
     }
 
     public Account update(String accountEmail, AccountUpdateDtoForm update) {
