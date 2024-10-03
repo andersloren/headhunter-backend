@@ -1,21 +1,5 @@
 active-application-yml: AUTH TEST in main
 
-spring:
-  config:
-    activate:
-      on-profile: auth-test
-  datasource:
-    url: jdbc:mysql://localhost:3306/headhunter-dev
-    username: ${DB_ADMIN_USERNAME}
-    password: ${DB_ADMIN_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    hibernate:
-      ddl-auto: create
-    generate-ddl: true
-    show-sql: true
-
 api:
   endpoint:
     base-url-account: /api/v1/account
