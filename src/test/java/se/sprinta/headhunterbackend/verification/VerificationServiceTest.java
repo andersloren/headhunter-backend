@@ -84,7 +84,7 @@ public class VerificationServiceTest {
         // When
         this.verificationService.verifyRegistration(this.accounts.get(0).getEmail(),
                 this.verifications.get(0).getVerificationCode());
-:q:
+
         // Then
         List<Verification> foundVerifications = this.verificationService.findAll();
 
