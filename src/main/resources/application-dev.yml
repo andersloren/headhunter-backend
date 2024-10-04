@@ -33,8 +33,6 @@ ai:
 email:
   service:
     service-address: ${EMAIL_SERVICE_ADDRESS}
-    secret-value: ${EMAIL_SERVICE_SECRET_VALUE}
-    secret-id: ${EMAIL_SERVICE_SECRET_ID}
 
 azure:
   client-id: ${AZURE_CLIENT_ID}
