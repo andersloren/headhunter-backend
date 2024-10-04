@@ -57,6 +57,14 @@ public class AdServiceTest {
     }
 
     @Test
+    @DisplayName("Test Data Array Initializer")
+    void test_databaseInitializer() {
+        assertEquals(this.jobs.size(), 4);
+        assertEquals(this.ads.size(), 3);
+        assertEquals(this.adDtos.size(), 3);
+    }
+
+    @Test
     @DisplayName("findAll - Success")
     void test_FindAll_Success() {
         // When
