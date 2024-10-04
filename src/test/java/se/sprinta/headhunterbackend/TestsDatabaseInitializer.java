@@ -19,6 +19,8 @@ import se.sprinta.headhunterbackend.job.converter.JobToJobCardDtoViewConverter;
 import se.sprinta.headhunterbackend.job.converter.JobToJobDtoViewConverter;
 import se.sprinta.headhunterbackend.job.dto.JobCardDtoView;
 import se.sprinta.headhunterbackend.job.dto.JobDtoView;
+import se.sprinta.headhunterbackend.verification.Verification;
+import se.sprinta.headhunterbackend.verification.VerificationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,9 @@ public class TestsDatabaseInitializer {
     private final AccountRepository accountRepository;
 
     @Autowired
+    private final VerificationRepository verificationRepository;
+
+    @Autowired
     private final JobRepository jobRepository;
 
     @Autowired
@@ -50,6 +55,8 @@ public class TestsDatabaseInitializer {
 
     @Getter
     private static final List<Account> accounts = new ArrayList<>();
+    @Getter
+    private static final List<Verification> verifications = new ArrayList<>();
     @Getter
     private static final List<Job> jobs = new ArrayList<>();
     @Getter
@@ -61,9 +68,13 @@ public class TestsDatabaseInitializer {
     @Getter
     private static final List<Ad> ads = new ArrayList<>();
 
-    public TestsDatabaseInitializer(AccountRepository accountRepository, JobRepository jobRepository,
-                                    AdRepository adRepository) {
+    public TestsDatabaseInitializer(
+            AccountRepository accountRepository,
+            VerificationRepository verificationRepository,
+            JobRepository jobRepository,
+            AdRepository adRepository) {
         this.accountRepository = accountRepository;
+        this.verificationRepository = verificationRepository;
         this.jobRepository = jobRepository;
         this.adRepository = adRepository;
     }
@@ -89,6 +100,19 @@ public class TestsDatabaseInitializer {
         user4.setEmail("user4-test@hh.se");
         user4.setPassword("a");
         user4.setRoles("user");
+
+        /*
+        Verifications to be persisted
+         */
+
+        Verification verification1 = new Verification();
+        verification1.setAccount(user1);
+
+        Verification verification2 = new Verification();
+        verification2.setAccount(user2);
+
+        Verification verification3 = new Verification();
+        verification3.setAccount(user3);
 
         /*
          * Jobs to be persisted
@@ -151,6 +175,10 @@ public class TestsDatabaseInitializer {
         this.accountRepository.save(user3);
         this.accountRepository.save(user4);
 
+        this.verificationRepository.save(verification1);
+        this.verificationRepository.save(verification2);
+        this.verificationRepository.save(verification3);
+
         this.jobRepository.save(job1);
         this.jobRepository.save(job2);
         this.jobRepository.save(job3);
@@ -165,6 +193,12 @@ public class TestsDatabaseInitializer {
         accounts.add(user2);
         accounts.add(user3);
         accounts.add(user4);
+
+
+        verifications.clear();
+        verifications.add(verification1);
+        verifications.add(verification2);
+        verifications.add(verification3);
 
         jobs.clear();
         jobs.add(job1);
@@ -200,6 +234,7 @@ public class TestsDatabaseInitializer {
 
     @Transactional
     public void clearH2Database() {
+        this.verificationRepository.deleteVerificationTable();
         this.adRepository.deleteAdTable();
         this.jobRepository.deleteJobTable();
         this.accountRepository.deleteAccountTable();
