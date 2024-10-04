@@ -1,9 +1,8 @@
-package se.sprinta.headhunterbackend.accountVerification;
+package se.sprinta.headhunterbackend.verification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import se.sprinta.headhunterbackend.account.Account;
 
