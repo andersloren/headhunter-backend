@@ -24,7 +24,8 @@ public class AccountToAccountDtoViewConverter implements Converter<Account, Acco
         return new AccountDtoView(
                 source.getEmail(),
                 source.getRoles(),
-                source.getNumber_of_jobs()
+                source.getNumber_of_jobs(),
+                source.isVerified()
         );
     }
 }

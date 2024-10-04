@@ -47,6 +47,8 @@ public class SecurityConfig {
     private String baseUrlAd;
     @Value("${api.endpoint.base-url-accountInfo}")
     private String baseUrlAccountInfo;
+    @Value("${api.endpoint.base-url-verification}")
+    private String baseUrlVerification;
 
     private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
@@ -86,6 +88,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+
                                 /*
                                   Account requests
                                  */
@@ -97,6 +100,12 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, this.baseUrlAccount + "/update/{email}").hasAuthority("ROLE_admin")
                                 .requestMatchers(HttpMethod.DELETE, this.baseUrlAccount + "/delete/{email}").hasAuthority("ROLE_admin")
 
+                                /*
+                                Verification requests
+                                 */
+
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlVerification + "/verifyRegistration/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlVerification + "/findAll").hasAuthority("ROLE_admin")
 
                                 /*
                                  Job requests

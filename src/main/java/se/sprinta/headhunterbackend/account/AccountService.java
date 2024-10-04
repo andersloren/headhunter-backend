@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.accountVerification.Verification;
-import se.sprinta.headhunterbackend.accountVerification.VerificationService;
+import se.sprinta.headhunterbackend.verification.VerificationService;
 import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -76,6 +75,7 @@ public class AccountService implements UserDetailsService {
         return this.accountRepository.save(account);
     }
 
+    // TODO: 10/3/2024 Check test methods, update if necessary
     public Account register(AccountDtoFormRegister accountDtoFormRegister) throws IOException, URISyntaxException {
         if (accountDtoFormRegister == null)
             throw new NullPointerException("Account object cannot be null");
@@ -83,6 +83,7 @@ public class AccountService implements UserDetailsService {
         Account newAccount = new Account();
         newAccount.setEmail(accountDtoFormRegister.email());
         newAccount.setPassword(this.passwordEncoder.encode(accountDtoFormRegister.password()));
+        newAccount.setRoles(accountDtoFormRegister.roles());
 
         Account savedAccount = this.accountRepository.save(newAccount);
         this.verificationService.sendVerificationEmail(savedAccount);

@@ -23,6 +23,7 @@ api:
     base-url-job: /api/v1/job
     base-url-ad: /api/v1/ad
     base-url-accountInfo: /api/v1/accountInfo
+    base-url-verification: /api/v1/verification
 
 ai:
   openai:

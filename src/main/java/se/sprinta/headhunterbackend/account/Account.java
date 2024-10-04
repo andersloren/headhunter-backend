@@ -61,6 +61,8 @@ public class Account implements Serializable {
      * Relationship: [Account] 1...* [Job]
      */
 
+    private boolean isVerified = false;
+
     @Getter
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -110,31 +112,29 @@ public class Account implements Serializable {
         this.roles = roles;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        // Password is left out !!!
-        return number_of_jobs == account.number_of_jobs &&
-                Objects.equals(email, account.email) &&
-                Objects.equals(roles, account.roles) &&
-                Objects.equals(accountInfo, account.accountInfo) &&
-                Objects.equals(jobs, account.jobs);
+        return number_of_jobs == account.number_of_jobs && isVerified == account.isVerified && Objects.equals(email, account.email) && Objects.equals(roles, account.roles) && Objects.equals(accountInfo, account.accountInfo) && Objects.equals(jobs, account.jobs);
     }
 
     @Override
     public int hashCode() {
-        // Password is left out !!!
-        return Objects.hash(
-                email,
-                roles,
-                number_of_jobs,
-                accountInfo,
-                jobs);
+        return Objects.hash(email, roles, number_of_jobs, accountInfo, isVerified, jobs);
     }
 
-    // TODO: 04/07/2024 Remove when going into production?
+// TODO: 04/07/2024 Remove when going into production?
+
 
     @Override
     public String toString() {
@@ -142,6 +142,9 @@ public class Account implements Serializable {
                 "email='" + email + '\'' +
                 ", roles='" + roles + '\'' +
                 ", number_of_jobs=" + number_of_jobs +
+                ", accountInfo=" + accountInfo +
+                ", isVerified=" + isVerified +
+                ", jobs=" + jobs +
                 '}';
     }
 }

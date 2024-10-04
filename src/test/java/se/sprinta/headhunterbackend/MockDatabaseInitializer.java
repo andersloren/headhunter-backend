@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
-import se.sprinta.headhunterbackend.accountVerification.Verification;
+import se.sprinta.headhunterbackend.verification.Verification;
 import se.sprinta.headhunterbackend.ad.Ad;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoView;
 import se.sprinta.headhunterbackend.job.Job;
@@ -23,7 +23,7 @@ public class MockDatabaseInitializer {
     private static List<Account> accounts = new ArrayList<>();
     private static final List<AccountDtoView> accountDtos = new ArrayList<>();
 
-    private static List<Verification> verifications = new ArrayList<>();
+    private static final List<Verification> verifications = new ArrayList<>();
 
     private static List<Job> jobs = new ArrayList<>();
     private static final List<JobDtoView> jobDtos = new ArrayList<>();
@@ -374,22 +374,26 @@ public class MockDatabaseInitializer {
         AccountDtoView accountDto1 = new AccountDtoView(
                 accounts.get(0).getEmail(),
                 accounts.get(0).getRoles(),
-                accounts.get(0).getNumber_of_jobs());
+                accounts.get(0).getNumber_of_jobs(),
+                accounts.get(0).isVerified());
 
         AccountDtoView accountDto2 = new AccountDtoView(
                 accounts.get(1).getEmail(),
                 accounts.get(1).getRoles(),
-                accounts.get(1).getNumber_of_jobs());
+                accounts.get(1).getNumber_of_jobs(),
+                accounts.get(1).isVerified());
 
         AccountDtoView accountDto3 = new AccountDtoView(
                 accounts.get(2).getEmail(),
                 accounts.get(2).getRoles(),
-                accounts.get(2).getNumber_of_jobs());
+                accounts.get(2).getNumber_of_jobs(),
+                accounts.get(2).isVerified());
 
         AccountDtoView accountDto4 = new AccountDtoView(
                 accounts.get(3).getEmail(),
                 accounts.get(3).getRoles(),
-                accounts.get(3).getNumber_of_jobs());
+                accounts.get(3).getNumber_of_jobs(),
+                accounts.get(3).isVerified());
 
         accountDtos.add(accountDto1);
         accountDtos.add(accountDto2);

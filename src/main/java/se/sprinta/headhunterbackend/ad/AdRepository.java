@@ -31,7 +31,7 @@ public interface AdRepository extends JpaRepository<Ad, String> {
   @Query("SELECT new se.sprinta.headhunterbackend.ad.dto.AdDtoView(ad.id, ad.dateCreated, ad.htmlCode) FROM Ad ad WHERE ad.job.id = :jobId")
   List<AdDtoView> getAdDtosByJobId(long jobId);
 
-  @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ad.job.account.email, ad.job.account.roles, ad.job.account.number_of_jobs) FROM Ad ad where ad.id = :adId")
+  @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ad.job.account.email, ad.job.account.roles, ad.job.account.number_of_jobs, ad.job.account.isVerified) FROM Ad ad where ad.id = :adId")
   AccountDtoView getAccountDtoByAdId(String adId);
 
   @Query("SELECT COUNT(ad) FROM Ad ad WHERE ad.job.id = :jobId")
