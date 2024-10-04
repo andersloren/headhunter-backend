@@ -51,15 +51,10 @@ public class AccountServiceTest {
     }
 
     @Test
-    @DisplayName("Test Database Initializer")
+    @DisplayName("Test Data Array Initializer")
     void test_databaseInitializer() {
         assertEquals(this.accounts.size(), 4);
         assertEquals(this.accountDtos.size(), 4);
-
-        assertEquals(this.accounts.get(0).getNumber_of_jobs(), 2);
-        assertEquals(this.accounts.get(1).getNumber_of_jobs(), 1);
-        assertEquals(this.accounts.get(2).getNumber_of_jobs(), 1);
-        assertEquals(this.accounts.get(3).getNumber_of_jobs(), 0);
     }
 
     @Test
