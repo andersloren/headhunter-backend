@@ -112,7 +112,7 @@ public class IntegrationTestDatabaseInitializer implements CommandLineRunner {
         this.adService.addAd(2L, ad3);
 
         /**
-         * Verifications to be persisted
+         * Verification to be persisted
          */
 
         this.verificationService.createVerification(user1);
