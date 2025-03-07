@@ -83,10 +83,22 @@ public class VerificationControllerAuthorityIntegrationTest {
     @DisplayName("DELETE - delete - Invalid Email - Exception")
     void test_Delete_InvalidEmail_Exception() throws Exception {
         this.mockMvc.perform(delete(this.baseUrlVerification + "/delete" + "/" + "Invalid Email")
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, adminToken()))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find verification with Id Invalid Email"));
     }
+
+    @Test
+    @DisplayName("DELETE - delete - User No Permission - Exception")
+    void test_Delete_UserNoPermission_Exception() throws Exception {
+        this.mockMvc.perform(delete(this.baseUrlVerification + "/delete" + "/" + "user1-integrationTest@hh.se")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, userToken()))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("No Permission"));
+    }
+
 }

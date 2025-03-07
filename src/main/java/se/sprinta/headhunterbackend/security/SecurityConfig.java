@@ -104,8 +104,9 @@ public class SecurityConfig {
                                 Verification requests
                                  */
 
-                                .requestMatchers(HttpMethod.DELETE, this.baseUrlVerification + "/verifyRegistration/**").hasAuthority("ROLE_user")
-                                .requestMatchers(HttpMethod.DELETE, this.baseUrlVerification + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlVerification + "/verifyRegistration/**").hasAuthority("ROLE_user")
+                                .requestMatchers(HttpMethod.GET, this.baseUrlVerification + "/findAll").hasAuthority("ROLE_admin")
+                                .requestMatchers(HttpMethod.DELETE, this.baseUrlVerification + "/delete/**").hasAuthority("ROLE_admin")
 
                                 /*
                                  Job requests
