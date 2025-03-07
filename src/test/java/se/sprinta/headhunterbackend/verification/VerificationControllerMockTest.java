@@ -24,8 +24,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ActiveProfiles("mock-test")
@@ -101,5 +100,19 @@ class VerificationControllerMockTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Verification Success"));
 
+    }
+
+    @Test
+    @DisplayName("DELETE - Delete Verification - Success")
+    void test_DeleteVerification_Success() throws Exception {
+        // Given
+        willDoNothing().given(this.verificationService).delete(this.accounts.get(0).getEmail());
+
+        // When and then
+        this.mockMvc.perform(delete(this.baseUrlVerification + "/delete" + "/" + this.accounts.get(0).getEmail())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Delete Success"));
     }
 }
