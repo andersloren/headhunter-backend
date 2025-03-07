@@ -1,6 +1,5 @@
 package se.sprinta.headhunterbackend.verification;
 
-import org.apache.juli.VerbatimFormatter;
 import org.springframework.web.bind.annotation.*;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
@@ -31,9 +30,22 @@ public class VerificationController {
         return new Result(true, StatusCode.SUCCESS, "Find All Verifications Success", foundVerifications);
     }
 
+    // TODO: 10/4/2024 Update Postman to include this method 
+    @GetMapping("/requestVerificationEmail/{email}")
+    public Result requestEmailVerification(@PathVariable String email) throws IOException, URISyntaxException {
+        this.verificationService.sendVerificationEmail(email);
+        return new Result(true, StatusCode.SUCCESS, "Verification Email Successfully Requested");
+    }
+
     @PostMapping("/verifyRegistration/{email}/{verificationCode}")
     public Result verifyRegistration(@PathVariable String email, @PathVariable String verificationCode) throws IOException, URISyntaxException {
         this.verificationService.verifyRegistration(email, verificationCode);
         return new Result(true, StatusCode.SUCCESS, "Verification Success");
+    }
+
+    @DeleteMapping("/delete/{email}")
+    public Result delete(@PathVariable String email) {
+        this.verificationService.delete(email);
+        return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
 }

@@ -14,6 +14,9 @@ public interface VerificationRepository extends JpaRepository<Verification, Long
     @Query("SELECT v.verificationCode FROM Verification v WHERE v.account.email = :accountEmail")
     Optional<String> findByEmail(String accountEmail);
 
+    @Query("SELECT v FROM Verification v WHERE v.account.email = :accountEmail")
+    Optional<Verification> findVerificationByEmail(String accountEmail);
+
     @Modifying
     @Query("DELETE FROM Verification v WHERE v.account.email = :accountEmail")
     void deleteByEmail(String accountEmail);

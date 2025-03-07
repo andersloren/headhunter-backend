@@ -152,5 +152,38 @@ class VerificationServiceMockTest {
         // Verify
         then(this.verificationRepository).should().findByEmail(this.accounts.get(0).getEmail());
     }
+
+    @Test
+    @DisplayName("DELETE - Delete Verification - Success")
+    void test_DeleteVerification_Success() {
+        // Given
+        given(this.verificationRepository.findVerificationByEmail(this.accounts.get(0).getEmail())).willReturn(Optional.of(this.verifications.get(0)));
+        willDoNothing().given(this.verificationRepository).delete(this.verifications.get(0));
+
+        // When
+        this.verificationService.delete(this.accounts.get(0).getEmail());
+
+        // Then
+        then(this.verificationRepository).should().delete(this.verifications.get(0));
+    }
+
+    @Test
+    @DisplayName("DELETE - Delete Verification - Non Existent Verification - Exception")
+    void test_DeleteVerification_NonExistentVerification_Exception() {
+        // Given
+        given(this.verificationRepository.findVerificationByEmail(this.accounts.get(0).getEmail())).willThrow(new ObjectNotFoundException("verification", this.accounts.get(0).getEmail()));
+
+        // When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class,
+                () -> this.verificationRepository.findVerificationByEmail(this.accounts.get(0).getEmail()));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find verification with Id " + this.accounts.get(0).getEmail());
+
+        // Verify
+        then(this.verificationRepository).should().findVerificationByEmail(this.accounts.get(0).getEmail());
+    }
 }
 

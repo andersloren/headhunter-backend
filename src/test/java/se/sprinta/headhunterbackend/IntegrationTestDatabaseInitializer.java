@@ -12,6 +12,8 @@ import se.sprinta.headhunterbackend.ad.AdService;
 import se.sprinta.headhunterbackend.ad.dto.AdDtoForm;
 import se.sprinta.headhunterbackend.job.Job;
 import se.sprinta.headhunterbackend.job.JobService;
+import se.sprinta.headhunterbackend.verification.Verification;
+import se.sprinta.headhunterbackend.verification.VerificationService;
 
 /**
  * * Database entries (User objects, Job objects, and Ad objects) for testing.
@@ -26,11 +28,17 @@ public class IntegrationTestDatabaseInitializer implements CommandLineRunner {
     private final AccountService accountService;
     private final JobService jobService;
     private final AdService adService;
+    private final VerificationService verificationService;
 
-    public IntegrationTestDatabaseInitializer(AccountService accountService, JobService jobService, AdService adService) {
+    public IntegrationTestDatabaseInitializer(
+            AccountService accountService,
+            JobService jobService,
+            AdService adService,
+            VerificationService verificationService) {
         this.accountService = accountService;
         this.jobService = jobService;
         this.adService = adService;
+        this.verificationService = verificationService;
     }
 
     @Override
@@ -102,5 +110,11 @@ public class IntegrationTestDatabaseInitializer implements CommandLineRunner {
         this.adService.addAd(1L, ad1);
         this.adService.addAd(1L, ad2);
         this.adService.addAd(2L, ad3);
+
+        /**
+         * Verification to be persisted
+         */
+
+        this.verificationService.createVerification(user1);
     }
 }
