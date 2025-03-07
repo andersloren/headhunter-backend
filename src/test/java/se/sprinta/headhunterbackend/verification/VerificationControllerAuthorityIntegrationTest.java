@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import se.sprinta.headhunterbackend.HeadhunterBackendApplication;
 import se.sprinta.headhunterbackend.system.StatusCode;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -41,6 +42,8 @@ public class VerificationControllerAuthorityIntegrationTest {
 
     @Value("${api.endpoint.base-url-verification}")
     private String baseUrlVerification;
+    @Autowired
+    private HeadhunterBackendApplication headhunterBackendApplication;
 
     public String userToken() throws Exception {
         ResultActions resultActions = this.mockMvc.perform(
@@ -74,5 +77,16 @@ public class VerificationControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Delete Success"));
+    }
+
+    @Test
+    @DisplayName("DELETE - delete - Invalid Email - Exception")
+    void test_Delete_InvalidEmail_Exception() throws Exception {
+        this.mockMvc.perform(delete(this.baseUrlVerification + "/delete" + "/" + "Invalid Email")
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, adminToken()))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find verification with Id Invalid Email"));
     }
 }
