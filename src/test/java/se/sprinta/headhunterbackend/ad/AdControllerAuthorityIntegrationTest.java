@@ -110,7 +110,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -138,7 +138,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -150,7 +150,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -162,7 +162,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -198,7 +198,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -236,7 +236,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -272,7 +272,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -328,7 +328,7 @@ public class AdControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 

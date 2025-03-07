@@ -24,6 +24,7 @@ import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.verification.VerificationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,9 @@ class AccountControllerMockTest {
 
     @MockBean
     private AccountService accountService;
+
+    @MockBean
+    private VerificationService verificationService;
 
     @Autowired
     private MockMvc mockMvc;

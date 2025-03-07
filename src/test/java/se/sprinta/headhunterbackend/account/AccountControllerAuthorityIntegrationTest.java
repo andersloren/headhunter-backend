@@ -99,7 +99,7 @@ public class AccountControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
@@ -224,8 +224,8 @@ public class AccountControllerAuthorityIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST - register - Admin Permission - Exception")
-    void test_RegisterAccount_AdminNoPermission_Exception() throws Exception {
+    @DisplayName("POST - register - Admin Permission - Success")
+    void test_RegisterAccount_AdminNoPermission_Success() throws Exception {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
                 "user4-integrationTest@hh.se",
                 "a",
@@ -376,7 +376,7 @@ public class AccountControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
 
         this.mockMvc.perform(get(this.baseUrlAccount + "/getAccountDtoByEmail" + "/admin-integrationTest@hh.se")
@@ -392,7 +392,8 @@ public class AccountControllerAuthorityIntegrationTest {
     @Test
     @DisplayName("DELETE - delete - Admin Permission - Success")
     void test_Delete_AdminPermission_Success() throws Exception {
-        this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/user1-integrationTest@hh.se")
+        // Since user1-integrationTest@hh.se has a Verification object connected to it, we should delete a different user account, hence the choice of user3
+        this.mockMvc.perform(delete(this.baseUrlAccount + "/delete" + "/user3-integrationTest@hh.se")
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, adminToken()))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -411,11 +412,11 @@ public class AccountControllerAuthorityIntegrationTest {
                 .andExpect(jsonPath("$.data[0].password").isNotEmpty())
                 .andExpect(jsonPath("$.data[0].roles").value("admin"))
                 .andExpect(jsonPath("$.data[0].number_of_jobs").value(0))
-                .andExpect(jsonPath("$.data[1].email").value("user2-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[1].email").value("user1-integrationTest@hh.se"))
                 .andExpect(jsonPath("$.data[1].password").isNotEmpty())
                 .andExpect(jsonPath("$.data[1].roles").value("user"))
                 .andExpect(jsonPath("$.data[2].number_of_jobs").value(1))
-                .andExpect(jsonPath("$.data[2].email").value("user3-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[2].email").value("user2-integrationTest@hh.se"))
                 .andExpect(jsonPath("$.data[2].password").isNotEmpty())
                 .andExpect(jsonPath("$.data[2].roles").value("user"))
                 .andExpect(jsonPath("$.data[2].number_of_jobs").value(1));
@@ -458,7 +459,7 @@ public class AccountControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No permission"))
+                .andExpect(jsonPath("$.message").value("No Permission"))
                 .andExpect(jsonPath("$.data").value("Access Denied"));
 
         this.mockMvc.perform(get(this.baseUrlAccount + "/findAll")

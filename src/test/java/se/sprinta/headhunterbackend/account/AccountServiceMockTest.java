@@ -49,7 +49,7 @@ class AccountServiceMockTest {
     }
 
     @Test
-    @DisplayName("Test Data Initializer")
+    @DisplayName("Test Data Array Initializer")
     void test_DataInitializer() {
         System.out.println("AccountServiceMockTest, accounts size: " + this.accounts.size());
         for (Account account : this.accounts) {
