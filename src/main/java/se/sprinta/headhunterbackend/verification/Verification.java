@@ -26,6 +26,10 @@ public class Verification {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    public Verification(Account account) {
+        this.account = account;
+    }
+
     public Verification() {
         this.verificationCode = generateVerificationCode();
     }
