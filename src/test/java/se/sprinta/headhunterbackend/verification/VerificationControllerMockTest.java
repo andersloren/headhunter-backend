@@ -18,12 +18,14 @@ import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.TestUtils;
 import se.sprinta.headhunterbackend.account.Account;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -63,7 +65,7 @@ class VerificationControllerMockTest {
     }
 
     @Test
-    @DisplayName("GET - Find All - Success")
+    @DisplayName("GET - find all - Success")
     void test_FindAll_Success() throws Exception {
         // Given
         given(this.verificationService.findAll()).willReturn(this.verifications);
@@ -103,7 +105,7 @@ class VerificationControllerMockTest {
     }
 
     @Test
-    @DisplayName("DELETE - Delete Verification - Success")
+    @DisplayName("DELETE - delete - Success")
     void test_DeleteVerification_Success() throws Exception {
         // Given
         willDoNothing().given(this.verificationService).delete(this.accounts.get(0).getEmail());
@@ -114,5 +116,19 @@ class VerificationControllerMockTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Delete Success"));
+    }
+
+    @Test
+    @DisplayName("DELETE - delete - Non-existent Email - Exception")
+    void test_DeleteVerification_NonExistentEmail_Exception() throws Exception {
+        // Given
+        doThrow(new ObjectNotFoundException("verification", "Invalid Email")).when(this.verificationService).delete("Invalid Email");
+
+        this.mockMvc.perform(delete(this.baseUrlVerification + "/delete" + "/" + "Invalid Email")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find verification with Id Invalid Email"));
+
     }
 }
