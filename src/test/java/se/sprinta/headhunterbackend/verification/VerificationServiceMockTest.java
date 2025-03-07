@@ -152,5 +152,19 @@ class VerificationServiceMockTest {
         // Verify
         then(this.verificationRepository).should().findByEmail(this.accounts.get(0).getEmail());
     }
+
+    @Test
+    @DisplayName("DELETE - Delete Verification - Success")
+    void test_DeleteVerification_Success() {
+        // Given
+        given(this.verificationRepository.findVerificationByEmail(this.accounts.get(0).getEmail())).willReturn(Optional.of(this.verifications.get(0)));
+        willDoNothing().given(this.verificationRepository).delete(this.verifications.get(0));
+
+        // When
+        this.verificationService.delete(this.accounts.get(0).getEmail());
+
+        // Then
+        then(this.verificationRepository).should().delete(this.verifications.get(0));
+    }
 }
 
