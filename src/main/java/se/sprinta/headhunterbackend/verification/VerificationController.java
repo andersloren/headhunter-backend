@@ -33,7 +33,7 @@ public class VerificationController {
     // TODO: 10/4/2024 Update Postman to include this method 
     @GetMapping("/requestVerificationEmail/{email}")
     public Result requestEmailVerification(@PathVariable String email) throws IOException, URISyntaxException {
-        this.verificationService.sendVerificationEmail(email);
+        this.verificationService.requestVerificationEmail(email);
         return new Result(true, StatusCode.SUCCESS, "Verification Email Successfully Requested");
     }
 

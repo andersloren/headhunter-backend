@@ -38,7 +38,7 @@ public class VerificationService {
         return savedVerification.getVerificationCode();
     }
 
-    public void sendVerificationEmail(String email) throws IOException, URISyntaxException {
+    public void requestVerificationEmail(String email) throws IOException, URISyntaxException {
         // TODO: 10/4/2024 Create new test for this method
         Account requestAccount = this.accountRepository.findAccountByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException("account", email));
@@ -62,7 +62,7 @@ public class VerificationService {
 
         // TODO: 10/3/2024 Create test for this if statement
         if (!foundVerificationCode.equals(verificationCode)) {
-            sendVerificationEmail(foundAccount.getEmail());
+            requestVerificationEmail(foundAccount.getEmail());
             throw new InvalidVerificationCodeException(email, verificationCode);
         }
 
