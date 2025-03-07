@@ -38,9 +38,14 @@ public class VerificationService {
         return savedVerification.getVerificationCode();
     }
 
-    public void sendVerificationEmail(Account account) throws IOException, URISyntaxException {
-        String verificationCode = createVerification(account);
-        this.microsoftGraphAuth.sendVerificationEmail(account.getEmail(), verificationCode);
+    public void sendVerificationEmail(String email) throws IOException, URISyntaxException {
+        // TODO: 10/4/2024 Create new test for this method
+        Account requestAccount = this.accountRepository.findAccountByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("account", email));
+
+        String verificationCode = createVerification(requestAccount);
+        System.out.println("****** IS THIS HAPPENING? *******" + requestAccount.getEmail());
+        this.microsoftGraphAuth.sendVerificationEmail(requestAccount.getEmail(), verificationCode);
     }
 
     public void verifyRegistration(String email, String verificationCode) throws IOException, URISyntaxException {
@@ -57,12 +62,20 @@ public class VerificationService {
 
         // TODO: 10/3/2024 Create test for this if statement
         if (!foundVerificationCode.equals(verificationCode)) {
-            sendVerificationEmail(foundAccount);
+            sendVerificationEmail(foundAccount.getEmail());
             throw new InvalidVerificationCodeException(email, verificationCode);
         }
 
         foundAccount.setVerified(true);
         this.verificationRepository.deleteByEmail(email);
     }
+
+    public void delete(String email) {
+        Verification foundVerification = this.verificationRepository.findVerificationByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("verification", email));
+
+        this.verificationRepository.delete(foundVerification);
+    }
+
 }
 
