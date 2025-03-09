@@ -3,6 +3,7 @@ package se.sprinta.headhunterbackend;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import se.sprinta.headhunterbackend.account.Account;
+import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.verification.Verification;
 import se.sprinta.headhunterbackend.ad.Ad;
@@ -22,6 +23,7 @@ public class MockDatabaseInitializer {
 
     private static List<Account> accounts = new ArrayList<>();
     private static final List<AccountDtoView> accountDtos = new ArrayList<>();
+    private static final List<AccountDtoFormRegister> accountDtoFormRegister = new ArrayList<>();
 
     private static final List<Verification> verifications = new ArrayList<>();
 
@@ -126,6 +128,42 @@ public class MockDatabaseInitializer {
         ads.add(ad3);
 
         return accounts;
+    }
+
+    public static List<AccountDtoFormRegister> initializeAccountDtoFormRegister() {
+
+        accountDtoFormRegister.clear();
+
+        AccountDtoFormRegister accountDtoFormRegister1 = new AccountDtoFormRegister(
+                "user1-mock@hh.se",
+                "a",
+                "user"
+        );
+
+        AccountDtoFormRegister accountDtoFormRegister2 = new AccountDtoFormRegister(
+                "user2-mock@hh.se",
+                "a",
+                "user"
+        );
+
+        AccountDtoFormRegister accountDtoFormRegister3 = new AccountDtoFormRegister(
+                "user3-mock@hh.se",
+                "a",
+                "user"
+        );
+
+        AccountDtoFormRegister accountDtoFormRegister4 = new AccountDtoFormRegister(
+                "user3-mock@hh.se",
+                "a",
+                "user"
+        );
+
+        accountDtoFormRegister.add(accountDtoFormRegister1);
+        accountDtoFormRegister.add(accountDtoFormRegister2);
+        accountDtoFormRegister.add(accountDtoFormRegister3);
+        accountDtoFormRegister.add(accountDtoFormRegister4);
+
+        return accountDtoFormRegister;
     }
 
     public static List<Verification> initializeMockVerifications() {
