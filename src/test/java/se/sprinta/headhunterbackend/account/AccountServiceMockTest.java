@@ -14,6 +14,7 @@ import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.AccountAlreadyExistException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -238,7 +239,7 @@ class AccountServiceMockTest {
     }
 
     @Test
-    @DisplayName("POST - register - Null Object (Exception) ")
+    @DisplayName("POST - register - Null Object - Exception")
     void test_RegisterAccount_NullObject() {
 
         Throwable thrown = assertThrows(NullPointerException.class,
@@ -248,6 +249,26 @@ class AccountServiceMockTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Account object cannot be null");
     }
+
+    @Test
+    @DisplayName("POST - register - Email Already Exists - Exception")
+    void test_RegisterAccount_EmailAlreadyExists_Exception() {
+        // Setup
+        AccountDtoFormRegister newAccountDtoFormRegister = new AccountDtoFormRegister("user1-mock@hh.se", "a", "user");
+
+        // Given
+        given(this.accountRepository.findAccountByEmail(newAccountDtoFormRegister.email())).willReturn(Optional.of(this.accounts.get(0)));
+
+        // When
+        Throwable thrown = assertThrows(AccountAlreadyExistException.class,
+                () -> this.accountService.register(newAccountDtoFormRegister));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(AccountAlreadyExistException.class)
+                .hasMessage("Email is already registered");
+    }
+
 
     @Test
     @DisplayName("PUT - update - Success")
