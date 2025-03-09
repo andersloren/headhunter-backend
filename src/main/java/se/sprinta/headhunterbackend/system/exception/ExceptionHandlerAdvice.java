@@ -40,6 +40,12 @@ public class ExceptionHandlerAdvice {
         return new Result(false, StatusCode.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    Result handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+        return new Result(false, StatusCode.FORBIDDEN, ex.getMessage());
+    }
+
     @ExceptionHandler(DoesNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     Result handleDoesNotExistException(DoesNotExistException ex) {
