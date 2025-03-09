@@ -14,6 +14,7 @@ import se.sprinta.headhunterbackend.MockDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -41,11 +42,13 @@ class AccountServiceMockTest {
 
     List<Account> accounts = new ArrayList<>();
     List<AccountDtoView> accountDtos = new ArrayList<>();
+    List<AccountDtoFormRegister> accountDtoFormRegisters = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         this.accounts = MockDatabaseInitializer.initializeMockAccounts();
         this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+        this.accountDtoFormRegisters = MockDatabaseInitializer.initializeAccountDtoFormRegister();
     }
 
     @Test
@@ -58,6 +61,10 @@ class AccountServiceMockTest {
         System.out.println("AccountServiceMockTest, accountDtos size: " + this.accountDtos.size());
         for (AccountDtoView accountDto : this.accountDtos) {
             System.out.println(accountDto.toString());
+        }
+        System.out.println("AccountServiceMockTest, accountDtoFormRegisters size: " + this.accountDtoFormRegisters.size());
+        for (AccountDtoFormRegister accountDtoFormRegisters : this.accountDtoFormRegisters) {
+            System.out.println(accountDtoFormRegisters.toString());
         }
     }
 
@@ -238,7 +245,7 @@ class AccountServiceMockTest {
     }
 
     @Test
-    @DisplayName("POST - register - Null Object (Exception) ")
+    @DisplayName("POST - register - Null Object - Exception")
     void test_RegisterAccount_NullObject() {
 
         Throwable thrown = assertThrows(NullPointerException.class,
@@ -248,6 +255,23 @@ class AccountServiceMockTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Account object cannot be null");
     }
+
+    @Test
+    @DisplayName("POST - register - Email Already Exists - Exception")
+    void test_RegisterAccount_EmailAlreadyExists_Exception() {
+        // Given
+        given(this.accountRepository.findAccountByEmail(this.accountDtoFormRegisters.get(0).email())).willReturn(Optional.of(this.accounts.get(0)));
+
+        // When
+        Throwable thrown = assertThrows(EmailAlreadyExistsException.class,
+                () -> this.accountService.register(this.accountDtoFormRegisters.get(0)));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(EmailAlreadyExistsException.class)
+                .hasMessage("Email is already registered");
+    }
+
 
     @Test
     @DisplayName("PUT - update - Success")

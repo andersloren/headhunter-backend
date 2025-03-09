@@ -298,6 +298,50 @@ public class AccountControllerAuthorityIntegrationTest {
     }
 
     @Test
+    @DisplayName("POST - register - Email Already Registered - Exception")
+    void test_Register_EmailAlreadyRegistered_Exception() throws Exception {
+
+        AccountDtoFormRegister newAccount = new AccountDtoFormRegister(
+                "user1-integrationTest@hh.se",
+                "a",
+                "user");
+
+        String json = this.objectMapper.writeValueAsString(newAccount);
+
+        this.mockMvc.perform(post(this.baseUrlAccount + "/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .header(HttpHeaders.AUTHORIZATION, userToken()))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("Email is already registered"));
+
+        this.mockMvc.perform(get(this.baseUrlAccount + "/findAll")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, adminToken()))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find All Accounts Success"))
+                .andExpect(jsonPath("$.data", Matchers.hasSize(4)))
+                .andExpect(jsonPath("$.data[0].email").value("admin-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[0].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[0].roles").value("admin"))
+                .andExpect(jsonPath("$.data[0].number_of_jobs").value(0))
+                .andExpect(jsonPath("$.data[1].email").value("user1-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[1].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[1].roles").value("user"))
+                .andExpect(jsonPath("$.data[1].number_of_jobs").value(2))
+                .andExpect(jsonPath("$.data[2].email").value("user2-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[2].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[2].roles").value("user"))
+                .andExpect(jsonPath("$.data[2].number_of_jobs").value(1))
+                .andExpect(jsonPath("$.data[3].email").value("user3-integrationTest@hh.se"))
+                .andExpect(jsonPath("$.data[3].password").isNotEmpty())
+                .andExpect(jsonPath("$.data[3].roles").value("user"))
+                .andExpect(jsonPath("$.data[3].number_of_jobs").value(1));
+    }
+
+    @Test
     @DisplayName("POST - register - User Permission - Invalid Input - Exception")
     void test_Register_UserPermission_InvalidInput_Exception() throws Exception {
         AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(

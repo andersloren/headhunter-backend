@@ -1,9 +1,6 @@
 package se.sprinta.headhunterbackend.account;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,11 +9,13 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.verification.VerificationService;
 import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
-import jakarta.transaction.Transactional;
+import se.sprinta.headhunterbackend.verification.VerificationService;
+
+import java.util.List;
 
 /**
  * Business logic for Job
@@ -76,19 +75,25 @@ public class AccountService implements UserDetailsService {
     }
 
     // TODO: 10/3/2024 Check test methods, update if necessary
-    public Account register(AccountDtoFormRegister accountDtoFormRegister) throws IOException, URISyntaxException {
+    public Account register(AccountDtoFormRegister accountDtoFormRegister) {
         if (accountDtoFormRegister == null)
             throw new NullPointerException("Account object cannot be null");
+
+        if (this.accountRepository.findAccountByEmail(accountDtoFormRegister.email()).isPresent()) {
+            System.out.println("if condition false");
+            throw new EmailAlreadyExistsException();
+        }
 
         Account newAccount = new Account();
         newAccount.setEmail(accountDtoFormRegister.email());
         newAccount.setPassword(this.passwordEncoder.encode(accountDtoFormRegister.password()));
         newAccount.setRoles(accountDtoFormRegister.roles());
 
-        Account savedAccount = this.accountRepository.save(newAccount);
-        this.verificationService.sendVerificationEmail(savedAccount);
+//        Account savedAccount = this.accountRepository.save(newAccount);
+//        this.verificationService.sendVerificationEmail(savedAccount);
 
-        return savedAccount;
+//        return savedAccount;
+        return this.accountRepository.save(newAccount);
     }
 
     public Account update(String accountEmail, AccountUpdateDtoForm update) {

@@ -12,6 +12,7 @@ import se.sprinta.headhunterbackend.TestsDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -174,6 +175,25 @@ public class AccountServiceTest {
                 () -> this.accountService.register(null));
 
         assertThat(thrown).isInstanceOf(NullPointerException.class).hasMessage("Account object cannot be null");
+    }
+
+    @Test
+    @DisplayName("POST - register - Email Already Registered - Exception")
+    void test_Register_EmailAlreadyRegistered_Exception() {
+        // Setup
+        AccountDtoFormRegister accountDtoFormRegister = new AccountDtoFormRegister(
+                "user1-test@hh.se",
+                "a",
+                "user");
+
+        // When
+        Throwable thrown = assertThrows(EmailAlreadyExistsException.class,
+                () -> this.accountService.register(accountDtoFormRegister));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(EmailAlreadyExistsException.class)
+                .hasMessage("Email is already registered");
     }
 
     @Test

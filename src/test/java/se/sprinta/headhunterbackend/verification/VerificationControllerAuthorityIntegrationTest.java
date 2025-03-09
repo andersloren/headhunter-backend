@@ -98,7 +98,8 @@ public class VerificationControllerAuthorityIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, userToken()))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
-                .andExpect(jsonPath("$.message").value("No Permission"));
+                .andExpect(jsonPath("$.message").value("No Permission"))
+                .andExpect(jsonPath("$.data").value("Access Denied"));
     }
 
 }
