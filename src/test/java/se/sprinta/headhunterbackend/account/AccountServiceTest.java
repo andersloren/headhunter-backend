@@ -12,7 +12,7 @@ import se.sprinta.headhunterbackend.TestsDatabaseInitializer;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.system.exception.AccountAlreadyExistException;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 
@@ -187,12 +187,12 @@ public class AccountServiceTest {
                 "user");
 
         // When
-        Throwable thrown = assertThrows(AccountAlreadyExistException.class,
+        Throwable thrown = assertThrows(EmailAlreadyExistsException.class,
                 () -> this.accountService.register(accountDtoFormRegister));
 
         // Then
         assertThat(thrown)
-                .isInstanceOf(AccountAlreadyExistException.class)
+                .isInstanceOf(EmailAlreadyExistsException.class)
                 .hasMessage("Email is already registered");
     }
 
