@@ -2,6 +2,7 @@ package se.sprinta.headhunterbackend.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.glassfish.jaxb.core.v2.TODO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,10 @@ import se.sprinta.headhunterbackend.account.dto.AccountDtoFormUpdate;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.StatusCode;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.system.exception.TokenDoesNotExistException;
 import se.sprinta.headhunterbackend.verification.VerificationService;
 
 import java.util.ArrayList;
@@ -234,11 +237,21 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
 
-
     @Test
     @DisplayName("POST - register - Email Already Exists - Exception")
     void test_Register_EmailAlreadyExists_Exception() throws Exception {
-        this.mockMvc.perform(post(this.baseUrlAccount + "/register" + "/" + this.accountDtoFormRegister.get(0).email())
+
+        String json = this.objectMapper.writeValueAsString(this.accountDtoFormRegister.get(0));
+
+        // Given
+        given(this.accountService.register(any(AccountDtoFormRegister.class)))
+                .willThrow(new EmailAlreadyExistsException());
+
+
+        // When and then
+        this.mockMvc.perform(post(this.baseUrlAccount + "/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
@@ -285,6 +298,7 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    // TODO Should probably be PUT, not a POST
     @Test
     @DisplayName("POST - update - Success")
     void test_update_Success() throws Exception {
@@ -314,6 +328,7 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.data.roles").value("newRole"));
     }
 
+    // TODO Should probably be PUT, not a POST
     @Test
     @DisplayName("POST - update - Non-existent Email - Exception")
     void test_update_NonExistentEmail() throws Exception {
