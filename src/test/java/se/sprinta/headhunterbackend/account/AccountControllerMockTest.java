@@ -56,6 +56,7 @@ class AccountControllerMockTest {
 
     private List<Account> accounts = new ArrayList<>();
     private List<AccountDtoView> accountDtos = new ArrayList<>();
+    private List<AccountDtoFormRegister> accountDtoFormRegister = new ArrayList<>();
 
     @Value("${api.endpoint.base-url-account}")
     String baseUrlAccount;
@@ -64,6 +65,7 @@ class AccountControllerMockTest {
     void setUp() {
         this.accounts = MockDatabaseInitializer.initializeMockAccounts();
         this.accountDtos = MockDatabaseInitializer.initializeMockAccountDtos();
+        this.accountDtoFormRegister = MockDatabaseInitializer.initializeAccountDtoFormRegister();
     }
 
     @Test
@@ -76,6 +78,10 @@ class AccountControllerMockTest {
         System.out.println("AccountControllerMockTest, accountDtos size: " + this.accountDtos.size());
         for (AccountDtoView accountDto : this.accountDtos) {
             System.out.println(accountDto.toString());
+        }
+        System.out.println("AccountControllerMockTest, accountDtoFormRegister size: " + this.accountDtoFormRegister.size());
+        for (AccountDtoFormRegister accountDtoFormRegister : this.accountDtoFormRegister) {
+            System.out.println(accountDtoFormRegister.toString());
         }
     }
 
@@ -227,6 +233,19 @@ class AccountControllerMockTest {
                 .andExpect(jsonPath("$.data.email").value("newAccount@hh.se"))
                 .andExpect(jsonPath("$.data.roles").value("user"));
     }
+
+
+    @Test
+    @DisplayName("POST - register - Email Already Exists - Exception")
+    void test_Register_EmailAlreadyExists_Exception() throws Exception {
+        this.mockMvc.perform(post(this.baseUrlAccount + "/register" + "/" + this.accountDtoFormRegister.get(0).email())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.FORBIDDEN))
+                .andExpect(jsonPath("$.message").value("Email is already registered"));
+
+    }
+
 
     @Test
     @DisplayName("GET - getAccountDtoByEmail - Success")
