@@ -10,7 +10,7 @@ import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
-import se.sprinta.headhunterbackend.system.exception.AccountAlreadyExistException;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.verification.VerificationService;
@@ -81,7 +81,7 @@ public class AccountService implements UserDetailsService {
 
         if (this.accountRepository.findAccountByEmail(accountDtoFormRegister.email()).isPresent()) {
             System.out.println("if condition false");
-            throw new AccountAlreadyExistException();
+            throw new EmailAlreadyExistsException();
         }
 
         Account newAccount = new Account();
