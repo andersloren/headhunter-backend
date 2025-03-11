@@ -47,29 +47,46 @@ public class MicrosoftGraphAuth {
         URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+        String accessToken;
+
+        try {
+            accessToken = getAccessToken();
+        } catch (IOException e) {
+            System.out.println("Failed to get the access token: " + e.getMessage());
+            throw e;
+        }
+
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization", "Bearer " + getAccessToken());
+        connection.setRequestProperty("Authorization", "Bearer " + accessToken);
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
+
         return connection;
     }
 
     public void sendVerificationEmail(String email, String verificationCode) throws IOException, URISyntaxException {
 
+        System.out.println("1. Entered microsoftGraph.sendVerificationEmail");
         HttpURLConnection connection = getHttpURLConnection();
+        System.out.println("2. " + connection);
 
         String emailPayload = this.messages.verificationEmail(email, verificationCode);
+
+        System.out.println("DID WE GET AN EMAIL PAYLOAD?");
 
         try (OutputStream outputStream = connection.getOutputStream()) {
             byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
             outputStream.write(input, 0, input.length);
         }
 
+        System.out.println("DID WE GE AN OUTPUT STREAM?");
+
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_ACCEPTED) {
             System.out.println("Email sent successfully");
         } else {
+            System.out.println("DID WE GE END UP HERE?????????");
             BufferedReader errorStream = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
             String inputLine;
             StringBuilder errorResponse = new StringBuilder();
@@ -117,11 +134,13 @@ public class MicrosoftGraphAuth {
 
     public String getAccessToken() throws IOException {
         try {
+            System.out.println("1. getAccessToken <-- THIS");
             IAuthenticationResult cachedResult = this.tokenCache.loadToken();
             return cachedResult.accessToken();
         } catch (TokenDoesNotExistException e) {
-
+            System.out.println("3. getAccessToken");
             IClientCredential credential;
+            System.out.println("4. getAccessToken <-- THIS");
             try (InputStream pkcs12Certificate = new FileInputStream(this.PKCS12Certificate)) {
                 credential = ClientCredentialFactory.createFromCertificate(pkcs12Certificate, this.PKCS12Password);
 

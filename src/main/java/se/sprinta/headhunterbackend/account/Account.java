@@ -144,7 +144,7 @@ public class Account implements Serializable {
                 ", number_of_jobs=" + number_of_jobs +
                 ", accountInfo=" + accountInfo +
                 ", isVerified=" + isVerified +
-                ", jobs=" + jobs +
+//                ", jobs=" + jobs +
                 '}';
     }
 }

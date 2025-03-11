@@ -15,6 +15,8 @@ import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.Result;
 import se.sprinta.headhunterbackend.system.StatusCode;
 import jakarta.validation.constraints.NotNull;
+import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
+import se.sprinta.headhunterbackend.verification.VerificationService;
 
 /**
  * Backend API endpoints for Account.
@@ -33,11 +35,15 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountToAccountDtoViewConverter accountToAccountDtoViewConverter;
+    private VerificationService verificationService;
 
-    public AccountController(AccountService accountService,
-                             AccountToAccountDtoViewConverter accountToAccountDtoViewConverter) {
+    public AccountController(
+            AccountService accountService,
+            AccountToAccountDtoViewConverter accountToAccountDtoViewConverter,
+            VerificationService verificationService) {
         this.accountService = accountService;
         this.accountToAccountDtoViewConverter = accountToAccountDtoViewConverter;
+        this.verificationService = verificationService;
     }
 
     @GetMapping("/findAll")
@@ -72,8 +78,8 @@ public class AccountController {
 
     @PostMapping("/register")
     public Result registerAccount(@RequestBody @Valid AccountDtoFormRegister accountDtoFormRegister) throws IOException, URISyntaxException {
-        Account addedAccount = this.accountService.register(accountDtoFormRegister);
-        AccountDtoView addedAccountDtoView = this.accountToAccountDtoViewConverter.convert(addedAccount);
+        Account savedAccount = this.accountService.register(accountDtoFormRegister);
+        AccountDtoView addedAccountDtoView = this.accountToAccountDtoViewConverter.convert(savedAccount);
         return new Result(true, StatusCode.SUCCESS, "Add Account Success", addedAccountDtoView);
     }
 
