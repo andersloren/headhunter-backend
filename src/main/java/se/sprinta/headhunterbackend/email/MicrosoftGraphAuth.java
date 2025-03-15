@@ -44,12 +44,15 @@ public class MicrosoftGraphAuth {
     }
 
     private HttpURLConnection getHttpURLConnection() throws URISyntaxException, IOException {
+        System.out.println("1. microsoftGraph.getHttpUrlConnection");
         URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
+        System.out.println("2. microsoftGraph.getHttpUrlConnection");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
+        System.out.println("3. microsoftGraph.getHttpUrlConnection");
         String accessToken;
-
+        System.out.println("4. microsoftGraph.getHttpUrlConnection");
         try {
+            System.out.println("5. microsoftGraph.getHttpUrlConnection");
             accessToken = getAccessToken();
         } catch (IOException e) {
             System.out.println("Failed to get the access token: " + e.getMessage());
@@ -134,31 +137,39 @@ public class MicrosoftGraphAuth {
 
     public String getAccessToken() throws IOException {
         try {
-            System.out.println("1. getAccessToken <-- THIS");
+            System.out.println("1. getAccessToken");
             IAuthenticationResult cachedResult = this.tokenCache.loadToken();
+            System.out.println("2. getAccessToken");
             return cachedResult.accessToken();
         } catch (TokenDoesNotExistException e) {
             System.out.println("3. getAccessToken");
             IClientCredential credential;
-            System.out.println("4. getAccessToken <-- THIS");
+            System.out.println("4. getAccessToken");
             try (InputStream pkcs12Certificate = new FileInputStream(this.PKCS12Certificate)) {
+                System.out.println("5. getAccessToken");
                 credential = ClientCredentialFactory.createFromCertificate(pkcs12Certificate, this.PKCS12Password);
 
+                System.out.println("6. getAccessToken");
                 ConfidentialClientApplication cca = ConfidentialClientApplication
                         .builder(this.clientId, credential)
                         .authority("https://login.microsoftonline.com/" + this.tenantId)
                         .build();
 
+                System.out.println("7. getAccessToken");
                 ClientCredentialParameters parameters = ClientCredentialParameters
                         .builder(SCOPE)
                         .build();
 
+                System.out.println("8. getAccessToken");
                 IAuthenticationResult result;
                 CompletableFuture<IAuthenticationResult> future = cca.acquireToken(parameters);
 
+                System.out.println("9. getAccessToken");
                 result = future.join();
 
+                System.out.println("10. getAccessToken");
 //                this.tokenCache.saveToken(result);
+
                 return result.accessToken();
             } catch (MsalException msalException) {
                 throw new RuntimeException("Unable to acquire token", msalException);

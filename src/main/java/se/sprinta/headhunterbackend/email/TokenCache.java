@@ -22,15 +22,19 @@ public class TokenCache {
     }
 
     public void saveToken(IAuthenticationResult result) throws IOException {
-        System.out.println("***WE MADE IT EVEN THIS FAR***");
+        System.out.println("1. saveToken");
         objectMapper.writeValue(new File(this.cacheFilePath), result);
     }
 
     public IAuthenticationResult loadToken() throws IOException {
+        System.out.println("1. loadToken");
         File cacheFile = new File(this.cacheFilePath);
+        System.out.println("2. loadToken");
         if (cacheFile.exists() && cacheFile.length() > 0) {
+            System.out.println("3. loadToken");
             return objectMapper.readValue(cacheFile, IAuthenticationResult.class);
         }
+        System.out.println("3.1. loadToken - EXCEPTION");
         throw new TokenDoesNotExistException();
     }
 
