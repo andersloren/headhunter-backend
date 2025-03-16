@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
 import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
@@ -29,17 +28,14 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MicrosoftGraphAuth microsoftGraphAuth;
     private final VerificationService verificationService;
 
     public AccountService(
             AccountRepository accountRepository,
             PasswordEncoder passwordEncoder,
-            MicrosoftGraphAuth microsoftGraphAuth,
             VerificationService verificationService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.microsoftGraphAuth = microsoftGraphAuth;
         this.verificationService = verificationService;
     }
 
