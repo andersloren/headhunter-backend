@@ -12,6 +12,7 @@ import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,6 +33,15 @@ public class VerificationService {
     }
 
     public String createVerification(Account account) {
+        Optional<Verification> foundVerification = this.verificationRepository.findVerificationByEmail(account.getEmail());
+
+        if (foundVerification.isPresent()) {
+            Verification existingVerification = foundVerification.get();
+            String newCode = existingVerification.newGenerateVerificationCode();
+            existingVerification.setVerificationCode(newCode);
+            return this.verificationRepository.save(existingVerification).getVerificationCode();
+        }
+
         Verification verification = new Verification();
         verification.setAccount(account);
         Verification savedVerification = this.verificationRepository.save(verification);
@@ -76,6 +86,5 @@ public class VerificationService {
 
         this.verificationRepository.delete(foundVerification);
     }
-
 }
 
