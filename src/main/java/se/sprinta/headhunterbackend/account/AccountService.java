@@ -9,12 +9,13 @@ import org.springframework.stereotype.Service;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoFormRegister;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
-import se.sprinta.headhunterbackend.email.MicrosoftGraphAuth;
 import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
 import se.sprinta.headhunterbackend.verification.VerificationService;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -27,17 +28,14 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MicrosoftGraphAuth microsoftGraphAuth;
     private final VerificationService verificationService;
 
     public AccountService(
             AccountRepository accountRepository,
             PasswordEncoder passwordEncoder,
-            MicrosoftGraphAuth microsoftGraphAuth,
             VerificationService verificationService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.microsoftGraphAuth = microsoftGraphAuth;
         this.verificationService = verificationService;
     }
 
@@ -75,7 +73,7 @@ public class AccountService implements UserDetailsService {
     }
 
     // TODO: 10/3/2024 Check test methods, update if necessary
-    public Account register(AccountDtoFormRegister accountDtoFormRegister) {
+    public Account register(AccountDtoFormRegister accountDtoFormRegister) throws IOException, URISyntaxException {
         if (accountDtoFormRegister == null)
             throw new NullPointerException("Account object cannot be null");
 
@@ -89,11 +87,11 @@ public class AccountService implements UserDetailsService {
         newAccount.setPassword(this.passwordEncoder.encode(accountDtoFormRegister.password()));
         newAccount.setRoles(accountDtoFormRegister.roles());
 
-//        Account savedAccount = this.accountRepository.save(newAccount);
-//        this.verificationService.sendVerificationEmail(savedAccount);
+        Account savedAccount = this.accountRepository.save(newAccount);
+        this.verificationService.requestVerificationEmail(savedAccount.getEmail());
 
-//        return savedAccount;
-        return this.accountRepository.save(newAccount);
+        return savedAccount;
+//        return this.accountRepository.save(newAccount);
     }
 
     public Account update(String accountEmail, AccountUpdateDtoForm update) {

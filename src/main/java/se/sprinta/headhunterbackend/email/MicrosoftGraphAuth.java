@@ -44,32 +44,52 @@ public class MicrosoftGraphAuth {
     }
 
     private HttpURLConnection getHttpURLConnection() throws URISyntaxException, IOException {
+        System.out.println("1. microsoftGraph.getHttpUrlConnection");
         URL url = new URI("https://graph.microsoft.com/v1.0/users/" + this.serviceAddress + "/sendMail").toURL();
+        System.out.println("2. microsoftGraph.getHttpUrlConnection");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        System.out.println("3. microsoftGraph.getHttpUrlConnection");
+        String accessToken;
+        System.out.println("4. microsoftGraph.getHttpUrlConnection");
+        try {
+            System.out.println("5. microsoftGraph.getHttpUrlConnection");
+            accessToken = getAccessToken();
+        } catch (IOException e) {
+            System.out.println("Failed to get the access token: " + e.getMessage());
+            throw e;
+        }
 
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization", "Bearer " + getAccessToken());
+        connection.setRequestProperty("Authorization", "Bearer " + accessToken);
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
+
         return connection;
     }
 
     public void sendVerificationEmail(String email, String verificationCode) throws IOException, URISyntaxException {
 
+        System.out.println("1. Entered microsoftGraph.sendVerificationEmail");
         HttpURLConnection connection = getHttpURLConnection();
+        System.out.println("2. " + connection);
 
         String emailPayload = this.messages.verificationEmail(email, verificationCode);
+
+        System.out.println("DID WE GET AN EMAIL PAYLOAD?");
 
         try (OutputStream outputStream = connection.getOutputStream()) {
             byte[] input = emailPayload.getBytes(StandardCharsets.UTF_8);
             outputStream.write(input, 0, input.length);
         }
 
+        System.out.println("DID WE GE AN OUTPUT STREAM?");
+
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_ACCEPTED) {
             System.out.println("Email sent successfully");
         } else {
+            System.out.println("DID WE GE END UP HERE?????????");
             BufferedReader errorStream = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
             String inputLine;
             StringBuilder errorResponse = new StringBuilder();
@@ -117,29 +137,39 @@ public class MicrosoftGraphAuth {
 
     public String getAccessToken() throws IOException {
         try {
+            System.out.println("1. getAccessToken");
             IAuthenticationResult cachedResult = this.tokenCache.loadToken();
+            System.out.println("2. getAccessToken");
             return cachedResult.accessToken();
         } catch (TokenDoesNotExistException e) {
-
+            System.out.println("3. getAccessToken");
             IClientCredential credential;
+            System.out.println("4. getAccessToken");
             try (InputStream pkcs12Certificate = new FileInputStream(this.PKCS12Certificate)) {
+                System.out.println("5. getAccessToken");
                 credential = ClientCredentialFactory.createFromCertificate(pkcs12Certificate, this.PKCS12Password);
 
+                System.out.println("6. getAccessToken");
                 ConfidentialClientApplication cca = ConfidentialClientApplication
                         .builder(this.clientId, credential)
                         .authority("https://login.microsoftonline.com/" + this.tenantId)
                         .build();
 
+                System.out.println("7. getAccessToken");
                 ClientCredentialParameters parameters = ClientCredentialParameters
                         .builder(SCOPE)
                         .build();
 
+                System.out.println("8. getAccessToken");
                 IAuthenticationResult result;
                 CompletableFuture<IAuthenticationResult> future = cca.acquireToken(parameters);
 
+                System.out.println("9. getAccessToken");
                 result = future.join();
 
+                System.out.println("10. getAccessToken");
 //                this.tokenCache.saveToken(result);
+
                 return result.accessToken();
             } catch (MsalException msalException) {
                 throw new RuntimeException("Unable to acquire token", msalException);
