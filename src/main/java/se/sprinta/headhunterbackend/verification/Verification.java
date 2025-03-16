@@ -39,4 +39,8 @@ public class Verification {
 
         return String.valueOf(random.nextInt(10000, 99999));
     }
+
+    public String newGenerateVerificationCode() {
+        return generateVerificationCode();
+    }
 }
