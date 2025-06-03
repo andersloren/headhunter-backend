@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -50,22 +49,23 @@ public class SecurityConfig {
     @Value("${api.endpoint.base-url-verification}")
     private String baseUrlVerification;
 
-    private final AuthenticationEntryPoint customBasicAuthenticationEntryPoint;
+    private final CustomBasicAuthenticationEntryPoint customBasicAuthenticationEntryPoint;
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
 
 
 
     /*
-     * RSA is an algorithm.
+     * RSA is an algorithm.*
      * The NoSuchAlgorithmException is there in case the algorithm is not supported.
      *
-     * When SecurityConfiguration is instantiated, the two keys will be created immediately.
+     * When SecurityConfig is instantiated, the two keys will be created immediately.
      * This means that every time this program is restarted, we have two new keys.
      * */
 
+
     public SecurityConfig(
-            AuthenticationEntryPoint customBasicAuthenticationEntryPoint,
+            CustomBasicAuthenticationEntryPoint customBasicAuthenticationEntryPoint,
             CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint,
             CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler
     ) throws NoSuchAlgorithmException {
@@ -138,12 +138,9 @@ public class SecurityConfig {
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAccount + "/**")).permitAll()
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlJob + "/**")).permitAll()
 //                        .requestMatchers(AntPathRequestMatcher.antMatcher(this.baseUrlAd + "/**")).permitAll()
-
                                 .anyRequest().authenticated()
                 )
-
-                        .
-                headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // This is for H2 browser console access
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // This is for H2 browser console access
                 .csrf(csrf -> {
                     csrf.disable();
                     csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"));
