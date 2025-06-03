@@ -4,7 +4,7 @@
     </Properties>
 
     <Appenders>
-        <Console name="Console" target="SYSTEM.OUT">
+        <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${layout}"/>
         </Console>
         <File name="LogFile" fileName="app.log">
