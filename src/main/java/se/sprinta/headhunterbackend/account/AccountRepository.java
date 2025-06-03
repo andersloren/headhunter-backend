@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import se.sprinta.headhunterbackend.account.dto.AccountDtoView;
 
@@ -22,15 +23,25 @@ public interface AccountRepository extends JpaRepository<Account, String> {
      * Note that Email is the id of an Account object.
      */
 
-    Optional<Account> findAccountByEmail(String email);
+    Optional<Account> findAccountByEmail(@Param("email") String email);
 
     @Query("SELECT COUNT(ac) = 0 FROM Account ac WHERE ac.email = :email")
-    boolean validateEmailAvailable(String email);
+    boolean validateEmailAvailable(@Param("email") String email);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ac.email, ac.roles, ac.number_of_jobs, ac.isVerified) FROM Account ac WHERE ac.email = :email")
-    Optional<AccountDtoView> getAccountDtoByEmail(String email);
+    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(" +
+            "ac.email AS email, " +
+            "ac.roles AS roles, " +
+            "ac.number_of_jobs AS number_of_jobs, " +
+            "ac.isVerified AS isVerified)" +
+            "FROM Account ac WHERE ac.email = :email")
+    Optional<AccountDtoView> getAccountDtoByEmail(@Param("email") String email);
 
-    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(ac.email, ac.roles, ac.number_of_jobs, ac.isVerified) FROM Account ac")
+    @Query("SELECT new se.sprinta.headhunterbackend.account.dto.AccountDtoView(" +
+            "ac.email AS email, " +
+            "ac.roles AS roles, " +
+            "ac.number_of_jobs AS number_of_jobs, " +
+            "ac.isVerified AS isVerified) " +
+            "FROM Account ac")
     List<AccountDtoView> getAccountDtos();
 
     @Modifying
