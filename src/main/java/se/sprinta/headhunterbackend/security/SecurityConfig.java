@@ -53,8 +53,6 @@ public class SecurityConfig {
     private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
     private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
 
-
-
     /*
      * RSA is an algorithm.*
      * The NoSuchAlgorithmException is there in case the algorithm is not supported.
