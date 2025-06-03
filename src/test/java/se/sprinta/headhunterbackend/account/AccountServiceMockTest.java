@@ -17,6 +17,7 @@ import se.sprinta.headhunterbackend.account.dto.AccountUpdateDtoForm;
 import se.sprinta.headhunterbackend.system.exception.EmailAlreadyExistsException;
 import se.sprinta.headhunterbackend.system.exception.EmailNotFreeException;
 import se.sprinta.headhunterbackend.system.exception.ObjectNotFoundException;
+import se.sprinta.headhunterbackend.verification.VerificationService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,6 +38,8 @@ class AccountServiceMockTest {
     AccountRepository accountRepository;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    VerificationService verificationService;
     @InjectMocks
     AccountService accountService;
 
@@ -226,6 +229,7 @@ class AccountServiceMockTest {
                 accountArgumentCaptor.capture()))
                 .willAnswer(invocation -> invocation.getArgument(0));
         given(this.passwordEncoder.encode(accountDtoFormRegister.password())).willReturn("Encoded Password");
+        willDoNothing().given(this.verificationService).requestVerificationEmail(accountDtoFormRegister.email());
 
         // When
         Account returnedAccount = this.accountService.register(accountDtoFormRegister);

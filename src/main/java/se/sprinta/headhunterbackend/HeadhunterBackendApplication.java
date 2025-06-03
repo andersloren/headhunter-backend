@@ -25,7 +25,7 @@ public class HeadhunterBackendApplication {
     @Bean
     ApplicationRunner applicationRunner(Environment environment) {
         return args ->
-            log.info("Active Configuration File: " + environment.getProperty("active-application-yml"));
+                log.info("Active Configuration File: {}", environment.getProperty("active-application-yml"));
     }
 }
 

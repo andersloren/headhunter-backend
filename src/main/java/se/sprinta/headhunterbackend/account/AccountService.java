@@ -91,7 +91,6 @@ public class AccountService implements UserDetailsService {
         this.verificationService.requestVerificationEmail(savedAccount.getEmail());
 
         return savedAccount;
-//        return this.accountRepository.save(newAccount);
     }
 
     public Account update(String accountEmail, AccountUpdateDtoForm update) {
