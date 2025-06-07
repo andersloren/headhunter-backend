@@ -54,7 +54,6 @@ public class VerificationService {
                 .orElseThrow(() -> new ObjectNotFoundException("account", email));
 
         String verificationCode = createVerification(requestAccount);
-        System.out.println("****** IS THIS HAPPENING? *******" + requestAccount.getEmail());
         this.microsoftGraphAuth.sendVerificationEmail(requestAccount.getEmail(), verificationCode);
     }
 
