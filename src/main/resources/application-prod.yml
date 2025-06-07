@@ -4,14 +4,17 @@ spring:
   config:
     activate:
       on-profile: prod
-  #  config:
-  #    import: "optional:configtree:/run/secrets/"
   datasource:
-    url: jdbc:mysql://${DB_PROD_HOSTNAME}:${DB_PORT}/${DB_PROD_DATABASE_NAME}
+    #    url: jdbc:mysql://localhost:3306/headhunter-prod
+    url: jdbc:${DB_NAME}://${DB_DEV_HOSTNAME}:${DB_PORT}/${DB_PROD_DATABASE_NAME}
     username: ${DB_USER_USERNAME}
     password: ${DB_USER_PASSWORD}
+    # DB_admin has privileges on the production database
+    #    username: ${DB_ADMIN_USERNAME}
+    #    password: ${DB_ADMIN_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
     generate-ddl: true
