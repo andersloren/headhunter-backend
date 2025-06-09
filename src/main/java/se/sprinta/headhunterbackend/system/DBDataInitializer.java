@@ -31,11 +31,13 @@ public class DBDataInitializer implements CommandLineRunner {
         admin1.setEmail("admin@hh.se");
         admin1.setPassword("a");
         admin1.setRoles("admin");
+        admin1.setVerified(true);
 
         Account account1 = new Account();
         account1.setEmail("user@hh.se");
         account1.setPassword("a");
         account1.setRoles("user");
+        account1.setVerified(false);
 
         this.accountService.save(admin1);
         this.accountService.save(account1);
